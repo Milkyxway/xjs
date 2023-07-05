@@ -1,74 +1,57 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+import SideBar from './components/SideBar.vue'
 </script>
-
 <template>
-  <!-- <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header> -->
-  <div class="nav-bar">
-    <el-row>
-      <el-col>
-        <h5 class="mb-2">Custom colors</h5>
-        <el-menu
-          active-text-color="#ffd04b"
-          background-color="#545c64"
-          class="el-menu-vertical-demo"
-          default-active="2"
-          text-color="#fff"
-          @open="handleOpen"
-          @close="handleClose"
-        >
-          <el-sub-menu index="1">
-            <template #title>
-              <el-icon><location /></el-icon>
-              <span>Navigator One</span>
-            </template>
-            <el-menu-item-group title="Group One">
-              <el-menu-item index="1-1">item one</el-menu-item>
-              <el-menu-item index="1-2">item two</el-menu-item>
-            </el-menu-item-group>
-            <el-menu-item-group title="Group Two">
-              <el-menu-item index="1-3">item three</el-menu-item>
-            </el-menu-item-group>
-            <el-sub-menu index="1-4">
-              <template #title>item four</template>
-              <el-menu-item index="1-4-1">item one</el-menu-item>
-            </el-sub-menu>
-          </el-sub-menu>
-          <el-menu-item index="2">
-            <el-icon><icon-menu /></el-icon>
-            <span>Navigator Two</span>
-          </el-menu-item>
-          <el-menu-item index="3" disabled>
-            <el-icon><document /></el-icon>
-            <span>Navigator Three</span>
-          </el-menu-item>
-          <el-menu-item index="4">
-            <el-icon><setting /></el-icon>
-            <span>Navigator Four</span>
-          </el-menu-item>
-        </el-menu>
-      </el-col>
-    </el-row>
+  <div class="common-layout">
+    <el-container>
+      <el-header>江苏有线督办平台</el-header>
+      <el-container>
+        <el-aside width="200px">
+          <SideBar></SideBar>
+        </el-aside>
+        <el-container>
+          <el-main><RouterView></RouterView></el-main>
+          <el-footer>江苏有线无锡分公司版权所有</el-footer>
+        </el-container>
+      </el-container>
+    </el-container>
   </div>
-  <RouterView />
 </template>
 
 <style scoped>
 header {
   line-height: 1.5;
   max-height: 100vh;
+}
+
+.common-layout {
+  .el-header,
+  .el-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .el-header,
+  .el-footer {
+    background-color: var(--el-color-primary-light-7);
+    color: var(--el-text-color-primary);
+    text-align: center;
+  }
+
+  .el-aside {
+    background-color: var(--el-color-primary-light-8);
+    color: var(--el-text-color-primary);
+    text-align: center;
+  }
+
+  .el-main {
+    background-color: var(--el-color-primary-light-9);
+    color: var(--el-text-color-primary);
+    text-align: center;
+  }
 }
 
 .logo {

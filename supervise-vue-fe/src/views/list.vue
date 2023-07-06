@@ -1,5 +1,5 @@
 <template>
-  <div></div>
+  <QueryHeader type="add" @handleQuery="handleQuery" @createTask="createTask" />
   <div>
     <el-table :data="tableData">
       <el-table-column
@@ -19,13 +19,19 @@
 
 <script>
 import { toRefs, reactive, watch } from 'vue'
+import QueryHeader from '../components/QueryHeader.vue'
+import { getTaskListReq } from '../api/list'
 export default {
+  components: {
+    QueryHeader
+  },
   setup() {
     const state = reactive({
       page: {
         pageSize: 10,
         pageNum: 1
       },
+      querys: {},
       tableColumns: [
         {
           columnName: '序号',
@@ -95,17 +101,38 @@ export default {
           status: 1,
           comment: ''
         }
-      ]
+      ],
+      total: 0
     })
-    const handleSizeChange = () => {}
-    const handlePageChange = () => {}
-    const getSuperviseList = () => {}
+
+    const getSuperviseList = async () => {
+      const params = {
+        ...state.page,
+        ...state.querys
+      }
+      const result = await getTaskListReq(params)
+      state.tableData = result.data.data
+      state.total = result.data.total
+    }
+    const handleQuery = () => {
+      console.log('query')
+    }
+    watch(
+      () => state.page,
+      (val) => {
+        state.page = { ...val }
+        getSuperviseList()
+      }
+    )
+    const createTask = () => {
+      console.log('create')
+    }
     getSuperviseList()
     return {
       ...toRefs(state),
-      handleSizeChange,
-      handlePageChange,
-      getSuperviseList
+      getSuperviseList,
+      handleQuery,
+      createTask
     }
   }
 }

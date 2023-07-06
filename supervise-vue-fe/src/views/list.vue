@@ -137,9 +137,9 @@ export default {
         ...state.page,
         ...state.querys
       }
-      const result = await getTaskListReq(params)
-      state.tableData = result.data.data
-      state.total = result.data.total
+      // const result = await getTaskListReq(params)
+      // state.tableData = result.data.data
+      // state.total = result.data.total
     }
     const handleQuery = () => {
       console.log('query')

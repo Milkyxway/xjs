@@ -1,7 +1,7 @@
 <template>
-  <!-- Form -->
-
   <el-dialog
+    :show-close="false"
+    :close-on-press-escape="false"
     v-model="props.modalVisible"
     :title="props.modalType === 'add' ? '新建任务' : '修改任务'"
   >

@@ -174,18 +174,13 @@ export default {
       state.modalVisible = true
       state.formData = { ...row }
     }
-    const deleteTask = () => {
-      ElMessageBox.alert('This is a message', 'Title', {
-        // if you want to disable its autofocus
-        // autofocus: false,
-        confirmButtonText: 'OK',
-        callback: (action) => {
-          ElMessage({
-            type: 'info',
-            message: `action: ${action}`
-          })
-        }
-      })
+    const deleteTask = async () => {
+      const result = await deleteTaskReq({})
+      getSuperviseList()
+      // ElMessageBox.confirm('It will permanently delete the file. Continue?', 'Warning', {
+      //   type: 'warning',
+      //   icon: markRaw(Delete)
+      // })
     }
     getSuperviseList()
     const handlePageChange = () => {}

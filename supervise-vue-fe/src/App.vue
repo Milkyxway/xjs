@@ -6,7 +6,12 @@ import SideBar from './components/SideBar.vue'
 <template>
   <div class="common-layout">
     <el-container>
-      <el-header>江苏有线督办平台</el-header>
+      <el-header
+        ><span><img src="./assets/logo.png" class="logo-icon" /></span>
+        <div class="user-wrap">
+          <el-icon><User /></el-icon>市场部小A
+        </div></el-header
+      >
       <el-container>
         <el-aside width="200px">
           <SideBar></SideBar>
@@ -27,7 +32,12 @@ header {
 }
 
 .common-layout {
-  .el-header,
+  .el-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
   .el-footer {
     display: flex;
     justify-content: center;
@@ -53,7 +63,16 @@ header {
     text-align: center;
   }
 }
-
+.logo-icon {
+  width: 400px;
+  height: auto;
+}
+.user-wrap {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
 .logo {
   display: block;
   margin: 0 auto 2rem;

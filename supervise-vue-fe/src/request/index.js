@@ -1,5 +1,6 @@
 import axios from 'axios'
-// import router from '@/router'
+import router from '../router'
+import { ElMessage } from 'element-plus'
 
 export const request = createRequest()
 function createRequest() {
@@ -39,7 +40,7 @@ function createRequest() {
       if (code === 200) return res.data
 
       if (code === 401) {
-        // router.replace('/login')
+        router.replace('/login')
       }
 
       // toast(msg || "网络错误", "warning");

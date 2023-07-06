@@ -7,6 +7,12 @@
         :label="item.columnName"
         :prop="item.prop"
       ></el-table-column>
+      <el-table-column fixed="right" label="操作" width="120">
+        <template #default="{ row }">
+          <el-button link type="primary" size="small" @click="updateTask(row)">修改</el-button>
+          <el-button link type="primary" size="small" @click="deleteTask(row)">删除</el-button>
+        </template>
+      </el-table-column>
     </el-table>
     <el-pagination
       layout="prev, pager, next"
@@ -14,24 +20,44 @@
       @size-change="handleSizeChange"
       @page-change="handlePageChange"
     />
+    <TaskModal
+      :modalVisible="modalVisible"
+      :modalType="modalType"
+      @handleCancel="modalVisible = false"
+      @handle-commit="handleCommit"
+      :formData="formData"
+    />
   </div>
 </template>
 
 <script>
 import { toRefs, reactive, watch } from 'vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import QueryHeader from '../components/QueryHeader.vue'
-import { getTaskListReq } from '../api/list'
+import TaskModal from '../components/TaskModal.vue'
+import { getTaskListReq, createTaskReq, updateTaskReq, deleteTaskReq } from '../api/list'
 export default {
   components: {
-    QueryHeader
+    QueryHeader,
+    TaskModal
   },
   setup() {
     const state = reactive({
+      modalType: '',
       page: {
         pageSize: 10,
         pageNum: 1
       },
       querys: {},
+      formData: {
+        name: '',
+        category: '',
+        taskContent: '',
+        orgnization: '',
+        taskGoal: '',
+        status: '',
+        comment: ''
+      },
       tableColumns: [
         {
           columnName: '序号',
@@ -102,7 +128,8 @@ export default {
           comment: ''
         }
       ],
-      total: 0
+      total: 0,
+      modalVisible: false
     })
 
     const getSuperviseList = async () => {
@@ -117,22 +144,62 @@ export default {
     const handleQuery = () => {
       console.log('query')
     }
+    const createTask = () => {
+      state.modalVisible = true
+      state.modalType = 'add'
+    }
     watch(
-      () => state.page,
+      () => state.page, //监听分页器的变化
       (val) => {
         state.page = { ...val }
         getSuperviseList()
+      },
+      {
+        immediate: true
       }
     )
-    const createTask = () => {
-      console.log('create')
+
+    // 弹窗里确定按钮触发
+    const handleCommit = async (form) => {
+      const result = state.modalType === 'add' ? await createTaskReq(form) : updateTaskReq(form)
+      state.page = {
+        pageNum: 1,
+        pageSize: 10
+      }
+
+      state.modalVisible = false
+    }
+    const updateTask = (row) => {
+      state.modalType = 'update'
+      state.modalVisible = true
+      state.formData = { ...row }
+    }
+    const deleteTask = () => {
+      ElMessageBox.alert('This is a message', 'Title', {
+        // if you want to disable its autofocus
+        // autofocus: false,
+        confirmButtonText: 'OK',
+        callback: (action) => {
+          ElMessage({
+            type: 'info',
+            message: `action: ${action}`
+          })
+        }
+      })
     }
     getSuperviseList()
+    const handlePageChange = () => {}
+    const handleSizeChange = () => {}
     return {
       ...toRefs(state),
       getSuperviseList,
       handleQuery,
-      createTask
+      handleCommit,
+      createTask,
+      updateTask,
+      deleteTask,
+      handlePageChange,
+      handleSizeChange
     }
   }
 }

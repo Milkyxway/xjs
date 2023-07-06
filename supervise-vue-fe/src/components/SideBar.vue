@@ -23,10 +23,10 @@ export default {
           name: '督办模块',
           url: '/supervise',
           children: [
-            {
-              name: '上传任务',
-              url: '/upload'
-            },
+            // {
+            //   name: '上传任务',
+            //   url: '/upload'
+            // },
             {
               name: '任务列表',
               url: '/list'

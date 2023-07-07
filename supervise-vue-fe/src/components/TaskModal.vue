@@ -110,31 +110,12 @@ const inputProps = ref({
 const taskStatus = ref(taskStatusList)
 const taskCategoryList = ref(taskCategory)
 
-const gridData = [
-  {
-    date: '2016-05-02',
-    name: 'John Smith',
-    address: 'No.1518,  Jinshajiang Road, Putuo District'
-  },
-  {
-    date: '2016-05-04',
-    name: 'John Smith',
-    address: 'No.1518,  Jinshajiang Road, Putuo District'
-  },
-  {
-    date: '2016-05-01',
-    name: 'John Smith',
-    address: 'No.1518,  Jinshajiang Road, Putuo District'
-  },
-  {
-    date: '2016-05-03',
-    name: 'John Smith',
-    address: 'No.1518,  Jinshajiang Road, Putuo District'
-  }
-]
 watch(
   () => props.formData,
-  (val) => (form = val)
+  (val) => (form = val),
+  {
+    immediate: true
+  }
 )
 
 const handleCancel = () => {

@@ -3,7 +3,13 @@
   <div>
     <el-tabs v-model="chooseTab">
       <el-tab-pane label="我的" name="mine">
-        <TableCommon :table-data="tableData" :table-columns="tableColumns" />
+        <TableCommon
+          :table-data="tableData"
+          :table-columns="tableColumns"
+          @updateTask="updateTask"
+          @deleteTask="deleteTask"
+          @setFinish="setFinish"
+        />
         <el-pagination
           layout="prev, pager, next"
           :total="tableData.length"
@@ -12,7 +18,13 @@
         />
       </el-tab-pane>
       <el-tab-pane label="所有" name="all">
-        <TableCommon :table-data="tableData" :table-columns="tableColumns" />
+        <TableCommon
+          :table-data="tableData"
+          :table-columns="tableColumns"
+          @updateTask="updateTask"
+          @deleteTask="deleteTask"
+          @setFinish="setFinish"
+        />
         <el-pagination
           layout="prev, pager, next"
           :total="tableData.length"
@@ -149,12 +161,6 @@ export default {
       modalVisible: false
     })
 
-    // 状态类型整型转换成文字
-    const getStatusName = computed(() => {
-      return function (item) {
-        return taskStatusMap[item.status]
-      }
-    })
     const getSuperviseList = async () => {
       const params = {
         ...state.page,
@@ -231,8 +237,7 @@ export default {
       deleteTask,
       handlePageChange,
       handleSizeChange,
-      setFinish,
-      getStatusName
+      setFinish
     }
   }
 }

@@ -1,11 +1,11 @@
 <template>
   <el-menu default-active="2" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose">
-    <el-sub-menu v-for="item in navConfig" :index="item.key">
+    <el-sub-menu v-for="item in navConfig" v-bind:key="item.key">
       <template #title>
         <el-icon><location /></el-icon>
         <span>{{ item.name }}</span>
       </template>
-      <el-menu-item-group v-for="child in item.children">
+      <el-menu-item-group v-for="child in item.children" v-bind:key="child.key">
         <el-menu-item :index="`${item.key}-${child.key}`">{{
           child.name
         }}</el-menu-item></el-menu-item-group
@@ -30,6 +30,10 @@ export default {
             {
               name: '任务列表',
               url: '/list'
+            },
+            {
+              name: '权限配置',
+              url: ''
             }
           ]
         }

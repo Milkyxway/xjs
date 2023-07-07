@@ -1,25 +1,27 @@
 <template>
   <QueryHeader type="add" @handleQuery="handleQuery" @createTask="createTask" />
   <div>
-    <el-table :data="tableData">
-      <el-table-column
-        v-for="item in tableColumns"
-        :label="item.columnName"
-        :prop="item.prop"
-      ></el-table-column>
-      <el-table-column fixed="right" label="操作" width="120">
-        <template #default="{ row }">
-          <el-button link type="primary" size="small" @click="updateTask(row)">修改</el-button>
-          <el-button link type="primary" size="small" @click="deleteTask(row)">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-pagination
-      layout="prev, pager, next"
-      :total="tableData.length"
-      @size-change="handleSizeChange"
-      @page-change="handlePageChange"
-    />
+    <el-tabs v-model="chooseTab">
+      <el-tab-pane label="我的" name="mine">
+        <TableCommon :table-data="tableData" :table-columns="tableColumns" />
+        <el-pagination
+          layout="prev, pager, next"
+          :total="tableData.length"
+          @size-change="handleSizeChange"
+          @page-change="handlePageChange"
+        />
+      </el-tab-pane>
+      <el-tab-pane label="所有" name="all">
+        <TableCommon :table-data="tableData" :table-columns="tableColumns" />
+        <el-pagination
+          layout="prev, pager, next"
+          :total="tableData.length"
+          @size-change="handleSizeChange"
+          @page-change="handlePageChange"
+        />
+      </el-tab-pane>
+    </el-tabs>
+
     <TaskModal
       :modalVisible="modalVisible"
       :modalType="modalType"
@@ -31,18 +33,22 @@
 </template>
 
 <script>
-import { toRefs, reactive, watch } from 'vue'
+import { toRefs, reactive, watch, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import QueryHeader from '../components/QueryHeader.vue'
 import TaskModal from '../components/TaskModal.vue'
+import TableCommon from '../components/TableCommon.vue'
+import { taskStatusMap } from '../constant/index'
 import { getTaskListReq, createTaskReq, updateTaskReq, deleteTaskReq } from '../api/list'
 export default {
   components: {
     QueryHeader,
-    TaskModal
+    TaskModal,
+    TableCommon
   },
   setup() {
     const state = reactive({
+      chooseTab: 'mine',
       modalType: '',
       page: {
         pageSize: 10,
@@ -74,6 +80,10 @@ export default {
         {
           columnName: '牵头责任部门',
           prop: 'orgnization'
+        },
+        {
+          columnName: '协办部门',
+          prop: 'assist'
         },
         {
           columnName: '完成计划',
@@ -120,10 +130,17 @@ export default {
         },
         {
           category: 1,
-          taskContent:
-            '在营销政策上建议给长期在网或充值额度高的忠实用户给予更多关怀，可以赠送一些小礼品等。',
+          taskContent: '政企部与市场部联手做好宣传推广，支撑政企业务宣传。',
           group: 1,
-          taskGoal: '在“迎春杯”和“春雷行动”的活动政策中均有体现。',
+          taskGoal: '已完成，4月份政企部提供政企全业务素材至市场部。',
+          status: 2,
+          comment: ''
+        },
+        {
+          category: 2,
+          taskContent: '可研报告里，需要填写专业数据的地方，能否请相关部门（财务、企发）协助。',
+          group: 1,
+          taskGoal: '企业发展部可牵头协调编制可研中的专业数据等内容。已完成。',
           status: 1,
           comment: ''
         }
@@ -132,6 +149,12 @@ export default {
       modalVisible: false
     })
 
+    // 状态类型整型转换成文字
+    const getStatusName = computed(() => {
+      return function (item) {
+        return taskStatusMap[item.status]
+      }
+    })
     const getSuperviseList = async () => {
       const params = {
         ...state.page,
@@ -141,8 +164,10 @@ export default {
       // state.tableData = result.data.data
       // state.total = result.data.total
     }
-    const handleQuery = () => {
-      console.log('query')
+    const handleQuery = (query) => {
+      console.log(query)
+      state.query = query
+      getSuperviseList()
     }
     const createTask = () => {
       state.modalVisible = true
@@ -159,6 +184,13 @@ export default {
       }
     )
 
+    // 监听切换tab 刷新list
+    watch(
+      () => state.chooseTab,
+      (val) => {
+        console.log(val, 'changetab')
+      }
+    )
     // 弹窗里确定按钮触发
     const handleCommit = async (form) => {
       const result = state.modalType === 'add' ? await createTaskReq(form) : updateTaskReq(form)
@@ -182,6 +214,10 @@ export default {
       //   icon: markRaw(Delete)
       // })
     }
+
+    // 置为完成
+    const setFinish = () => {}
+
     getSuperviseList()
     const handlePageChange = () => {}
     const handleSizeChange = () => {}
@@ -194,7 +230,9 @@ export default {
       updateTask,
       deleteTask,
       handlePageChange,
-      handleSizeChange
+      handleSizeChange,
+      setFinish,
+      getStatusName
     }
   }
 }

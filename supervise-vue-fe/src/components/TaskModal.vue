@@ -7,22 +7,56 @@
   >
     <el-form :model="form">
       <el-form-item label="任务类别" :label-width="formLabelWidth">
-        <el-input v-model="form.category" autocomplete="off" />
+        <el-select v-model="form.category" placeholder="请选择"
+          ><el-option
+            v-for="(item, index) in taskCategoryList"
+            v-bind:key="index"
+            :label="item.label"
+            :value="item.value"
+            >{{ item.label }}</el-option
+          ></el-select
+        >
       </el-form-item>
       <el-form-item label="任务内容" :label-width="formLabelWidth">
-        <el-input v-model="form.taskContent" autocomplete="off" />
+        <el-input
+          :autosize="inputProps.autoSize"
+          :type="inputProps.type"
+          :autocomplete="inputProps.autocomplete"
+          :placeholder="inputProps.placeHolder"
+          v-model="form.taskContent"
+        />
       </el-form-item>
       <el-form-item label="组织架构" :label-width="formLabelWidth">
         <el-input v-model="form.orgnization" autocomplete="off" />
       </el-form-item>
       <el-form-item label="任务目标" :label-width="formLabelWidth">
-        <el-input v-model="form.taskGoal" autocomplete="off" />
+        <el-input
+          :autosize="inputProps.autoSize"
+          :type="inputProps.type"
+          :autocomplete="inputProps.autocomplete"
+          :placeholder="inputProps.placeHolder"
+          v-model="form.taskGoal"
+        />
       </el-form-item>
       <el-form-item label="任务状态" :label-width="formLabelWidth">
-        <el-select v-model="form.status"></el-select>
+        <el-select v-model="form.status" placeholder="请选择"
+          ><el-option
+            v-for="(item, index) in taskStatus"
+            v-bind:key="index"
+            :label="item.label"
+            :value="item.value"
+            >{{ item.label }}</el-option
+          ></el-select
+        >
       </el-form-item>
       <el-form-item label="备注" :label-width="formLabelWidth">
-        <el-input :autosize="{ minRows: 2, maxRows: 4 }" type="textarea" v-model="form.comment" />
+        <el-input
+          :autosize="inputProps.autoSize"
+          :type="inputProps.type"
+          :autocomplete="inputProps.autocomplete"
+          :placeholder="inputProps.placeHolder"
+          v-model="form.comment"
+        />
       </el-form-item>
     </el-form>
     <template #footer>
@@ -34,8 +68,9 @@
   </el-dialog>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { reactive, ref, watch } from 'vue'
+import { taskStatusList, taskCategory } from '../constant/index'
 const props = defineProps({
   modalVisible: {
     default: false,
@@ -63,6 +98,17 @@ let form = reactive({
   status: '',
   comment: ''
 })
+const inputProps = ref({
+  placeHolder: '请输入',
+  type: 'textarea',
+  autoSize: {
+    minRows: 2,
+    maxRows: 6
+  },
+  autocomplete: false
+})
+const taskStatus = ref(taskStatusList)
+const taskCategoryList = ref(taskCategory)
 
 const gridData = [
   {

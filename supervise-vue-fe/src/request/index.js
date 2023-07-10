@@ -5,7 +5,7 @@ import { ElMessage } from 'element-plus'
 export const request = createRequest()
 function createRequest() {
   const request = axios.create({
-    baseURL: `http://127.0.0.1:80`,
+    baseURL: `http://127.0.0.1:7002`,
     headers: {
       common: {
         ['Cache-Control']: 'no-cache'

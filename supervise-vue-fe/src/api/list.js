@@ -1,37 +1,37 @@
 import { request } from '../request'
 
 // 查询任务列表
-export const getTaskListReq = (params) => {
+export const getTaskListReq = (data) => {
   return request({
     url: '/api/task/list',
-    method: 'get',
-    params
+    method: 'post',
+    data
   })
 }
 
 // 新建任务
-export const createTaskReq = (params) => {
+export const createTaskReq = (data) => {
   return request({
     url: '/api/task/add',
     method: 'post',
-    params
+    data
   })
 }
 
 // 修改任务
-export const updateTaskReq = (params) => {
+export const updateTaskReq = (data) => {
   return request({
     url: '/api/task/update',
     method: 'put',
-    params
+    data
   })
 }
 
 // 删除任务
-export const deleteTaskReq = (params) => {
+export const deleteTaskReq = (data) => {
   return request({
     url: '/api/task/delete',
     method: 'delete',
-    params
+    data
   })
 }

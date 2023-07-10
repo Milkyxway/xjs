@@ -90,7 +90,6 @@ const emit = defineEmits(['handleCancel', 'handleCommit'])
 const formLabelWidth = '140px'
 
 let form = reactive({
-  name: '',
   category: '',
   taskContent: '',
   orgnization: '',

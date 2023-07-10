@@ -45,8 +45,8 @@
 </template>
 
 <script>
-import { toRefs, reactive, watch, computed } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { toRefs, reactive, watch } from 'vue'
+import { ElMessage, ElLoading, ElMessageBox } from 'element-plus'
 import QueryHeader from '../components/QueryHeader.vue'
 import TaskModal from '../components/TaskModal.vue'
 import TableCommon from '../components/TableCommon.vue'
@@ -63,11 +63,10 @@ export default {
       modalType: '',
       page: {
         pageSize: 10,
-        pageNum: 1
+        pageNum: 0
       },
       querys: {},
       formData: {
-        name: '',
         category: '',
         taskContent: '',
         orgnization: '',
@@ -109,53 +108,7 @@ export default {
           prop: 'comment'
         }
       ],
-
-      tableData: [
-        {
-          category: 3,
-          taskContent:
-            '在营销政策上建议给长期在网或充值额度高的忠实用户给予更多关怀，可以赠送一些小礼品等。',
-          group: 1,
-          taskGoal: '在“迎春杯”和“春雷行动”的活动政策中均有体现。',
-          status: 1,
-          comment: ''
-        },
-        {
-          category: 5,
-          taskContent:
-            '在营销政策上建议给长期在网或充值额度高的忠实用户给予更多关怀，可以赠送一些小礼品等。',
-          group: 1,
-          taskGoal: '在“迎春杯”和“春雷行动”的活动政策中均有体现。',
-          status: 1,
-          comment: ''
-        },
-        {
-          category: 6,
-          taskContent:
-            '今年出台奖励措施，智慧广电第一年是10%，第二年降到2%，考虑3年以后还要续签，建议提高奖励，便于长久维系客户关系。',
-          group: 1,
-          taskGoal:
-            '经研究，按照智慧广电乡村工程长效运营要求，第二年，第三年在原有工程基础上有新业态发展及点击率，曝光率有显著增加的地区，参照第一年奖励比例提高。',
-          status: 1,
-          comment: ''
-        },
-        {
-          category: 7,
-          taskContent: '政企部与市场部联手做好宣传推广，支撑政企业务宣传。',
-          group: 1,
-          taskGoal: '已完成，4月份政企部提供政企全业务素材至市场部。',
-          status: 2,
-          comment: ''
-        },
-        {
-          category: 2,
-          taskContent: '可研报告里，需要填写专业数据的地方，能否请相关部门（财务、企发）协助。',
-          group: 1,
-          taskGoal: '企业发展部可牵头协调编制可研中的专业数据等内容。已完成。',
-          status: 1,
-          comment: ''
-        }
-      ],
+      tableData: [],
       total: 0,
       modalVisible: false
     })
@@ -166,23 +119,23 @@ export default {
         ...state.querys
       }
       const result = await getTaskListReq(params)
-      // state.tableData = result.data.data
-      // state.total = result.data.total
+      state.tableData = result.data.list
+      state.total = result.data.total
     }
     const handleQuery = (query) => {
-      console.log(query)
       state.query = query
       getSuperviseList()
     }
     const createTask = () => {
       state.modalVisible = true
       state.modalType = 'add'
+      state.formData = {}
     }
     watch(
       () => state.page, //监听分页器的变化
       (val) => {
         state.page = { ...val }
-        getSuperviseList()
+        // getSuperviseList()
       },
       {
         immediate: true
@@ -198,14 +151,19 @@ export default {
     )
     // 弹窗里确定按钮触发
     const handleCommit = async (form) => {
-      const result = state.modalType === 'add' ? await createTaskReq(form) : updateTaskReq(form)
+      state.modalType === 'add' ? await createTaskReq(form) : updateTaskReq(form)
       state.page = {
-        pageNum: 1,
+        pageNum: 0,
         pageSize: 10
       }
-
+      ElMessage({
+        message: '操作成功！',
+        type: 'info'
+      })
+      getSuperviseList()
       state.modalVisible = false
     }
+
     const updateTask = (row) => {
       state.modalType = 'update'
       state.modalVisible = true
@@ -224,6 +182,7 @@ export default {
     const setFinish = () => {}
 
     getSuperviseList()
+
     const handlePageChange = () => {}
     const handleSizeChange = () => {}
     return {

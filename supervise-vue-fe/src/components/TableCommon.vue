@@ -10,6 +10,7 @@
         <span v-if="item.prop === 'status'" :class="getClassName(row)">{{
           getStatusName(row)
         }}</span>
+        <span v-if="item.prop === 'category'">{{ getCategoryName(row) }}</span>
       </template></el-table-column
     >
 
@@ -24,7 +25,7 @@
 </template>
 <script setup>
 import { computed } from 'vue'
-import { taskStatusMap } from '../constant/index'
+import { taskStatusMap, taskCategoryMap } from '../constant/index'
 const props = defineProps({
   tableData: {
     default: [],
@@ -36,9 +37,18 @@ const props = defineProps({
   }
 })
 const emits = defineEmits(['updateTask', 'deleteTask', 'setFinish'])
+
+// 转换成状态名称
 const getStatusName = computed(() => {
   return function (row) {
     return taskStatusMap[row.status]
+  }
+})
+
+// 转换成类别名称
+const getCategoryName = computed(() => {
+  return function (row) {
+    return taskCategoryMap[row.category]
   }
 })
 

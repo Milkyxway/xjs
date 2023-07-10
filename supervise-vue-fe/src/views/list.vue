@@ -50,7 +50,6 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import QueryHeader from '../components/QueryHeader.vue'
 import TaskModal from '../components/TaskModal.vue'
 import TableCommon from '../components/TableCommon.vue'
-import { taskStatusMap } from '../constant/index'
 import { getTaskListReq, createTaskReq, updateTaskReq, deleteTaskReq } from '../api/list'
 export default {
   components: {
@@ -113,7 +112,7 @@ export default {
 
       tableData: [
         {
-          category: 1,
+          category: 3,
           taskContent:
             '在营销政策上建议给长期在网或充值额度高的忠实用户给予更多关怀，可以赠送一些小礼品等。',
           group: 1,
@@ -122,7 +121,7 @@ export default {
           comment: ''
         },
         {
-          category: 1,
+          category: 5,
           taskContent:
             '在营销政策上建议给长期在网或充值额度高的忠实用户给予更多关怀，可以赠送一些小礼品等。',
           group: 1,
@@ -131,7 +130,7 @@ export default {
           comment: ''
         },
         {
-          category: 1,
+          category: 6,
           taskContent:
             '今年出台奖励措施，智慧广电第一年是10%，第二年降到2%，考虑3年以后还要续签，建议提高奖励，便于长久维系客户关系。',
           group: 1,
@@ -141,7 +140,7 @@ export default {
           comment: ''
         },
         {
-          category: 1,
+          category: 7,
           taskContent: '政企部与市场部联手做好宣传推广，支撑政企业务宣传。',
           group: 1,
           taskGoal: '已完成，4月份政企部提供政企全业务素材至市场部。',
@@ -166,7 +165,7 @@ export default {
         ...state.page,
         ...state.querys
       }
-      // const result = await getTaskListReq(params)
+      const result = await getTaskListReq(params)
       // state.tableData = result.data.data
       // state.total = result.data.total
     }

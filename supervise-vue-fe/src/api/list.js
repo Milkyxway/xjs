@@ -3,7 +3,7 @@ import { request } from '../request'
 // 查询任务列表
 export const getTaskListReq = (params) => {
   return request({
-    url: '/market/api/file/upload/access',
+    url: '/api/task/list',
     method: 'get',
     params
   })
@@ -12,8 +12,8 @@ export const getTaskListReq = (params) => {
 // 新建任务
 export const createTaskReq = (params) => {
   return request({
-    url: '/market/api/file/upload/access',
-    method: 'get',
+    url: '/api/task/add',
+    method: 'post',
     params
   })
 }
@@ -21,8 +21,8 @@ export const createTaskReq = (params) => {
 // 修改任务
 export const updateTaskReq = (params) => {
   return request({
-    url: '/market/api/file/upload/access',
-    method: 'get',
+    url: '/api/task/update',
+    method: 'put',
     params
   })
 }
@@ -30,8 +30,8 @@ export const updateTaskReq = (params) => {
 // 删除任务
 export const deleteTaskReq = (params) => {
   return request({
-    url: '/market/api/file/upload/access',
-    method: 'get',
+    url: '/api/task/delete',
+    method: 'delete',
     params
   })
 }

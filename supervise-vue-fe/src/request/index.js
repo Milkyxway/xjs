@@ -1,18 +1,17 @@
 import axios from 'axios'
 import router from '../router'
-import { ElMessage } from 'element-plus'
-
+import { toast } from '../util/toast'
 export const request = createRequest()
 function createRequest() {
   const request = axios.create({
-    baseURL: `http://127.0.0.1:7002`,
+    baseURL: `http://127.0.0.1:7001`,
     headers: {
       common: {
         ['Cache-Control']: 'no-cache'
         // ["Authorization"]: defaultEmptyParam([authorization.value]),
       },
       post: {
-        ['Content-Type']: 'application/x-www-form-urlencoded'
+        // ['Content-Type']: 'application/x-www-form-urlencoded'
       }
     }
   })
@@ -37,19 +36,17 @@ function createRequest() {
     (res) => {
       const { code, msg } = res.data
 
-      if (code === 200) return res.data
-
-      if (code === 401) {
+      if (code === 200) {
+        return res.data
+      } else if (code === 401) {
         router.replace('/login')
+      } else {
+        toast(msg, 'error')
+        return Promise.reject(msg || '网络错误')
       }
-
-      // toast(msg || "网络错误", "warning");
-
-      return Promise.reject(msg || '网络错误')
     },
     (err) => {
-      // toast(err.msg || "网络错误", "warning");
-
+      toast(err.msg || '网络错误', 'error')
       return Promise.reject(err)
     }
   )

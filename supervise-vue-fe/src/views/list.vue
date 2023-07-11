@@ -10,11 +10,16 @@
           @deleteTask="deleteTask"
           @setFinish="setFinish"
         />
+
         <el-pagination
-          layout="prev, pager, next"
-          :total="tableData.length"
+          v-model:current-page="currentPage"
+          v-model:page-size="page.pageSize"
+          :page-sizes="[10, 20, 30, 40]"
+          :small="small"
+          layout="sizes, prev, pager, next"
+          :total="total"
           @size-change="handleSizeChange"
-          @page-change="handlePageChange"
+          @current-change="handlePageChange"
         />
       </el-tab-pane>
       <el-tab-pane label="所有" name="all">
@@ -27,9 +32,10 @@
         />
         <el-pagination
           layout="prev, pager, next"
-          :total="tableData.length"
+          :page-sizes="[20, 40, 60, 80]"
+          :total="total"
           @size-change="handleSizeChange"
-          @page-change="handlePageChange"
+          @current-change="handlePageChange"
         />
       </el-tab-pane>
     </el-tabs>
@@ -46,11 +52,12 @@
 
 <script>
 import { toRefs, reactive, watch } from 'vue'
-import { ElMessage, ElLoading, ElMessageBox } from 'element-plus'
+import { ElMessageBox } from 'element-plus'
 import QueryHeader from '../components/QueryHeader.vue'
 import TaskModal from '../components/TaskModal.vue'
 import TableCommon from '../components/TableCommon.vue'
 import { getTaskListReq, createTaskReq, updateTaskReq, deleteTaskReq } from '../api/list'
+import { toast } from '../util/toast'
 export default {
   components: {
     QueryHeader,
@@ -110,6 +117,7 @@ export default {
       ],
       tableData: [],
       total: 0,
+      currentPage: 1,
       modalVisible: false
     })
 
@@ -121,6 +129,7 @@ export default {
       const result = await getTaskListReq(params)
       state.tableData = result.data.list
       state.total = result.data.total
+      state.currentPage = 1
     }
     const handleQuery = (query) => {
       state.query = query
@@ -131,16 +140,6 @@ export default {
       state.modalType = 'add'
       state.formData = {}
     }
-    watch(
-      () => state.page, //监听分页器的变化
-      (val) => {
-        state.page = { ...val }
-        // getSuperviseList()
-      },
-      {
-        immediate: true
-      }
-    )
 
     // 监听切换tab 刷新list
     watch(
@@ -149,6 +148,7 @@ export default {
         console.log(val, 'changetab')
       }
     )
+
     // 弹窗里确定按钮触发
     const handleCommit = async (form) => {
       state.modalType === 'add' ? await createTaskReq(form) : updateTaskReq(form)
@@ -156,10 +156,7 @@ export default {
         pageNum: 0,
         pageSize: 10
       }
-      ElMessage({
-        message: '操作成功！',
-        type: 'info'
-      })
+      toast()
       getSuperviseList()
       state.modalVisible = false
     }
@@ -169,13 +166,21 @@ export default {
       state.modalVisible = true
       state.formData = { ...row }
     }
-    const deleteTask = async () => {
-      const result = await deleteTaskReq({})
-      getSuperviseList()
-      // ElMessageBox.confirm('It will permanently delete the file. Continue?', 'Warning', {
-      //   type: 'warning',
-      //   icon: markRaw(Delete)
-      // })
+
+    const deleteTask = async (row) => {
+      const { taskId } = row
+      ElMessageBox.confirm('确定要删除这项专项任务吗?', '警告', {
+        type: 'warning',
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        callback: async (action) => {
+          if (action === 'confirm') {
+            const result = await deleteTaskReq({ taskId })
+            toast()
+            getSuperviseList()
+          }
+        }
+      })
     }
 
     // 置为完成
@@ -183,8 +188,15 @@ export default {
 
     getSuperviseList()
 
-    const handlePageChange = () => {}
-    const handleSizeChange = () => {}
+    const handlePageChange = (val) => {
+      state.page.pageNum = val - 1
+      state.currentPage = val
+      getSuperviseList()
+    }
+    const handleSizeChange = (val) => {
+      state.page.pageSize = val
+      getSuperviseList()
+    }
     return {
       ...toRefs(state),
       getSuperviseList,

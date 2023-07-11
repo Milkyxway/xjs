@@ -71,10 +71,10 @@ const getClassName = computed(() => {
 const updateTask = (row) => {
   emits('updateTask', row)
 }
-const deleteTask = () => {
-  emits('updateTask', row)
+const deleteTask = (row) => {
+  emits('deleteTask', row)
 }
-const setFinish = () => {
+const setFinish = (row) => {
   emits('setFinish', row)
 }
 </script>

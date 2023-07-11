@@ -94,7 +94,7 @@ let form = reactive({
   taskContent: '',
   orgnization: '',
   taskGoal: '',
-  status: '',
+  status: 0,
   comment: ''
 })
 const inputProps = ref({

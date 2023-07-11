@@ -74,12 +74,14 @@ export default {
       },
       querys: {},
       formData: {
-        category: '',
+        category: null,
         taskContent: '',
-        orgnization: '',
+        leadOrg: null,
+        assistOrg: null,
         taskGoal: '',
-        status: '',
-        comment: ''
+        status: null,
+        comment: '',
+        createTime: null
       },
       tableColumns: [
         {
@@ -96,11 +98,11 @@ export default {
         },
         {
           columnName: '牵头责任部门',
-          prop: 'orgnization'
+          prop: 'leadOrg'
         },
         {
           columnName: '协办部门',
-          prop: 'assist'
+          prop: 'assistOrg'
         },
         {
           columnName: '完成计划',
@@ -132,7 +134,10 @@ export default {
       state.currentPage = 1
     }
     const handleQuery = (query) => {
-      state.query = query
+      state.querys = {
+        ...query
+      }
+
       getSuperviseList()
     }
     const createTask = () => {

@@ -46,7 +46,7 @@ function createRequest() {
       }
     },
     (err) => {
-      toast(err.msg || '网络错误', 'error')
+      toast(err.message || '网络错误', 'error')
       return Promise.reject(err)
     }
   )

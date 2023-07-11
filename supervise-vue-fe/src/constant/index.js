@@ -75,4 +75,187 @@ const taskCategoryMap = {
   9: '组织人事'
 }
 
-export { taskStatusMap, taskStatusList, taskCategory, taskCategoryMap }
+const orgnizationTree = [
+  {
+    value: 1,
+    label: '综合管理部'
+  },
+  {
+    value: 2,
+    label: '党群工作部'
+  },
+  {
+    value: 3,
+    label: '人力资源部'
+  },
+  {
+    value: 4,
+    label: '财务资产部'
+  },
+  {
+    value: 5,
+    label: '企业发展部'
+  },
+  {
+    value: 6,
+    label: '市场运营部'
+  },
+  {
+    value: 7,
+    label: '政企客户部'
+  },
+  {
+    value: 8,
+    label: '公众客户部'
+  },
+  {
+    value: 9,
+    label: '技术支撑部'
+  },
+  {
+    value: 10,
+    label: '工程建设部'
+  },
+  {
+    value: 11,
+    label: '安播运维部'
+  },
+  {
+    value: 12,
+    label: '锡山广电中心'
+  },
+  {
+    value: 13,
+    label: '惠山广电中心'
+  },
+  {
+    value: 14,
+    label: '滨湖广电中心'
+  },
+  {
+    value: 15,
+    label: '经开广电中心'
+  },
+  {
+    value: 16,
+    label: '新吴广电中心'
+  },
+  {
+    value: 17,
+    label: '梁溪广电中心'
+  },
+  {
+    value: 18,
+    label: '安镇广电网络管理站'
+  },
+  {
+    value: 19,
+    label: '东亭广电网络管理站'
+  },
+  {
+    value: 20,
+    label: '东北塘广电网络管理站'
+  },
+  {
+    value: 21,
+    label: '羊尖广电网络管理站'
+  },
+  {
+    value: 22,
+    label: '锡北广电网络管理站'
+  },
+  {
+    value: 23,
+    label: '东港广电网络管理站'
+  },
+  {
+    value: 24,
+    label: '钱桥阳山广电网络管理站'
+  },
+  {
+    value: 25,
+    label: '洛社广电网络管理站'
+  },
+  {
+    value: 26,
+    label: '堰桥长安广电网络管理站'
+  },
+  {
+    value: 27,
+    label: '前洲玉祁长安广电网络管理站'
+  },
+  {
+    value: 28,
+    label: '山北黄巷广电网络管理站'
+  },
+  {
+    value: 29,
+    label: '太湖滨湖黄巷广电网络管理站'
+  },
+  {
+    value: 30,
+    label: '华庄广电网络管理站'
+  },
+  {
+    value: 31,
+    label: '马山广电网络管理站'
+  },
+  {
+    value: 32,
+    label: '胡埭广电网络管理站'
+  },
+  {
+    value: 33,
+    label: '河埒广电网络管理站'
+  },
+  {
+    value: 34,
+    label: '蠡园广电网络管理站'
+  },
+  {
+    value: 35,
+    label: '鸿山梅村广电网络管理站'
+  },
+  {
+    value: 36,
+    label: '硕放西南广电网络管理站'
+  },
+  {
+    value: 37,
+    label: '鹅湖广电网络管理站'
+  },
+  {
+    value: 38,
+    label: '旺庄广电网络管理站'
+  },
+  {
+    value: 39,
+    label: '江溪广益扬名广电网络管理站'
+  },
+  {
+    value: 40,
+    label: '湖滨广电网络管理站'
+  },
+  {
+    value: 41,
+    label: '崇安广电网络管理站'
+  },
+  {
+    value: 42,
+    label: '盛岸广电网络管理站'
+  },
+  {
+    value: 43,
+    label: '长江路广电网络管理站'
+  },
+  {
+    value: 44,
+    label: '中桥广电网络管理站'
+  },
+  {
+    value: 45,
+    label: '北塘广电网络管理站'
+  }
+]
+
+export { taskStatusMap, taskStatusList, taskCategory, taskCategoryMap, orgnizationTree }

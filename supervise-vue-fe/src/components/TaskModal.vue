@@ -52,13 +52,8 @@
           ></el-select
         >
       </el-form-item>
-      <el-form-item
-        label="协办部门"
-        :label-width="formLabelWidth"
-        prop="assistOrg"
-        :rules="rules('请选择协办部门')"
-      >
-        <el-select v-model="form.assistOrg" placeholder="请选择协办部门" clearable
+      <el-form-item label="协办部门" :label-width="formLabelWidth" prop="assistOrg">
+        <el-select v-model="form.assistOrg" placeholder="请选择协办部门" clearable multiple
           ><el-option
             v-for="item in orgnizationList"
             :label="item.label"
@@ -68,10 +63,8 @@
           ></el-select
         >
       </el-form-item>
-      <!-- <el-form-item label="是否有子任务">
-        <el-switch v-model="form.childTask"></el-switch>
-      </el-form-item> -->
-      <el-form-item label="任务目标" :label-width="formLabelWidth" prop="taskGoal">
+
+      <!-- <el-form-item label="任务目标" :label-width="formLabelWidth" prop="taskGoal">
         <el-input
           :autosize="inputProps.autoSize"
           :type="inputProps.type"
@@ -79,15 +72,15 @@
           :placeholder="inputProps.placeHolder"
           v-model="form.taskGoal"
         />
-      </el-form-item>
-      <el-form-item
+      </el-form-item> -->
+      <!-- <el-form-item
         label="完成计划"
         :label-width="formLabelWidth"
         prop="deadline"
         :rules="rules('请选择完成计划')"
       >
         <el-date-picker></el-date-picker>
-      </el-form-item>
+      </el-form-item> -->
       <!-- <el-form-item label="任务状态" :label-width="formLabelWidth" prop="status">
         <el-select v-model="form.status" placeholder="请选择"
           ><el-option
@@ -192,9 +185,14 @@ const handleCommit = () => {
   formRef.value
     .validate()
     .then((res) => {
-      emit('handleCommit', form)
+      emit('handleCommit', {
+        ...form,
+        assistOrg: form.assistOrg ? form.assistOrg.join(',') : ''
+      })
     })
-    .catch((err) => {})
+    .catch((err) => {
+      console.log(err)
+    })
 }
 </script>
 <style scoped>

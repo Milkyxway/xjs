@@ -4,7 +4,7 @@
       <el-form :model="formData" ref="loginFormRef">
         <el-form-item><div>无锡分公司专项任务督办管理平台</div></el-form-item>
         <el-form-item
-          prop="account"
+          prop="username"
           :label="accountProps.label"
           :rules="[
             {
@@ -14,7 +14,7 @@
             }
           ]"
         >
-          <el-input :placeholder="accountProps.placeHolder" v-model="formData.account"></el-input>
+          <el-input :placeholder="accountProps.placeHolder" v-model="formData.username"></el-input>
         </el-form-item>
         <el-form-item
           prop="password"
@@ -45,7 +45,7 @@ const { userInfo } = storeToRefs(authStore)
 const { loginFn, setUserInfo } = authStore
 const loginFormRef = ref()
 const formData = ref({
-  account: '',
+  username: '',
   password: ''
 })
 const accountProps = ref({
@@ -66,9 +66,8 @@ const login = () => {
   loginFormRef.value
     .validate()
     .then(async (res) => {
-      // const result = await loginReq(formData)
-      // loginFn(result.data.data)
-      setUserInfo(formData)
+      const result = await loginReq(formData.value)
+
       router.replace('/list')
     })
     .catch((err) => {

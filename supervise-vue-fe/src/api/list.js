@@ -18,7 +18,11 @@ export const createTaskReq = (data) => {
   })
 }
 
-// 修改任务
+/**
+ * 修改任务
+ * @param {*} data
+ * @returns
+ */
 export const updateTaskReq = (data) => {
   return request({
     url: '/api/task/update',
@@ -27,11 +31,28 @@ export const updateTaskReq = (data) => {
   })
 }
 
-// 删除任务
+/**
+ * 删除任务
+ * @param {*} data
+ * @returns
+ */
 export const deleteTaskReq = (data) => {
   return request({
     url: '/api/task/delete',
     method: 'delete',
+    data
+  })
+}
+
+/**
+ * 置为完成
+ * @param {*} data
+ * @returns
+ */
+export const taskSetFinishReq = (data) => {
+  return request({
+    url: '/api/task/finish',
+    method: 'put',
     data
   })
 }

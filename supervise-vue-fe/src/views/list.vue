@@ -9,6 +9,7 @@
           @updateTask="updateTask"
           @deleteTask="deleteTask"
           @setFinish="setFinish"
+          @checkTask="checkTask"
         />
 
         <el-pagination
@@ -56,7 +57,13 @@ import { ElMessageBox } from 'element-plus'
 import QueryHeader from '../components/QueryHeader.vue'
 import TaskModal from '../components/TaskModal.vue'
 import TableCommon from '../components/TableCommon.vue'
-import { getTaskListReq, createTaskReq, updateTaskReq, deleteTaskReq } from '../api/list'
+import {
+  getTaskListReq,
+  createTaskReq,
+  updateTaskReq,
+  deleteTaskReq,
+  taskSetFinishReq
+} from '../api/list'
 import { toast } from '../util/toast'
 export default {
   components: {
@@ -169,7 +176,10 @@ export default {
     const updateTask = (row) => {
       state.modalType = 'update'
       state.modalVisible = true
-      state.formData = { ...row }
+      state.formData = {
+        ...row,
+        assistOrg: row.assistOrg === '' ? [] : row.assistOrg.split(',').map((i) => Number(i))
+      }
     }
 
     const deleteTask = async (row) => {
@@ -189,7 +199,11 @@ export default {
     }
 
     // 置为完成
-    const setFinish = () => {}
+    const setFinish = async (item) => {
+      const result = await taskSetFinishReq(item)
+      toast()
+      getSuperviseList()
+    }
 
     getSuperviseList()
 
@@ -202,6 +216,8 @@ export default {
       state.page.pageSize = val
       getSuperviseList()
     }
+
+    const checkTask = () => {}
     return {
       ...toRefs(state),
       getSuperviseList,
@@ -212,7 +228,8 @@ export default {
       deleteTask,
       handlePageChange,
       handleSizeChange,
-      setFinish
+      setFinish,
+      checkTask
     }
   }
 }

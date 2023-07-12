@@ -11,21 +11,26 @@
           getStatusName(row)
         }}</span>
         <span v-if="item.prop === 'category'">{{ getCategoryName(row) }}</span>
+        <span v-if="item.prop === 'leadOrg'">{{ getLeadOrg(row) }}</span>
+        <span v-if="item.prop === 'assistOrg'">{{ getAssistOrg(row) }}</span>
       </template></el-table-column
     >
 
     <el-table-column fixed="right" label="操作" width="120">
       <template #default="{ row }">
+        <el-button link type="primary" size="small" @click="checkTask(row)">查看</el-button>
         <el-button link type="primary" size="small" @click="updateTask(row)">修改</el-button>
         <el-button link type="primary" size="small" @click="deleteTask(row)">删除</el-button>
-        <el-button link type="primary" size="small" @click="setFinish(row)">置为完成</el-button>
+        <el-button link type="primary" size="small" @click="setFinish(row)" v-if="row.status !== 4"
+          >置为完成</el-button
+        >
       </template>
     </el-table-column>
   </el-table>
 </template>
 <script setup>
 import { computed } from 'vue'
-import { taskStatusMap, taskCategoryMap } from '../constant/index'
+import { taskStatusMap, taskCategoryMap, orgnizationTree } from '../constant/index'
 const props = defineProps({
   tableData: {
     default: [],
@@ -56,16 +61,40 @@ const getClassName = computed(() => {
   return function (row) {
     let className = ''
     switch (row.status) {
-      case 1:
-        className = 'status-finish'
+      case 1: //
+        className = 'status-confirm'
         break
       case 2:
-        className = 'status-pending'
+        className = 'status-adjust'
+        break
+      case 3:
+        className = 'status-processing'
+        break
+      case 4:
+        className = 'status-finish'
         break
       default:
         break
     }
     return className
+  }
+})
+
+const getLeadOrg = computed(() => {
+  return function (row) {
+    return orgnizationTree.filter((i) => i.value === row.leadOrg)[0].label
+  }
+})
+
+const getAssistOrg = computed(() => {
+  return function (row) {
+    if (row.assistOrg == '' || !row.assistOrg.length) return ''
+    const assistOrgList = row.assistOrg.split(',')
+    return assistOrgList
+      .map((i) => {
+        return orgnizationTree.filter((treeItem) => treeItem.value == i)[0].label
+      })
+      .join(',')
   }
 })
 const updateTask = (row) => {
@@ -77,12 +106,22 @@ const deleteTask = (row) => {
 const setFinish = (row) => {
   emits('setFinish', row)
 }
+
+const checkTask = (row) => {
+  emits('checkTask', row)
+}
 </script>
 <style scoped>
 .status-finish {
   color: #67c23a;
 }
-.status-pending {
+.status-processing {
   color: #e6a23c;
+}
+.status-confirm {
+  color: #f56c6c;
+}
+.status-adjust {
+  color: #b1b3b8;
 }
 </style>

@@ -34,15 +34,15 @@ function createRequest() {
   // response拦截
   request.interceptors.response.use(
     (res) => {
-      const { code, msg } = res.data
+      const { code, errMsg } = res.data
 
       if (code === 200) {
         return res.data
       } else if (code === 401) {
         router.replace('/login')
       } else {
-        toast(msg, 'error')
-        return Promise.reject(msg || '网络错误')
+        toast(errMsg, 'error')
+        return Promise.reject(errMsg || '网络错误')
       }
     },
     (err) => {

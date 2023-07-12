@@ -18,10 +18,21 @@
 
     <el-table-column fixed="right" label="操作" width="120">
       <template #default="{ row }">
-        <el-button link type="primary" size="small" @click="checkTask(row)">查看</el-button>
-        <el-button link type="primary" size="small" @click="updateTask(row)">修改</el-button>
-        <el-button link type="primary" size="small" @click="deleteTask(row)">删除</el-button>
-        <el-button link type="primary" size="small" @click="setFinish(row)" v-if="row.status !== 4"
+        <el-button link type="primary" size="small" @click="checkTask(row)" v-if="commonAuth"
+          >查看</el-button
+        >
+        <el-button link type="primary" size="small" @click="updateTask(row)" v-if="adminAuth"
+          >修改</el-button
+        >
+        <el-button link type="primary" size="small" @click="deleteTask(row)" v-if="adminAuth"
+          >删除</el-button
+        >
+        <el-button
+          link
+          type="primary"
+          size="small"
+          @click="setFinish(row)"
+          v-if="row.status !== 4 && adminAuth"
           >置为完成</el-button
         >
       </template>
@@ -29,8 +40,13 @@
   </el-table>
 </template>
 <script setup>
+import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
 import { taskStatusMap, taskCategoryMap, orgnizationTree } from '../constant/index'
+import { userLoginStore } from '../stores/login'
+import { orgnizationListIdToName, orgnizationToName } from '../util/orgnization'
+const authStore = userLoginStore()
+const { userInfo } = storeToRefs(authStore)
 const props = defineProps({
   tableData: {
     default: [],
@@ -82,21 +98,27 @@ const getClassName = computed(() => {
 
 const getLeadOrg = computed(() => {
   return function (row) {
-    return orgnizationTree.filter((i) => i.value === row.leadOrg)[0].label
+    return orgnizationToName(row.leadOrg)
+    // return orgnizationTree.filter((i) => i.value === row.leadOrg)[0].label
   }
 })
 
 const getAssistOrg = computed(() => {
   return function (row) {
-    if (row.assistOrg == '' || !row.assistOrg.length) return ''
-    const assistOrgList = row.assistOrg.split(',')
-    return assistOrgList
-      .map((i) => {
-        return orgnizationTree.filter((treeItem) => treeItem.value == i)[0].label
-      })
-      .join(',')
+    return orgnizationListIdToName(row.assistOrg)
   }
 })
+
+// 普通权限
+const commonAuth = computed(() => {
+  return userInfo.value.role !== 'admin'
+})
+
+// 管理员权限
+const adminAuth = computed(() => {
+  return userInfo.value.role === 'admin'
+})
+
 const updateTask = (row) => {
   emits('updateTask', row)
 }

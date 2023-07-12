@@ -1,5 +1,11 @@
 <script setup>
+import { storeToRefs } from 'pinia'
 import SideBar from '../components/SideBar.vue'
+import { userLoginStore } from '../stores/login'
+const authStore = userLoginStore()
+const { userInfo } = storeToRefs(authStore)
+
+const userInfoLocal = JSON.parse(localStorage.getItem('userInfo'))
 </script>
 
 <template>
@@ -8,7 +14,7 @@ import SideBar from '../components/SideBar.vue'
       <el-header
         ><span><img src="../assets/logo.png" class="logo-icon" /></span>
         <div class="user-wrap">
-          <el-icon><User /></el-icon>市场部小A
+          <el-icon><User /></el-icon>{{ userInfoLocal.username }}
         </div></el-header
       >
       <el-container>

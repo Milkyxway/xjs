@@ -65,6 +65,7 @@ import {
   taskSetFinishReq
 } from '../api/list'
 import { toast } from '../util/toast'
+import router from '../router'
 export default {
   components: {
     QueryHeader,
@@ -217,7 +218,15 @@ export default {
       getSuperviseList()
     }
 
-    const checkTask = () => {}
+    const checkTask = (row) => {
+      router.push({
+        path: '/detail',
+        query: {
+          taskId: row.taskId
+        }
+      })
+    }
+
     return {
       ...toRefs(state),
       getSuperviseList,

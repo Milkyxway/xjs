@@ -56,3 +56,16 @@ export const taskSetFinishReq = (data) => {
     data
   })
 }
+
+/**
+ * 查询任务详情
+ * @param {*} data
+ * @returns
+ */
+export const taskDetailReq = (data) => {
+  return request({
+    url: '/api/task/detail',
+    method: 'post',
+    data
+  })
+}

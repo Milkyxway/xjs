@@ -39,6 +39,7 @@ import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { loginReq } from '../api/login'
 import router from '../router'
+import { setLocalStore } from '../util/localStorage'
 import { userLoginStore } from '../stores/login'
 const authStore = userLoginStore()
 const { userInfo } = storeToRefs(authStore)
@@ -67,7 +68,7 @@ const login = () => {
     .validate()
     .then(async (res) => {
       const result = await loginReq(formData.value)
-
+      setLocalStore('userInfo', result.data.userInfo)
       router.replace('/list')
     })
     .catch((err) => {

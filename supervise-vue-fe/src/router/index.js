@@ -24,7 +24,7 @@ const router = createRouter({
           name: 'auth'
         },
         {
-          path: '/detail',
+          path: '/detail/:taskId',
           name: 'detail',
           component: () => import('../views/detail.vue')
         }

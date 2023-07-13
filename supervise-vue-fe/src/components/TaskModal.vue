@@ -3,7 +3,7 @@
     :show-close="false"
     :close-on-press-escape="false"
     v-model="props.modalVisible"
-    :title="props.modalType === 'add' ? '新建任务' : '修改任务'"
+    :title="getModalTitle"
   >
     <el-form :model="form" ref="formRef">
       <el-form-item
@@ -12,7 +12,7 @@
         prop="category"
         :rules="rules('请选择任务类别')"
       >
-        <el-select v-model="form.category" placeholder="请选择"
+        <el-select v-model="form.category" placeholder="请选择" :disabled="disableCondition"
           ><el-option
             v-for="(item, index) in taskCategoryList"
             v-bind:key="index"
@@ -34,6 +34,7 @@
           :autocomplete="inputProps.autocomplete"
           :placeholder="inputProps.placeHolder"
           v-model="form.taskContent"
+          :disabled="disableCondition"
         />
       </el-form-item>
       <el-form-item
@@ -42,7 +43,11 @@
         prop="leadOrg"
         :rules="rules('请选择责任部门')"
       >
-        <el-select v-model="form.leadOrg" placeholder="请选择责任部门" clearable
+        <el-select
+          v-model="form.leadOrg"
+          placeholder="请选择责任部门"
+          clearable
+          :disabled="disableCondition"
           ><el-option
             v-for="item in orgnizationList"
             :label="item.label"
@@ -53,7 +58,12 @@
         >
       </el-form-item>
       <el-form-item label="协办部门" :label-width="formLabelWidth" prop="assistOrg">
-        <el-select v-model="form.assistOrg" placeholder="请选择协办部门" clearable multiple
+        <el-select
+          v-model="form.assistOrg"
+          placeholder="请选择协办部门"
+          clearable
+          multiple
+          :disabled="disableCondition"
           ><el-option
             v-for="item in orgnizationList"
             :label="item.label"
@@ -92,7 +102,29 @@
           ></el-select
         >
       </el-form-item> -->
-      <el-form-item label="备注" :label-width="formLabelWidth" prop="comment">
+      <el-form-item
+        label="申诉类型"
+        :label-width="formLabelWidth"
+        prop="appealType"
+        v-if="modalType === 'appeal'"
+        :rules="[{ required: modalType === 'appeal', message: '请选择申诉类型' }]"
+      >
+        <el-select placeholder="请选择申诉类型" v-model="formData.appealType">
+          <el-option
+            v-for="item in appealCategory"
+            :label="item.label"
+            :value="item.value"
+            v-bind:key="item.key"
+            >{{ item.label }}</el-option
+          >
+        </el-select>
+      </el-form-item>
+      <el-form-item
+        label="备注"
+        :label-width="formLabelWidth"
+        prop="comment"
+        :rules="[{ required: modalType === 'appeal', message: '请输入申诉内容' }]"
+      >
         <el-input
           :autosize="inputProps.autoSize"
           :type="inputProps.type"
@@ -113,7 +145,7 @@
 
 <script setup>
 import { reactive, ref, watch, computed } from 'vue'
-import { taskStatusList, taskCategory, orgnizationTree } from '../constant/index'
+import { taskStatusList, taskCategory, orgnizationTree, appealCategory } from '../constant/index'
 const props = defineProps({
   modalVisible: {
     default: false,
@@ -153,7 +185,8 @@ let form = reactive({
   comment: '',
   childTask: true,
   leadOrg: '',
-  assistOrg: ''
+  assistOrg: '',
+  appealType: ''
 })
 
 const formRef = ref()
@@ -178,6 +211,26 @@ watch(
   }
 )
 
+const getModalTitle = computed(() => {
+  let title = ''
+  switch (props.modalType) {
+    case 'add':
+      title = '创建任务'
+      break
+    case 'update':
+      title = '修改任务'
+      break
+    case 'appeal':
+      title = '申诉任务'
+      break
+    default:
+      break
+  }
+  return title
+})
+const disableCondition = computed(() => {
+  return props.modalType === 'appeal'
+})
 const handleCancel = () => {
   emit('handleCancel')
 }

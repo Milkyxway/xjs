@@ -18,13 +18,28 @@
 
     <el-table-column fixed="right" label="操作" width="120">
       <template #default="{ row }">
-        <el-button link type="primary" size="small" @click="checkTask(row)" v-if="commonAuth"
+        <el-button
+          link
+          type="primary"
+          size="small"
+          @click="checkTask(row)"
+          v-showByAuth="{ role, showCondition: 'section' }"
           >查看</el-button
         >
-        <el-button link type="primary" size="small" @click="updateTask(row)" v-if="adminAuth"
+        <el-button
+          link
+          type="primary"
+          size="small"
+          @click="updateTask(row)"
+          v-showByAuth="{ role, showCondition: 'admin' }"
           >修改</el-button
         >
-        <el-button link type="primary" size="small" @click="deleteTask(row)" v-if="adminAuth"
+        <el-button
+          link
+          type="primary"
+          size="small"
+          @click="deleteTask(row)"
+          v-showByAuth="{ role, showCondition: 'admin' }"
           >删除</el-button
         >
         <el-button
@@ -32,7 +47,7 @@
           type="primary"
           size="small"
           @click="setFinish(row)"
-          v-if="row.status !== 4 && adminAuth"
+          v-showByAuth="{ role, showCondition: 'admin' }"
           >置为完成</el-button
         >
       </template>
@@ -43,6 +58,7 @@
 import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
 import { taskStatusMap, taskCategoryMap, orgnizationTree } from '../constant/index'
+import { getLocalStore } from '../util/localStorage'
 import { userLoginStore } from '../stores/login'
 import { orgnizationListIdToName, orgnizationToName } from '../util/orgnization'
 const authStore = userLoginStore()
@@ -58,7 +74,7 @@ const props = defineProps({
   }
 })
 const emits = defineEmits(['updateTask', 'deleteTask', 'setFinish'])
-
+const role = getLocalStore('userInfo').role
 // 转换成状态名称
 const getStatusName = computed(() => {
   return function (row) {

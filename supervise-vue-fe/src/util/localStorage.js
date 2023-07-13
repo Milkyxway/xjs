@@ -3,5 +3,9 @@ export const getLocalStore = (key) => {
 }
 
 export const setLocalStore = (key, val) => {
-  setLocalStore(key, JSON.stringify(val))
+  localStorage.setItem(key, JSON.stringify(val))
+}
+
+export const rmLocalStore = (key) => {
+  localStorage.removeItem(key)
 }

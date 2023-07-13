@@ -268,4 +268,30 @@ const orgnizationTree = [
   }
 ]
 
-export { taskStatusMap, taskStatusList, taskCategory, taskCategoryMap, orgnizationTree }
+const appealCategory = [
+  {
+    label: '任务表述调整',
+    value: 1
+  },
+  {
+    label: '非问题仅需解释',
+    value: 2
+  },
+  {
+    label: '暂时无法解决，需持续跟进',
+    value: 3
+  },
+  {
+    label: '已完成',
+    value: 4
+  }
+]
+
+export {
+  taskStatusMap,
+  taskStatusList,
+  taskCategory,
+  taskCategoryMap,
+  orgnizationTree,
+  appealCategory
+}

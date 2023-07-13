@@ -71,14 +71,18 @@
     <div class="btn-wrap">
       <el-button @click="reset" plain>重置查询</el-button>
       <el-button @click="handleQuery" type="primary" plain>查询</el-button>
-      <el-button @click="createTask" type="primary">新建任务</el-button>
+      <el-button @click="createTask" type="primary" v-showByAuth="{ role, showCondition: 'admin' }"
+        >新建任务</el-button
+      >
     </div>
   </div>
 </template>
 <script setup>
 import { ref, reactive } from 'vue'
 import { taskStatusList, taskCategory, orgnizationTree } from '../constant'
+import { getLocalStore } from '../util/localStorage'
 const emit = defineEmits(['handleQuery', 'createTask'])
+const role = getLocalStore('userInfo').role
 let queryForm = reactive({
   category: null,
   status: null,

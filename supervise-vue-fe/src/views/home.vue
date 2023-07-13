@@ -1,11 +1,17 @@
 <script setup>
 import { storeToRefs } from 'pinia'
 import SideBar from '../components/SideBar.vue'
+import router from '../router'
+import { rmLocalStore, getLocalStore } from '../util/localStorage'
 import { userLoginStore } from '../stores/login'
 const authStore = userLoginStore()
 const { userInfo } = storeToRefs(authStore)
 
-const userInfoLocal = JSON.parse(localStorage.getItem('userInfo'))
+const userInfoLocal = getLocalStore('userInfo')
+const logOutFn = () => {
+  rmLocalStore('userInfo')
+  router.replace('/login')
+}
 </script>
 
 <template>
@@ -13,10 +19,12 @@ const userInfoLocal = JSON.parse(localStorage.getItem('userInfo'))
     <el-container>
       <el-header
         ><span><img src="../assets/logo.png" class="logo-icon" /></span>
+
         <div class="user-wrap">
-          <el-icon><User /></el-icon>{{ userInfoLocal.username }}
-        </div></el-header
-      >
+          <el-icon><User /></el-icon><span>{{ userInfoLocal.username }}</span>
+          <span @click="logOutFn" class="logout">登出</span>
+        </div>
+      </el-header>
       <el-container>
         <el-aside width="200px">
           <SideBar></SideBar>
@@ -76,6 +84,9 @@ header {
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
+}
+.logout {
+  user-select: none;
 }
 .logo {
   display: block;

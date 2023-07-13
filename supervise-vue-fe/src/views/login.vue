@@ -36,9 +36,10 @@
 </template>
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { loginReq } from '../api/login'
-import router from '../router'
+
 import { setLocalStore } from '../util/localStorage'
 import { userLoginStore } from '../stores/login'
 const authStore = userLoginStore()
@@ -49,6 +50,7 @@ const formData = ref({
   username: '',
   password: ''
 })
+const router = useRouter()
 const accountProps = ref({
   placeHolder: '请输入账号',
   clearable: true,

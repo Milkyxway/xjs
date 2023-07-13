@@ -17,3 +17,11 @@ app.use(createPinia())
 app.use(router)
 
 app.mount('#app')
+app.directive('showByAuth', (el, binding) => {
+  // 这会在 `mounted` 和 `updated` 时都调用
+  const adminAuth = ['admin']
+  const {
+    value: { role, showCondition }
+  } = binding
+  el.style.display = role === showCondition ? 'block' : 'none'
+})

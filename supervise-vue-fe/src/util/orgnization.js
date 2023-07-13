@@ -18,5 +18,5 @@ export const orgnizationListIdToName = (str) => {
     .map((i) => {
       return orgnizationTree.filter((treeItem) => treeItem.value == i)[0].label
     })
-    .join(',')
+    .join('、')
 }

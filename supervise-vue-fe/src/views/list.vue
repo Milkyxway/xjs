@@ -54,6 +54,7 @@
 <script>
 import { toRefs, reactive, watch } from 'vue'
 import { ElMessageBox } from 'element-plus'
+import { useRouter } from 'vue-router'
 import QueryHeader from '../components/QueryHeader.vue'
 import TaskModal from '../components/TaskModal.vue'
 import TableCommon from '../components/TableCommon.vue'
@@ -65,7 +66,7 @@ import {
   taskSetFinishReq
 } from '../api/list'
 import { toast } from '../util/toast'
-import router from '../router'
+
 export default {
   components: {
     QueryHeader,
@@ -73,6 +74,7 @@ export default {
     TableCommon
   },
   setup() {
+    const router = useRouter()
     const state = reactive({
       chooseTab: 'mine',
       modalType: '',
@@ -219,12 +221,7 @@ export default {
     }
 
     const checkTask = (row) => {
-      router.push({
-        path: '/detail',
-        query: {
-          taskId: row.taskId
-        }
-      })
+      router.push(`/detail/${row.taskId}`)
     }
 
     return {

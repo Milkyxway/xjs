@@ -9,6 +9,19 @@ export const getTaskListReq = (data) => {
   })
 }
 
+/**
+ * 查询我的任务
+ * @param {*} data
+ * @returns
+ */
+export const myTaskReq = (data) => {
+  return request({
+    url: '/api/task/mine',
+    method: 'post',
+    data
+  })
+}
+
 // 新建任务
 export const createTaskReq = (data) => {
   return request({
@@ -65,6 +78,19 @@ export const taskSetFinishReq = (data) => {
 export const taskDetailReq = (data) => {
   return request({
     url: '/api/task/detail',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 对任务申诉
+ * @param {*} data
+ * @returns
+ */
+export const appealTaskReq = (data) => {
+  return request({
+    url: '/api/task/appeal',
     method: 'post',
     data
   })

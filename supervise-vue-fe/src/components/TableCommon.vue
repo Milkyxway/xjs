@@ -1,62 +1,71 @@
 <template>
-  <el-table :data="props.tableData">
-    <el-table-column
-      v-for="item in props.tableColumns"
-      :label="item.columnName"
-      :prop="item.prop"
-      :key="item.key"
-    >
-      <template #default="{ row }">
-        <span v-if="item.prop === 'status'" :class="getClassName(row)">{{
-          getStatusName(row)
-        }}</span>
-        <span v-if="item.prop === 'category'">{{ getCategoryName(row) }}</span>
-        <span v-if="item.prop === 'leadOrg'">{{ getLeadOrg(row) }}</span>
-        <span v-if="item.prop === 'assistOrg'">{{ getAssistOrg(row) }}</span>
-      </template></el-table-column
-    >
+  <div>
+    <el-table :data="props.tableData">
+      <el-table-column
+        v-for="item in props.tableColumns"
+        :label="item.columnName"
+        :prop="item.prop"
+        :key="item.key"
+      >
+        <template #default="{ row }">
+          <span v-if="item.prop === 'status'" :class="getClassName(row)">{{
+            getStatusName(row)
+          }}</span>
+          <span v-if="item.prop === 'category'">{{ getCategoryName(row) }}</span>
+          <span v-if="item.prop === 'leadOrg'">{{ getLeadOrg(row) }}</span>
+          <span v-if="item.prop === 'assistOrg'">{{ getAssistOrg(row) }}</span>
+        </template></el-table-column
+      >
 
-    <el-table-column fixed="right" label="操作" width="120">
-      <template #default="{ row }">
-        <el-button
-          link
-          type="primary"
-          size="small"
-          @click="checkTask(row)"
-          v-showByAuth="{ role, showCondition: 'section' }"
-          >查看</el-button
-        >
-        <el-button
-          link
-          type="primary"
-          size="small"
-          @click="updateTask(row)"
-          v-showByAuth="{ role, showCondition: 'admin' }"
-          >修改</el-button
-        >
-        <el-button
-          link
-          type="primary"
-          size="small"
-          @click="deleteTask(row)"
-          v-showByAuth="{ role, showCondition: 'admin' }"
-          >删除</el-button
-        >
-        <el-button
-          link
-          type="primary"
-          size="small"
-          @click="setFinish(row)"
-          v-showByAuth="{ role, showCondition: 'admin' }"
-          >置为完成</el-button
-        >
-      </template>
-    </el-table-column>
-  </el-table>
+      <el-table-column fixed="right" label="操作" width="120">
+        <template #default="{ row }">
+          <el-button
+            link
+            type="primary"
+            size="small"
+            @click="checkTask(row)"
+            v-showByAuth="{ role, showCondition: 'section' }"
+            >查看</el-button
+          >
+          <el-button
+            link
+            type="primary"
+            size="small"
+            @click="updateTask(row)"
+            v-showByAuth="{ role, showCondition: 'admin', otherCondition: row.status !== 4 }"
+            >修改</el-button
+          >
+          <el-button
+            link
+            type="primary"
+            size="small"
+            @click="deleteTask(row)"
+            v-showByAuth="{ role, showCondition: 'admin' }"
+            >删除</el-button
+          >
+          <el-button
+            link
+            type="primary"
+            size="small"
+            @click="setFinish(row)"
+            v-showByAuth="{ role, showCondition: 'admin', otherCondition: row.status !== 4 }"
+            >置为完成</el-button
+          >
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-pagination
+      v-model:current-page="state.page.pageNum"
+      v-model:page-size="state.page.pageSize"
+      :page-sizes="[10, 20, 30, 40]"
+      layout="sizes, prev, pager, next"
+      :total="props.total"
+    />
+  </div>
 </template>
 <script setup>
 import { storeToRefs } from 'pinia'
-import { computed } from 'vue'
+import { computed, reactive, watch } from 'vue'
 import { taskStatusMap, taskCategoryMap, orgnizationTree } from '../constant/index'
 import { getLocalStore } from '../util/localStorage'
 import { userLoginStore } from '../stores/login'
@@ -71,10 +80,29 @@ const props = defineProps({
   tableColumns: {
     default: [],
     type: Array
+  },
+  total: {
+    default: 0,
+    type: Number
   }
 })
-const emits = defineEmits(['updateTask', 'deleteTask', 'setFinish'])
+const emits = defineEmits(['updateTask', 'deleteTask', 'setFinish', 'changePage'])
 const role = getLocalStore('userInfo').role
+const state = reactive({
+  page: {
+    pageNum: 1,
+    pageSize: 10
+  }
+})
+
+watch(
+  () => [state.page.pageNum, state.page.pageSize],
+  (val) => {
+    console.log(val)
+    emits('changePage', { pageNum: val[0], pageSize: val[1] })
+  }
+)
+
 // 转换成状态名称
 const getStatusName = computed(() => {
   return function (row) {

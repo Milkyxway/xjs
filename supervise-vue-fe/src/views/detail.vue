@@ -12,16 +12,18 @@
       </template>
       <div class="card-content">
         <div>
-          <span class="bold space">任务类别: </span><span>{{ state.taskDetail?.category }}</span>
+          <span class="bold space">任务类别: </span
+          ><span>{{ state.taskDetail?.categoryName }}</span>
         </div>
         <div>
           <span class="bold space">任务内容: </span><span>{{ state.taskDetail.taskContent }}</span>
         </div>
         <div>
-          <span class="bold space">责任部门: </span><span>{{ state.taskDetail.leadOrg }}</span>
+          <span class="bold space">责任部门: </span><span>{{ state.taskDetail.leadOrgName }}</span>
         </div>
-        <div>
-          <span class="bold space">协办部门: </span><span>{{ state.taskDetail.assistOrg }}</span>
+        <div v-if="state.taskDetail.assistOrg !== ''">
+          <span class="bold space">协办部门: </span
+          ><span>{{ state.taskDetail.assistOrgName }}</span>
         </div>
       </div>
     </el-card>
@@ -36,19 +38,37 @@
         </div>
       </template>
       <el-form>
-        <el-form-item label="是否拆分子任务"
+        <el-form-item label="是否拆分成阶段任务"
           ><el-switch v-model="state.hasChildTasks"></el-switch
         ></el-form-item>
-        <el-form-item v-if="state.hasChildTasks" label="子任务1"
-          ><el-date-picker></el-date-picker
-          ><el-icon color="#409eff" @click="addChild"><CirclePlus /></el-icon
-        ></el-form-item>
+        <el-form-item
+          v-if="state.hasChildTasks"
+          label="阶段任务1"
+          :rules="[{ required: true, trigger: 'blur', message: '请完整填写' }]"
+        >
+          <div class="inline-wrap">
+            <div><span>完成时间</span><el-date-picker></el-date-picker></div>
+            <div>
+              <span>完成目标</span><el-input></el-input
+              ><el-icon color="#409eff" @click="addChild">
+                <CirclePlus />
+              </el-icon>
+            </div>
+          </div>
+        </el-form-item>
         <el-form-item
           v-for="(item, index) in state.childTasks"
-          :label="`子任务${index + 2}`"
+          :label="`阶段任务${index + 2}`"
           v-bind:key="index"
+          :rules="[{ required: true, trigger: 'blur', message: '请完整填写' }]"
         >
-          <el-date-picker></el-date-picker><el-icon @click="deleteChild(index)"><Delete /></el-icon>
+          <div class="inline-wrap">
+            <div><span>完成时间</span><el-date-picker></el-date-picker></div>
+            <div>
+              <span>完成目标</span><el-input></el-input>
+              <el-icon @click="deleteChild(index)"><Delete /></el-icon>
+            </div>
+          </div>
         </el-form-item>
         <el-form-item label="完成计划" v-if="!state.hasChildTasks">
           <el-date-picker></el-date-picker>
@@ -60,7 +80,7 @@
       modalType="appeal"
       @handleCancel="state.modalVisible = false"
       @handle-commit="handleCommit"
-      :formData="taskDetail"
+      :formData="state.taskDetail"
     />
   </div>
 </template>
@@ -68,9 +88,11 @@
 import { reactive, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import TaskModal from '../components/TaskModal.vue'
-import { taskDetailReq } from '../api/list'
+import { taskDetailReq, appealTaskReq } from '../api/list'
 import { orgnizationListIdToName, orgnizationToName } from '../util/orgnization'
 import { taskCategoryMap } from '../constant/index'
+import { toast } from '../util/toast'
+import dayjs from 'dayjs'
 const router = useRoute()
 const taskId = router.params.taskId
 
@@ -94,9 +116,9 @@ const getTaskDetail = async () => {
   } = result
   state.taskDetail = {
     ...result.data,
-    category: taskCategoryMap[category],
-    leadOrg: orgnizationToName(leadOrg),
-    assistOrg: orgnizationListIdToName(result.data.assistOrg)
+    categoryName: taskCategoryMap[category],
+    leadOrgName: orgnizationToName(leadOrg),
+    assistOrgName: orgnizationListIdToName(result.data.assistOrg)
   }
 }
 
@@ -113,6 +135,18 @@ const addChild = () => {
 
 const deleteChild = (index) => {
   state.childTasks.splice(index, 1)
+}
+
+const handleCommit = async (form) => {
+  const { categoryName, leadOrgName, assistOrgName, createTime, ...rest } = form
+  const result = await appealTaskReq({
+    createTime: dayjs(createTime).format(),
+    taskId,
+    ...rest
+  })
+  state.modalVisible = false
+  toast('申诉成功！')
+  router.replace('/list')
 }
 
 getTaskDetail()
@@ -135,5 +169,18 @@ getTaskDetail()
 }
 .space {
   padding-right: 20px;
+}
+.el-form-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+.inline-wrap {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  white-space: nowrap;
 }
 </style>

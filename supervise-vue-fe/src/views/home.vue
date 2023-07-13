@@ -1,5 +1,6 @@
 <script setup>
 import { storeToRefs } from 'pinia'
+import { ElMessageBox } from 'element-plus'
 import SideBar from '../components/SideBar.vue'
 import router from '../router'
 import { rmLocalStore, getLocalStore } from '../util/localStorage'
@@ -9,8 +10,17 @@ const { userInfo } = storeToRefs(authStore)
 
 const userInfoLocal = getLocalStore('userInfo')
 const logOutFn = () => {
-  rmLocalStore('userInfo')
-  router.replace('/login')
+  ElMessageBox.confirm('确定要登出吗?', '警告', {
+    type: 'warning',
+    confirmButtonText: '确认',
+    cancelButtonText: '取消',
+    callback: async (action) => {
+      if (action === 'confirm') {
+        rmLocalStore('userInfo')
+        router.replace('/login')
+      }
+    }
+  })
 }
 </script>
 
@@ -75,6 +85,9 @@ header {
     text-align: center;
   }
 }
+.is-vertical {
+  height: 100vh;
+}
 .logo-icon {
   width: 400px;
   height: auto;
@@ -87,6 +100,8 @@ header {
 }
 .logout {
   user-select: none;
+  cursor: pointer;
+  padding-left: 20px;
 }
 .logo {
   display: block;

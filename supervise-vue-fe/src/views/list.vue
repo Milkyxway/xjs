@@ -2,25 +2,16 @@
   <QueryHeader type="add" @handleQuery="handleQuery" @createTask="createTask" />
   <div>
     <el-tabs v-model="chooseTab">
-      <el-tab-pane label="我的" name="mine">
+      <el-tab-pane label="我的" name="mine" v-if="role !== 'admin'">
         <TableCommon
-          :table-data="tableData"
+          :table-data="myTable"
           :table-columns="tableColumns"
           @updateTask="updateTask"
           @deleteTask="deleteTask"
           @setFinish="setFinish"
           @checkTask="checkTask"
-        />
-
-        <el-pagination
-          v-model:current-page="currentPage"
-          v-model:page-size="page.pageSize"
-          :page-sizes="[10, 20, 30, 40]"
-          :small="small"
-          layout="sizes, prev, pager, next"
-          :total="total"
-          @size-change="handleSizeChange"
-          @current-change="handlePageChange"
+          :total="myTableTotal"
+          @changePage="changePage"
         />
       </el-tab-pane>
       <el-tab-pane label="所有" name="all">
@@ -30,13 +21,8 @@
           @updateTask="updateTask"
           @deleteTask="deleteTask"
           @setFinish="setFinish"
-        />
-        <el-pagination
-          layout="prev, pager, next"
-          :page-sizes="[20, 40, 60, 80]"
           :total="total"
-          @size-change="handleSizeChange"
-          @current-change="handlePageChange"
+          @changePage="changePage"
         />
       </el-tab-pane>
     </el-tabs>
@@ -52,7 +38,7 @@
 </template>
 
 <script>
-import { toRefs, reactive, watch } from 'vue'
+import { toRefs, reactive, watch, ref } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import { useRouter } from 'vue-router'
 import QueryHeader from '../components/QueryHeader.vue'
@@ -63,9 +49,11 @@ import {
   createTaskReq,
   updateTaskReq,
   deleteTaskReq,
-  taskSetFinishReq
+  taskSetFinishReq,
+  myTaskReq
 } from '../api/list'
 import { toast } from '../util/toast'
+import { getLocalStore } from '../util/localStorage'
 
 export default {
   components: {
@@ -74,6 +62,8 @@ export default {
     TableCommon
   },
   setup() {
+    const userInfo = ref(getLocalStore('userInfo'))
+    const role = ref(getLocalStore('userInfo').role)
     const router = useRouter()
     const state = reactive({
       chooseTab: 'mine',
@@ -82,21 +72,25 @@ export default {
         pageSize: 10,
         pageNum: 0
       },
+      myTable: [],
+      myTableTotal: 0,
       querys: {},
       formData: {
         category: null,
-        taskContent: '',
+        taskContent: null,
         leadOrg: null,
         assistOrg: null,
-        taskGoal: '',
+        taskGoal: null,
         status: null,
-        comment: '',
-        createTime: null
+        comment: null,
+        createTime: null,
+        appealType: null
       },
       tableColumns: [
         {
           columnName: '序号',
-          prop: 'index'
+          prop: 'index',
+          type: 'index'
         },
         {
           columnName: '类别',
@@ -129,7 +123,6 @@ export default {
       ],
       tableData: [],
       total: 0,
-      currentPage: 1,
       modalVisible: false
     })
 
@@ -141,7 +134,6 @@ export default {
       const result = await getTaskListReq(params)
       state.tableData = result.data.list
       state.total = result.data.total
-      state.currentPage = 1
     }
     const handleQuery = (query) => {
       state.querys = {
@@ -156,11 +148,25 @@ export default {
       state.formData = {}
     }
 
+    const init = () => {
+      getSuperviseList()
+      if (role.value === 'admin') {
+        state.chooseTab = 'all'
+      } else {
+        getRelatedMeTask()
+      }
+    }
+
     // 监听切换tab 刷新list
     watch(
       () => state.chooseTab,
       (val) => {
-        console.log(val, 'changetab')
+        state.page.pageNum = 0
+        if (val === 'mine') {
+          getRelatedMeTask()
+        } else {
+          getSuperviseList()
+        }
       }
     )
 
@@ -185,6 +191,15 @@ export default {
       }
     }
 
+    const getRelatedMeTask = async () => {
+      const result = await myTaskReq({
+        ...state.page,
+        orgnizationId: userInfo.value.orgnization
+      })
+      state.myTable = result.data.list
+      state.myTableTotal = result.data.total
+    }
+
     const deleteTask = async (row) => {
       const { taskId } = row
       ElMessageBox.confirm('确定要删除这项专项任务吗?', '警告', {
@@ -203,39 +218,49 @@ export default {
 
     // 置为完成
     const setFinish = async (item) => {
-      const result = await taskSetFinishReq(item)
-      toast()
-      getSuperviseList()
-    }
-
-    getSuperviseList()
-
-    const handlePageChange = (val) => {
-      state.page.pageNum = val - 1
-      state.currentPage = val
-      getSuperviseList()
-    }
-    const handleSizeChange = (val) => {
-      state.page.pageSize = val
-      getSuperviseList()
+      ElMessageBox.confirm('确定要将这项专项任务置为完成吗?', '警告', {
+        type: 'warning',
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        callback: async (action) => {
+          if (action === 'confirm') {
+            const result = await taskSetFinishReq(item)
+            toast()
+            getSuperviseList()
+          }
+        }
+      })
     }
 
     const checkTask = (row) => {
       router.push(`/detail/${row.taskId}`)
     }
 
+    const changePage = (val) => {
+      state.page.pageSize = val.pageSize
+      state.page.pageNum = val.pageNum - 1
+      if (state.chooseTab === 'all') {
+        getSuperviseList()
+      } else {
+        getRelatedMeTask()
+      }
+    }
+    init()
+
     return {
       ...toRefs(state),
+      userInfo,
+      role,
       getSuperviseList,
       handleQuery,
       handleCommit,
       createTask,
       updateTask,
       deleteTask,
-      handlePageChange,
-      handleSizeChange,
       setFinish,
-      checkTask
+      checkTask,
+      changePage,
+      getRelatedMeTask
     }
   }
 }

@@ -109,7 +109,7 @@
         v-if="modalType === 'appeal'"
         :rules="[{ required: modalType === 'appeal', message: '请选择申诉类型' }]"
       >
-        <el-select placeholder="请选择申诉类型" v-model="formData.appealType">
+        <el-select placeholder="请选择申诉类型" v-model="form.appealType">
           <el-option
             v-for="item in appealCategory"
             :label="item.label"
@@ -186,7 +186,7 @@ let form = reactive({
   childTask: true,
   leadOrg: '',
   assistOrg: '',
-  appealType: ''
+  appealType: null
 })
 
 const formRef = ref()

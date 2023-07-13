@@ -21,7 +21,7 @@ app.directive('showByAuth', (el, binding) => {
   // 这会在 `mounted` 和 `updated` 时都调用
   const adminAuth = ['admin']
   const {
-    value: { role, showCondition }
+    value: { role, showCondition, otherCondition = true }
   } = binding
-  el.style.display = role === showCondition ? 'block' : 'none'
+  el.style.display = role === showCondition && otherCondition ? 'block' : 'none'
 })

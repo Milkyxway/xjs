@@ -84,8 +84,8 @@ export default {
         taskGoal: null,
         status: null,
         comment: null,
-        createTime: null,
-        appealType: null
+        createTime: null
+        // appealType: null
       },
       tableColumns: [
         // {
@@ -120,6 +120,14 @@ export default {
         {
           columnName: '任务状态',
           prop: 'status'
+        },
+        {
+          columnName: '创建时间',
+          prop: 'createTime'
+        },
+        {
+          columnName: '修改时间',
+          prop: 'updateTime'
         },
         {
           columnName: '备注',
@@ -179,14 +187,16 @@ export default {
 
     // 弹窗里确定按钮触发
     const handleCommit = async (form) => {
-      state.modalType === 'add' ? await createTaskReq(form) : updateTaskReq(form)
+      const result = state.modalType === 'add' ? await createTaskReq(form) : updateTaskReq(form)
       state.page = {
         pageNum: 0,
         pageSize: 10
       }
-      toast()
-      getSuperviseList()
-      state.modalVisible = false
+      if (result.code === 200) {
+        toast()
+        getSuperviseList()
+        state.modalVisible = false
+      }
     }
 
     const updateTask = (row) => {

@@ -1,5 +1,10 @@
 <template>
-  <el-menu default-active="2" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose">
+  <el-menu
+    default-active="0-0"
+    class="el-menu-vertical-demo"
+    @open="handleOpen"
+    @close="handleClose"
+  >
     <el-sub-menu v-for="item in navConfig" v-bind:key="item.key">
       <template #title>
         <el-icon><location /></el-icon>
@@ -34,6 +39,16 @@ export default {
             {
               name: '权限配置',
               url: ''
+            }
+          ]
+        },
+        {
+          name: '账户模块',
+          url: '',
+          children: [
+            {
+              name: '修改密码',
+              url: 'modifypwd'
             }
           ]
         }

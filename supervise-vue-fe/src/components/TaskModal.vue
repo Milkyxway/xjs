@@ -185,8 +185,8 @@ let form = reactive({
   comment: '',
   childTask: true,
   leadOrg: '',
-  assistOrg: '',
-  appealType: null
+  assistOrg: ''
+  // appealType: null
 })
 
 const formRef = ref()

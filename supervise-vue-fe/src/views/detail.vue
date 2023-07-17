@@ -52,7 +52,7 @@
         </div>
         <div class="row-item">
           <div class="bold space">任务状态:</div>
-          <div>{{ getTaskStatus }}</div>
+          <div :class="getClassName">{{ getTaskStatus }}</div>
         </div>
         <div class="row-item">
           <div class="bold space">备注及回复:</div>
@@ -140,8 +140,10 @@ import { taskDetailReq, appealTaskReq, addSubTaskReq } from '../api/list'
 import { orgnizationListIdToName, orgnizationToName } from '../util/orgnization'
 import { taskCategoryMap, taskStatusMap } from '../constant/index'
 import { toast } from '../util/toast'
+// import { route } from '../router'
 
 const router = useRoute()
+
 const taskId = router.params.taskId
 
 // const getTaskCatefory = computed(() => {
@@ -178,6 +180,29 @@ const getTime = computed(() => {
 
 const getTaskStatus = computed(() => {
   return taskStatusMap[state.taskDetail.status]
+})
+
+const getClassName = computed(() => {
+  // return function (row) {
+  let className = ''
+  switch (state.taskDetail.status) {
+    case 1: //
+      className = 'status-confirm'
+      break
+    case 2:
+      className = 'status-adjust'
+      break
+    case 3:
+      className = 'status-processing'
+      break
+    case 4:
+      className = 'status-finish'
+      break
+    default:
+      break
+  }
+  return className
+  // }
 })
 
 const getTaskDetail = async () => {
@@ -220,8 +245,8 @@ const handleCommit = async (form) => {
     ...rest
   })
   state.modalVisible = false
-  toast('调整成功！')
-  router.replace('/list')
+  toast('提交成功！')
+  route.replace('list')
 }
 
 const submitFn = async () => {
@@ -287,5 +312,17 @@ getTaskDetail()
   align-items: center;
   white-space: nowrap;
   user-select: none;
+}
+.status-finish {
+  color: #67c23a;
+}
+.status-processing {
+  color: #e6a23c;
+}
+.status-confirm {
+  color: #f56c6c;
+}
+.status-adjust {
+  color: #b1b3b8;
 }
 </style>

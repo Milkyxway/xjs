@@ -20,7 +20,9 @@
           <span v-if="item.prop === 'category'">{{ getCategoryName(row) }}</span>
           <span v-if="item.prop === 'leadOrg'">{{ getLeadOrg(row) }}</span>
           <span v-if="item.prop === 'assistOrg'">{{ getAssistOrg(row) }}</span>
-          <span v-if="item.prop === 'finishTime'">{{ getTime(row) }}</span>
+          <span v-if="item.prop === 'finishTime'">{{ getTime(row, item.prop) }}</span>
+          <span v-if="item.prop === 'createTime'">{{ getTime(row, item.prop) }}</span>
+          <span v-if="item.prop === 'updateTime'">{{ getTime(row, item.prop) }}</span>
           <span
             v-if="item.prop === 'taskContent'"
             :class="isExpand ? 'task-content-expand' : 'task-content'"
@@ -167,8 +169,9 @@ const getAssistOrg = computed(() => {
 })
 
 const getTime = computed(() => {
-  return function (row) {
-    return dayjs(row.finishTime).format('YYYY-MM-DD')
+  return function (row, prop) {
+    if (!row[prop]) return ''
+    return dayjs(row[prop]).format('YYYY-MM-DD hh:mm:ss')
   }
 })
 

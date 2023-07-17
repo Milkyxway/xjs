@@ -2,7 +2,7 @@
   <div class="login-page">
     <div class="login-form">
       <el-form :model="formData" ref="loginFormRef">
-        <el-form-item><div>无锡分公司专项任务督办管理平台</div></el-form-item>
+        <el-form-item><div class="title">无锡分公司专项任务督办管理平台</div></el-form-item>
         <el-form-item
           prop="username"
           :label="accountProps.label"
@@ -89,10 +89,22 @@ const login = () => {
   justify-content: center;
   align-items: center;
   height: 100vh;
+  width: 100%;
+  background-image: url('../assets/bg.jpg');
+  background-repeat: repeat;
 }
 
 .login-form {
   width: 30%;
+  background: #fff;
+  height: auto;
+  border-radius: 8px;
+  padding: 20px;
+}
+.title {
+  color: #cecece;
+  font-weight: bold;
+  font-size: 28px;
 }
 .login-btn {
   width: 100%;

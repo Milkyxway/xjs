@@ -27,6 +27,11 @@ const router = createRouter({
           path: '/detail/:taskId',
           name: 'detail',
           component: () => import('../views/detail.vue')
+        },
+        {
+          path: '/password',
+          name: 'password',
+          component: () => import('../views/password.vue')
         }
       ]
     }

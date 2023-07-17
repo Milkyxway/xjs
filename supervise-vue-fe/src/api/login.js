@@ -25,3 +25,16 @@ export const logoutReq = (data) => {
     data
   })
 }
+
+/**
+ * 修改密码
+ * @param {*} data
+ * @returns
+ */
+export const modifyPwdReq = (data) => {
+  return request({
+    url: '/api/modifypwd',
+    method: 'post',
+    data
+  })
+}

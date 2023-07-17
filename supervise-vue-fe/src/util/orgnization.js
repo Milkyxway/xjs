@@ -1,5 +1,6 @@
 import { orgnizationTree } from '../constant/index'
 export const orgnizationToName = (id) => {
+  if (!id) return ''
   const orgId = Number(id)
   return orgnizationTree.filter((i) => i.value === orgId)[0].label
 }
@@ -10,7 +11,7 @@ export const orgnizationToName = (id) => {
  * @returns
  */
 export const orgnizationListIdToName = (str) => {
-  if (str == '') {
+  if (str == '' || !str) {
     return ''
   }
   const listOrg = str.split(',')

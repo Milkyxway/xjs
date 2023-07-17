@@ -17,3 +17,11 @@ INSERT into user value('gongke', 'gongke123456', 9, 'section', 8);
 INSERT into user value('jszc', 'jszc123456', 10, 'section', 9);
 INSERT into user value('gcjs', 'gcjs123456', 11, 'section', 10);
 INSERT into user value('abyw', 'abyw123456', 12, 'section', 11);
+
+CREATE TABLE `task_supervise_schema`.`subtask_list` (
+  `parentId` INT NULL,
+  `subtaskId` INT NOT NULL AUTO_INCREMENT,
+  `taskContent` VARCHAR(45) NULL,
+  `finishTime` DATETIME NULL,
+  PRIMARY KEY (`subtaskId`));
+

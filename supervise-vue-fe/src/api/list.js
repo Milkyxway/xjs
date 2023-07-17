@@ -58,6 +58,19 @@ export const deleteTaskReq = (data) => {
 }
 
 /**
+ * 增加阶段任务
+ * @param {*} data
+ * @returns
+ */
+export const addSubTaskReq = (data) => {
+  return request({
+    url: '/api/subtask/add',
+    method: 'post',
+    data
+  })
+}
+
+/**
  * 置为完成
  * @param {*} data
  * @returns
@@ -84,7 +97,7 @@ export const taskDetailReq = (data) => {
 }
 
 /**
- * 对任务申诉
+ * 对任务调整
  * @param {*} data
  * @returns
  */

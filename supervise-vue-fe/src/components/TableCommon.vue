@@ -1,6 +1,12 @@
 <template>
   <div>
-    <el-table :data="props.tableData">
+    <el-table
+      :data="props.tableData"
+      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+      row-key="parentId"
+      lazy
+      default-expand-all
+    >
       <el-table-column
         v-for="item in props.tableColumns"
         :label="item.columnName"
@@ -14,6 +20,12 @@
           <span v-if="item.prop === 'category'">{{ getCategoryName(row) }}</span>
           <span v-if="item.prop === 'leadOrg'">{{ getLeadOrg(row) }}</span>
           <span v-if="item.prop === 'assistOrg'">{{ getAssistOrg(row) }}</span>
+          <span v-if="item.prop === 'finishTime'">{{ getTime(row) }}</span>
+          <span
+            v-if="item.prop === 'taskContent'"
+            :class="isExpand ? 'task-content-expand' : 'task-content'"
+            >{{ row.taskContent }}</span
+          ><span v-if="item.prop === 'taskContent'" @click="expandAll">展开</span>
         </template></el-table-column
       >
 
@@ -70,6 +82,7 @@ import { taskStatusMap, taskCategoryMap, orgnizationTree } from '../constant/ind
 import { getLocalStore } from '../util/localStorage'
 import { userLoginStore } from '../stores/login'
 import { orgnizationListIdToName, orgnizationToName } from '../util/orgnization'
+import { dayjs } from 'element-plus'
 const authStore = userLoginStore()
 const { userInfo } = storeToRefs(authStore)
 const props = defineProps({
@@ -92,13 +105,13 @@ const state = reactive({
   page: {
     pageNum: 1,
     pageSize: 10
-  }
+  },
+  isExpand: false
 })
 
 watch(
   () => [state.page.pageNum, state.page.pageSize],
   (val) => {
-    console.log(val)
     emits('changePage', { pageNum: val[0], pageSize: val[1] })
   }
 )
@@ -153,6 +166,12 @@ const getAssistOrg = computed(() => {
   }
 })
 
+const getTime = computed(() => {
+  return function (row) {
+    return dayjs(row.finishTime).format('YYYY-MM-DD')
+  }
+})
+
 // 普通权限
 const commonAuth = computed(() => {
   return userInfo.value.role !== 'admin'
@@ -176,6 +195,9 @@ const setFinish = (row) => {
 const checkTask = (row) => {
   emits('checkTask', row)
 }
+const expandAll = () => {
+  state.isExpand = true
+}
 </script>
 <style scoped>
 .status-finish {
@@ -189,5 +211,17 @@ const checkTask = (row) => {
 }
 .status-adjust {
   color: #b1b3b8;
+}
+.task-content {
+  width: 100px;
+  word-break: break-all;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3; /* 这里是超出几行省略 */
+}
+.task-content-expand {
+  display: block;
 }
 </style>

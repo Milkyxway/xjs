@@ -102,14 +102,14 @@
           ></el-select
         >
       </el-form-item> -->
-      <el-form-item
-        label="申诉类型"
+      <!-- <el-form-item
+        label="调整类型"
         :label-width="formLabelWidth"
         prop="appealType"
         v-if="modalType === 'appeal'"
-        :rules="[{ required: modalType === 'appeal', message: '请选择申诉类型' }]"
+        :rules="[{ required: modalType === 'appeal', message: '请选择调整类型' }]"
       >
-        <el-select placeholder="请选择申诉类型" v-model="form.appealType">
+        <el-select placeholder="请选择调整类型" v-model="form.appealType">
           <el-option
             v-for="item in appealCategory"
             :label="item.label"
@@ -118,12 +118,12 @@
             >{{ item.label }}</el-option
           >
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item
         label="备注"
         :label-width="formLabelWidth"
         prop="comment"
-        :rules="[{ required: modalType === 'appeal', message: '请输入申诉内容' }]"
+        :rules="[{ required: modalType === 'appeal', message: '请输入调整内容' }]"
       >
         <el-input
           :autosize="inputProps.autoSize"
@@ -221,7 +221,7 @@ const getModalTitle = computed(() => {
       title = '修改任务'
       break
     case 'appeal':
-      title = '申诉任务'
+      title = '调整任务'
       break
     default:
       break

@@ -21,6 +21,7 @@
           @updateTask="updateTask"
           @deleteTask="deleteTask"
           @setFinish="setFinish"
+          @checkTask="checkTask"
           :total="total"
           @changePage="changePage"
         />
@@ -87,11 +88,11 @@ export default {
         appealType: null
       },
       tableColumns: [
-        {
-          columnName: '序号',
-          prop: 'index',
-          type: 'index'
-        },
+        // {
+        //   columnName: '序号',
+        //   prop: 'index',
+        //   type: 'index'
+        // },
         {
           columnName: '类别',
           prop: 'category'
@@ -109,11 +110,15 @@ export default {
           prop: 'assistOrg'
         },
         {
-          columnName: '完成计划',
+          columnName: '任务目标',
           prop: 'taskGoal'
         },
         {
-          columnName: '完成情况',
+          columnName: '完成计划',
+          prop: 'finishTime'
+        },
+        {
+          columnName: '任务状态',
           prop: 'status'
         },
         {
@@ -132,7 +137,9 @@ export default {
         ...state.querys
       }
       const result = await getTaskListReq(params)
-      state.tableData = result.data.list
+      state.tableData = result.data.list.map((i) => {
+        return { ...i, hasChildren: i.children.length !== 0 }
+      })
       state.total = result.data.total
     }
     const handleQuery = (query) => {
@@ -196,7 +203,9 @@ export default {
         ...state.page,
         orgnizationId: userInfo.value.orgnization
       })
-      state.myTable = result.data.list
+      state.myTable = result.data.list.map((i) => {
+        return { ...i, hasChildren: i.children && i.children.length }
+      })
       state.myTableTotal = result.data.total
     }
 

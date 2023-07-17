@@ -3,7 +3,8 @@ const taskStatusMap = {
   1: '待确认',
   2: '待调整',
   3: '进行中',
-  4: '已完成'
+  4: '已完成',
+  5: '已延期'
 }
 
 const taskStatusList = [
@@ -26,6 +27,10 @@ const taskStatusList = [
   {
     label: '已完成',
     value: 4
+  },
+  {
+    label: '已延期',
+    value: 5
   }
 ]
 

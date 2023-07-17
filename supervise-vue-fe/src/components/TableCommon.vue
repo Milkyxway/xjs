@@ -6,6 +6,7 @@
       row-key="parentId"
       lazy
       default-expand-all
+      @expand-change="rowExpansion"
     >
       <el-table-column
         v-for="item in props.tableColumns"
@@ -27,11 +28,12 @@
             v-if="item.prop === 'taskContent'"
             :class="isExpand ? 'task-content-expand' : 'task-content'"
             >{{ row.taskContent }}</span
-          ><span v-if="item.prop === 'taskContent'" @click="expandAll">展开</span>
+          >
+          <!-- <span v-if="item.prop === 'taskContent'" @click="expandAll">展开</span> -->
         </template></el-table-column
       >
 
-      <el-table-column fixed="right" label="操作" width="120">
+      <el-table-column fixed="right" label="操作" width="150">
         <template #default="{ row }">
           <el-button
             link
@@ -62,7 +64,7 @@
             type="primary"
             size="small"
             @click="setFinish(row)"
-            v-showByAuth="{ role, showCondition: 'admin', otherCondition: row.status !== 4 }"
+            v-if="showFinishBtn(row)"
             >置为完成</el-button
           >
         </template>
@@ -99,6 +101,10 @@ const props = defineProps({
   total: {
     default: 0,
     type: Number
+  },
+  chooseTab: {
+    default: '',
+    type: String
   }
 })
 const emits = defineEmits(['updateTask', 'deleteTask', 'setFinish', 'changePage'])
@@ -131,7 +137,20 @@ const getCategoryName = computed(() => {
     return taskCategoryMap[row.category]
   }
 })
-
+const showFinishBtn = computed(() => {
+  return function (row) {
+    if (row.status === 4) {
+      return false
+    }
+    if (role === 'admin') {
+      return true
+    }
+    if (props.chooseTab === 'mine') {
+      return true
+    }
+    return false
+  }
+})
 const getClassName = computed(() => {
   return function (row) {
     let className = ''
@@ -171,19 +190,13 @@ const getAssistOrg = computed(() => {
 const getTime = computed(() => {
   return function (row, prop) {
     if (!row[prop]) return ''
-    return dayjs(row[prop]).format('YYYY-MM-DD hh:mm:ss')
+    return dayjs(row[prop]).format('YYYY-MM-DD ')
   }
 })
 
-// 普通权限
-const commonAuth = computed(() => {
-  return userInfo.value.role !== 'admin'
-})
-
-// 管理员权限
-const adminAuth = computed(() => {
-  return userInfo.value.role === 'admin'
-})
+const rowExpansion = (row, expanded) => {
+  console.log(row, expanded)
+}
 
 const updateTask = (row) => {
   emits('updateTask', row)

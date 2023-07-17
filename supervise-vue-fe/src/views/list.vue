@@ -12,6 +12,7 @@
           @checkTask="checkTask"
           :total="myTableTotal"
           @changePage="changePage"
+          :chooseTab="chooseTab"
         />
       </el-tab-pane>
       <el-tab-pane label="所有" name="all">
@@ -24,6 +25,7 @@
           @checkTask="checkTask"
           :total="total"
           @changePage="changePage"
+          :chooseTab="chooseTab"
         />
       </el-tab-pane>
     </el-tabs>
@@ -230,6 +232,7 @@ export default {
             const result = await deleteTaskReq({ taskId })
             toast()
             getSuperviseList()
+            getRelatedMeTask()
           }
         }
       })
@@ -246,6 +249,7 @@ export default {
             const result = await taskSetFinishReq(item)
             toast()
             getSuperviseList()
+            getRelatedMeTask()
           }
         }
       })

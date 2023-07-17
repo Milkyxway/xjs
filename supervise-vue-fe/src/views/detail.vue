@@ -54,7 +54,7 @@
           <div class="bold space">任务状态:</div>
           <div :class="getClassName">{{ getTaskStatus }}</div>
         </div>
-        <div class="row-item">
+        <div class="row-item" v-if="state.taskDetail.comment">
           <div class="bold space">备注及回复:</div>
           <div>{{ state.taskDetail.comment }}</div>
         </div>
@@ -255,7 +255,8 @@ const submitFn = async () => {
     return {
       ...i,
       finishTime: dayjs(i.finishTime).format(),
-      parentId: taskId * 1
+      parentId: taskId * 1,
+      status: 3
     }
   })
 

@@ -75,7 +75,7 @@ const login = () => {
     .then(async (res) => {
       const result = await loginReq(formData.value)
       setLocalStore('userInfo', result.data.userInfo)
-      router.replace('/list')
+      router.replace('/supervise/list')
     })
     .catch((err) => {
       console.log(err)

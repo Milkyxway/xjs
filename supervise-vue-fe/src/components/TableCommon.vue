@@ -74,7 +74,7 @@
       v-model:current-page="state.page.pageNum"
       v-model:page-size="state.page.pageSize"
       :page-sizes="[10, 20, 30, 40]"
-      layout="sizes, prev, pager, next"
+      layout="total,sizes, prev, pager, next, jumper"
       :total="props.total"
     />
   </div>
@@ -109,6 +109,7 @@ const props = defineProps({
 })
 const emits = defineEmits(['updateTask', 'deleteTask', 'setFinish', 'changePage'])
 const role = getLocalStore('userInfo').role
+const userOrg = getLocalStore('userInfo').orgnization
 const state = reactive({
   page: {
     pageNum: 1,
@@ -146,6 +147,10 @@ const showFinishBtn = computed(() => {
       return true
     }
     if (props.chooseTab === 'mine') {
+      if (row.leadOrg !== userOrg) {
+        // 只有牵头部门可以置为完成
+        return false
+      }
       return true
     }
     return false
@@ -239,5 +244,12 @@ const expandAll = () => {
 }
 .task-content-expand {
   display: block;
+}
+.el-pagination {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 10px;
 }
 </style>

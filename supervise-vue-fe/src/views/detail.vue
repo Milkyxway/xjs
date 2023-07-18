@@ -70,15 +70,20 @@
           </div>
         </div>
       </template>
-      <el-form>
+      <el-radio-group v-model="state.taskType">
+        <el-radio
+          v-for="(item, index) in state.options"
+          :label="item.label"
+          :name="item.name"
+          v-bind:key="index"
+          >{{ item.label }}</el-radio
+        >
+      </el-radio-group>
+      <el-form v-if="state.showForm">
         <el-form-item label="是否拆分成阶段任务"
           ><el-switch v-model="state.hasChildTasks"></el-switch
         ></el-form-item>
-        <el-form-item
-          v-if="state.hasChildTasks"
-          label="阶段任务1"
-          :rules="[{ required: true, trigger: 'blur', message: '请完整填写' }]"
-        >
+        <el-form-item v-if="state.hasChildTasks" label="阶段任务1">
           <div class="inline-wrap">
             <div>
               <span class="space">完成时间</span
@@ -100,7 +105,6 @@
           v-for="(item, index) in state.childTasks"
           :label="`阶段任务${index + 2}`"
           v-bind:key="index"
-          :rules="[{ required: true, trigger: 'blur', message: '请完整填写' }]"
         >
           <div class="inline-wrap">
             <div>
@@ -117,8 +121,27 @@
             </div>
           </div>
         </el-form-item>
-        <el-form-item label="完成计划" v-if="!state.hasChildTasks">
-          <el-date-picker></el-date-picker>
+        <el-form-item v-if="!state.hasChildTasks">
+          <el-form-item label="完成目标"
+            ><el-input v-model="state.formSingle.taskGoal"></el-input
+          ></el-form-item>
+          <el-form-item label="完成时间"
+            ><el-date-picker v-model="state.formSingle.finishTime"></el-date-picker
+          ></el-form-item>
+        </el-form-item>
+      </el-form>
+      <el-form v-if="state.showInput" ref="inputForm">
+        <el-form-item
+          label="详细解释"
+          :rules="[{ required: true, message: '请输入详细解释', trigger: 'blur' }]"
+        >
+          <el-input
+            type="textarea"
+            rows="3"
+            v-if="state.showInput"
+            placeholder="请输入详细解释"
+            v-model="state.comment"
+          ></el-input>
         </el-form-item>
       </el-form>
     </el-card>
@@ -132,25 +155,22 @@
   </div>
 </template>
 <script setup>
-import { reactive, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { reactive, computed, watch, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { dayjs } from 'element-plus'
 import TaskModal from '../components/TaskModal.vue'
-import { taskDetailReq, appealTaskReq, addSubTaskReq } from '../api/list'
+import { taskDetailReq, appealTaskReq, addSubTaskReq, updateTaskReq } from '../api/list'
 import { orgnizationListIdToName, orgnizationToName } from '../util/orgnization'
 import { taskCategoryMap, taskStatusMap } from '../constant/index'
 import { toast } from '../util/toast'
 // import { route } from '../router'
 
-const router = useRoute()
+const inputForm = ref()
+const route = useRoute()
+const router = useRouter()
 
-const taskId = router.params.taskId
+const taskId = route.params.taskId
 
-// const getTaskCatefory = computed(() => {
-//   return function (category) {
-//     return taskCategoryMap[category]
-//   }
-// })
 let state = reactive({
   modalVisible: false,
   taskDetail: {},
@@ -162,9 +182,45 @@ let state = reactive({
       taskGoal: null
     }
   ],
-  childTasks: []
+  childTasks: [],
+  formSingle: {
+    taskGoal: '',
+    finishTime: ''
+  },
+
+  options: [
+    {
+      label: '非问题仅解释',
+      value: 1
+    },
+    {
+      label: '该问题已完成',
+      value: 2
+    },
+    {
+      label: '该问题待解决',
+      value: 3
+    }
+  ],
+  taskType: '',
+  showForm: false,
+  showInput: false,
+  comment: ''
 })
 
+watch(
+  () => state.taskType,
+  (val) => {
+    if (val === '该问题待解决') {
+      state.showForm = true
+      state.showInput = false
+    } else {
+      state.showForm = false
+      state.showInput = true
+    }
+  }
+)
+state.taskType = '该问题待解决'
 const taskContentIsShow = computed(() => {
   if (state.taskDetail.children) {
     return false
@@ -250,21 +306,45 @@ const handleCommit = async (form) => {
 }
 
 const submitFn = async () => {
-  const { childTasks, childTasksFirst } = state
-  const list = [...childTasksFirst, ...childTasks].map((i) => {
-    return {
-      ...i,
-      finishTime: dayjs(i.finishTime).format(),
-      parentId: taskId * 1,
-      status: 3
-    }
-  })
+  const { childTasks, childTasksFirst, hasChildTasks, taskType, comment } = state
+  if (['非问题仅解释', '该问题已完成'].includes(taskType)) {
+    return inputForm.value.validate().then(async (res) => {
+      await updateTaskReq({
+        taskId: taskId * 1,
+        comment,
+        resolveType: taskType,
+        status: 3
+      })
+      toast('提交成功！')
+      router.replace('/supervise/list')
+    })
+  }
+  if (hasChildTasks) {
+    const list = [...childTasksFirst, ...childTasks].map((i) => {
+      return {
+        ...i,
+        finishTime: dayjs(i.finishTime).format(),
+        parentId: taskId * 1,
+        status: 3
+      }
+    })
 
-  const result = await addSubTaskReq({
-    list,
-    taskId
-  })
-  toast()
+    const result = await addSubTaskReq({
+      list,
+      taskId
+    })
+    toast('提交成功！')
+    router.replace('/supervise/list')
+  } else {
+    await updateTaskReq({
+      ...state.formSingle,
+      finishTime: dayjs(state.formSingle.finishTime).format(),
+      taskId: taskId * 1,
+      status: 3
+    })
+    toast('提交成功！')
+    router.replace('/supervise/list')
+  }
 }
 
 getTaskDetail()

@@ -90,11 +90,6 @@ export default {
         // appealType: null
       },
       tableColumns: [
-        // {
-        //   columnName: '序号',
-        //   prop: 'index',
-        //   type: 'index'
-        // },
         {
           columnName: '类别',
           prop: 'category'
@@ -124,16 +119,20 @@ export default {
           prop: 'status'
         },
         {
+          columnName: '反馈类型',
+          prop: 'resolveType'
+        },
+        {
+          columnName: '反馈',
+          prop: 'comment'
+        },
+        {
           columnName: '创建时间',
           prop: 'createTime'
         },
         {
           columnName: '修改时间',
           prop: 'updateTime'
-        },
-        {
-          columnName: '备注',
-          prop: 'comment'
         }
       ],
       tableData: [],
@@ -142,6 +141,7 @@ export default {
     })
 
     const getSuperviseList = async () => {
+      state.tableData = []
       const params = {
         ...state.page,
         ...state.querys
@@ -153,6 +153,11 @@ export default {
       state.total = result.data.total
     }
     const handleQuery = (query) => {
+      Object.keys(query).map((i) => {
+        if (query[i] === '') {
+          query[i] = null
+        }
+      })
       state.querys = {
         ...query
       }
@@ -189,11 +194,24 @@ export default {
 
     // 弹窗里确定按钮触发
     const handleCommit = async (form) => {
-      const result = state.modalType === 'add' ? await createTaskReq(form) : updateTaskReq(form)
+      const { assistOrg, category, taskContent, leadOrg, comment, taskId } = form
+      const result =
+        state.modalType === 'add'
+          ? await createTaskReq(form)
+          : await updateTaskReq({
+              assistOrg,
+              category,
+              taskContent,
+              leadOrg,
+              comment,
+              status: 1,
+              taskId
+            })
       state.page = {
         pageNum: 0,
         pageSize: 10
       }
+
       if (result.code === 200) {
         toast()
         getSuperviseList()
@@ -232,7 +250,7 @@ export default {
             const result = await deleteTaskReq({ taskId })
             toast()
             getSuperviseList()
-            getRelatedMeTask()
+            role !== 'admin' && getRelatedMeTask()
           }
         }
       })
@@ -249,7 +267,7 @@ export default {
             const result = await taskSetFinishReq(item)
             toast()
             getSuperviseList()
-            getRelatedMeTask()
+            role !== 'admin' && getRelatedMeTask()
           }
         }
       })

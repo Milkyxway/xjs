@@ -1,67 +1,43 @@
 <template>
   <el-menu
-    default-active="0-0"
+    :default-active="currentSiderPath"
     class="el-menu-vertical-demo"
     @open="handleOpen"
     @close="handleClose"
+    :router="true"
   >
-    <el-sub-menu v-for="item in navConfig" v-bind:key="item.key">
+    <el-sub-menu v-for="item in homeMenu" :key="item.path" :index="item.path">
       <template #title>
         <el-icon><location /></el-icon>
         <span>{{ item.name }}</span>
       </template>
-      <el-menu-item-group v-for="child in item.children" v-bind:key="child.key">
-        <el-menu-item :index="`${item.key}-${child.key}`">{{
+      <el-menu-item-group
+        v-for="child in item.children.filter((i) => i.isSider)"
+        v-bind:key="child.key"
+      >
+        <el-menu-item :key="child.path" :index="child.path">{{
           child.name
         }}</el-menu-item></el-menu-item-group
       >
     </el-sub-menu>
   </el-menu>
 </template>
-<script>
-import { reactive, ref, toRefs } from 'vue'
-export default {
-  setup() {
-    const state = reactive({
-      navConfig: [
-        {
-          name: '督办模块',
-          url: '/supervise',
-          children: [
-            // {
-            //   name: '上传任务',
-            //   url: '/upload'
-            // },
-            {
-              name: '任务列表',
-              url: '/list'
-            },
-            {
-              name: '权限配置',
-              url: ''
-            }
-          ]
-        },
-        {
-          name: '账户模块',
-          url: '',
-          children: [
-            {
-              name: '修改密码',
-              url: 'modifypwd'
-            }
-          ]
-        }
-      ]
-    })
-    const handleOpen = () => {}
-    const handleClose = () => {}
-    return {
-      ...toRefs(state),
-      handleClose,
-      handleOpen
-    }
-  }
-}
+<script setup>
+import { reactive, computed } from 'vue'
+import router, { routeList } from '../router/index'
+
+const homeMenu = routeList.filter((item) => item.id === 'home')[0]?.children || []
+let menuLevel = router.currentRoute.value.matched?.length || 0
+let currentPath = router.currentRoute.value.fullPath
+const currentSiderPath = computed(() => {
+  let fullPath = router.currentRoute.value.fullPath
+  let siderPath = fullPath.split('/')?.splice(0, 3)?.join('/')
+  return siderPath
+})
+const defaultSelectedKey =
+  currentPath === '/' || menuLevel < 3 ? '/dataCenter/project' : currentPath
+
+const handleOpen = () => {}
+const handleClose = () => {}
 </script>
 <style></style>

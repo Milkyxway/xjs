@@ -5,11 +5,11 @@ import { toast } from '../util/toast'
 
 export const request = createRequest()
 function createRequest() {
-  // const loading = ElLoading.service({
-  //   lock: true,
-  //   text: '加载中...',
-  //   background: 'rgba(0, 0, 0, 0.7)'
-  // })
+  const loading = ElLoading.service({
+    lock: true,
+    text: '加载中...',
+    background: 'rgba(0, 0, 0, 0.7)'
+  })
   const request = axios.create({
     baseURL: `http://127.0.0.1:7001`,
     headers: {
@@ -42,7 +42,7 @@ function createRequest() {
   request.interceptors.response.use(
     (res) => {
       const { code, errMsg } = res.data
-      // loading.close()
+      loading.close()
       if (code === 200) {
         return res.data
       } else if (code === 401) {
@@ -53,7 +53,7 @@ function createRequest() {
       }
     },
     (err) => {
-      // loading.close()
+      loading.close()
       toast(err.message || '网络错误', 'error')
       return Promise.reject(err)
     }

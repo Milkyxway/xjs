@@ -95,7 +95,7 @@ const login = () => {
 }
 
 .login-form {
-  width: 30%;
+  width: 34%;
   background: #fff;
   height: auto;
   border-radius: 8px;

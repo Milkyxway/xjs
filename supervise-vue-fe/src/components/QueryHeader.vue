@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <el-card>
     <form :v-model="queryForm">
       <el-row>
-        <span>任务类别</span>
+        <el-col :span="2">任务类别</el-col>
         <el-col :span="6">
           <el-select v-model="queryForm.category" placeholder="请选择任务类别" clearable>
             <el-option
@@ -14,7 +14,7 @@
             >
           </el-select>
         </el-col>
-        <span>牵头部门</span>
+        <el-col :span="2">牵头部门</el-col>
         <el-col :span="6">
           <el-select placeholder="请选择牵头部门" v-model="queryForm.leadOrg" clearable>
             <el-option
@@ -26,7 +26,7 @@
             >
           </el-select>
         </el-col>
-        <span>协办部门</span>
+        <el-col :span="2">协办部门</el-col>
         <el-col :span="6">
           <el-select placeholder="请选择协办部门" v-model="queryForm.assistOrg" clearable>
             <el-option
@@ -41,7 +41,7 @@
       </el-row>
       <div class="white-space"></div>
       <el-row>
-        <span>任务状态</span>
+        <el-col :span="2">任务状态</el-col>
         <el-col :span="6"
           ><el-select v-model="queryForm.status" placeholder="请选择" clearable>
             <el-option
@@ -53,7 +53,7 @@
             >
           </el-select></el-col
         >
-        <span>任务年度</span>
+        <el-col :span="2">任务年度</el-col>
         <el-col :span="6"
           ><el-date-picker
             type="year"
@@ -62,7 +62,7 @@
             clearable
           ></el-date-picker
         ></el-col>
-        <el-col :span="2"><span>关键字</span></el-col>
+        <el-col :span="2">关键字</el-col>
         <el-col :span="6"
           ><el-input placeholder="请输入" v-model="queryForm.keyword"></el-input
         ></el-col>
@@ -75,7 +75,7 @@
         >新建任务</el-button
       >
     </div>
-  </div>
+  </el-card>
 </template>
 <script setup>
 import { ref, reactive } from 'vue'
@@ -119,7 +119,7 @@ const reset = () => {
   align-items: center;
   padding: 15px 0;
 }
-:deep(.el-input__wrapper) {
-  /* width: 250px; */
+:deep(.el-input) {
+  width: 250px !important;
 }
 </style>

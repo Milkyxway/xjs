@@ -31,7 +31,7 @@ const logOutFn = () => {
         ><span><img src="../assets/logo.png" class="logo-icon" /></span>
 
         <div class="user-wrap">
-          <el-icon><User /></el-icon><span>{{ userInfoLocal.username }}</span>
+          <el-icon><User /></el-icon><span>{{ userInfoLocal.usernameCn }}</span>
           <span @click="logOutFn" class="logout">登出</span>
         </div>
       </el-header>
@@ -41,7 +41,7 @@ const logOutFn = () => {
         </el-aside>
         <el-container>
           <el-main><RouterView></RouterView></el-main>
-          <el-footer>江苏有线无锡分公司版权所有</el-footer>
+          <el-footer>江苏有线无锡分公司版权所有Copyright © 2023 </el-footer>
         </el-container>
       </el-container>
     </el-container>

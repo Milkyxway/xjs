@@ -14,7 +14,7 @@
       >
         <el-select v-model="form.category" placeholder="请选择" :disabled="disableCondition"
           ><el-option
-            v-for="(item, index) in taskCategoryList"
+            v-for="(item, index) in state.taskCategory"
             v-bind:key="index"
             :label="item.label"
             :value="item.value"
@@ -36,6 +36,26 @@
           v-model="form.taskContent"
           :disabled="disableCondition"
         />
+      </el-form-item>
+      <el-form-item
+        label="提出部门"
+        :label-width="formLabelWidth"
+        prop="ariseOrg"
+        :rules="rules('请选择提出部门')"
+      >
+        <el-select
+          v-model="form.ariseOrg"
+          placeholder="请选择提出部门"
+          clearable
+          :disabled="disableCondition"
+          ><el-option
+            v-for="item in orgnizationList"
+            :label="item.label"
+            :value="item.value"
+            v-bind:key="item.key"
+            >{{ item.label }}</el-option
+          ></el-select
+        >
       </el-form-item>
       <el-form-item
         label="责任部门"
@@ -185,8 +205,12 @@ let form = reactive({
   comment: '',
   childTask: true,
   leadOrg: '',
-  assistOrg: ''
+  assistOrg: '',
+  ariseOrg: null
   // appealType: null
+})
+let state = reactive({
+  taskCategory
 })
 
 const formRef = ref()
@@ -200,7 +224,6 @@ const inputProps = ref({
   autocomplete: false
 })
 const taskStatus = ref(taskStatusList)
-const taskCategoryList = ref(taskCategory)
 const orgnizationList = ref(orgnizationTree)
 
 watch(
@@ -210,6 +233,7 @@ watch(
     immediate: true
   }
 )
+state.taskCategory = state.taskCategory.filter((i) => i.value !== 0)
 
 const getModalTitle = computed(() => {
   let title = ''

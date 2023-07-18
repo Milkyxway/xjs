@@ -86,7 +86,8 @@ export default {
         taskGoal: null,
         status: null,
         comment: null,
-        createTime: null
+        createTime: null,
+        ariseOrg: null
         // appealType: null
       },
       tableColumns: [
@@ -95,11 +96,15 @@ export default {
           prop: 'category'
         },
         {
-          columnName: '专项工作任务',
+          columnName: '任务内容',
           prop: 'taskContent'
         },
         {
-          columnName: '牵头责任部门',
+          columnName: '提出部门',
+          prop: 'ariseOrg'
+        },
+        {
+          columnName: '牵头部门',
           prop: 'leadOrg'
         },
         {
@@ -176,6 +181,7 @@ export default {
         state.chooseTab = 'all'
       } else {
         getRelatedMeTask()
+        state.tableColumns = state.tableColumns.filter((i) => i.prop !== 'ariseOrg') // 部门权限看不见问题提出部门
       }
     }
 

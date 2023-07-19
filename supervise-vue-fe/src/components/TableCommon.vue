@@ -1,13 +1,6 @@
 <template>
   <div>
-    <el-table
-      :data="props.tableData"
-      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
-      row-key="parentId"
-      lazy
-      default-expand-all
-      @expand-change="rowExpansion"
-    >
+    <el-table :data="props.tableData" row-key="id" default-expand-all>
       <el-table-column
         v-for="item in props.tableColumns"
         :label="item.columnName"

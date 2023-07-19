@@ -354,7 +354,8 @@ const submitFn = async () => {
         leadOrg: taskDetail.leadOrg,
         finishTime: dayjs(i.finishTime).format(),
         parentId: taskId * 1,
-        status: 3
+        status: 3,
+        taskId: taskId * 1
       }
     })
 

@@ -3,6 +3,7 @@ export const routeList = [
   {
     path: '/login',
     name: 'login',
+    alias: '/',
     component: () => import('../views/login.vue')
   },
 

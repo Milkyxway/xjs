@@ -150,9 +150,7 @@ export default {
         ...state.querys
       }
       const result = await getTaskListReq(params)
-      state.tableData = result.data.list.map((i) => {
-        return { ...i, hasChildren: i.children.length !== 0 }
-      })
+      state.tableData = insertIdIntoArr(result.data.list)
       state.total = result.data.total
     }
     const handleQuery = (query) => {
@@ -171,6 +169,29 @@ export default {
       state.modalVisible = true
       state.modalType = 'add'
       state.formData = {}
+    }
+
+    /**
+     * 满足element的数据结构
+     * @param {*} data
+     */
+    const insertIdIntoArr = (data) => {
+      const result = data.map((i) => {
+        if (i.children.length) {
+          i.children = i.children.map((j) => {
+            return {
+              ...j,
+              id: j.subtaskId
+            }
+          })
+          return {
+            ...i,
+            id: i.taskId
+          }
+        }
+        return i
+      })
+      return result
     }
 
     const init = () => {
@@ -237,9 +258,7 @@ export default {
         ...state.page,
         orgnizationId: userInfo.value.orgnization
       })
-      state.myTable = result.data.list.map((i) => {
-        return { ...i, hasChildren: i.children && i.children.length }
-      })
+      state.myTable = insertIdIntoArr(result.data.list)
       state.myTableTotal = result.data.total
     }
 
@@ -251,7 +270,7 @@ export default {
         cancelButtonText: '取消',
         callback: async (action) => {
           if (action === 'confirm') {
-            const result = await deleteTaskReq({ taskId })
+            await deleteTaskReq({ taskId })
             toast()
             getSuperviseList()
             role !== 'admin' && getRelatedMeTask()

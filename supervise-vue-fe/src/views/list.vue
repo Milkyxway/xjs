@@ -7,8 +7,7 @@
           :table-data="myTable"
           :table-columns="tableColumns"
           @updateTask="updateTask"
-          @deleteTask="deleteTask"
-          @setFinish="setFinish"
+          @refreshList="refreshList"
           :total="myTableTotal"
           @changePage="changePage"
           :chooseTab="chooseTab"
@@ -19,8 +18,7 @@
           :table-data="tableData"
           :table-columns="tableColumns"
           @updateTask="updateTask"
-          @deleteTask="deleteTask"
-          @setFinish="setFinish"
+          @refreshList="refreshList"
           :total="total"
           @changePage="changePage"
           :chooseTab="chooseTab"
@@ -238,8 +236,7 @@ export default {
       }
 
       if (result.code === 200) {
-        toast()
-        getSuperviseList()
+        refreshList()
         state.modalVisible = false
       }
     }
@@ -262,40 +259,6 @@ export default {
       state.myTableTotal = result.data.total
     }
 
-    const deleteTask = async (row) => {
-      const { taskId } = row
-      ElMessageBox.confirm('确定要删除这项专项任务吗?', '警告', {
-        type: 'warning',
-        confirmButtonText: '确认',
-        cancelButtonText: '取消',
-        callback: async (action) => {
-          if (action === 'confirm') {
-            await deleteTaskReq({ taskId })
-            toast()
-            getSuperviseList()
-            role !== 'admin' && getRelatedMeTask()
-          }
-        }
-      })
-    }
-
-    // 置为完成
-    const setFinish = async (item) => {
-      ElMessageBox.confirm('确定要将这项专项任务置为完成吗?', '警告', {
-        type: 'warning',
-        confirmButtonText: '确认',
-        cancelButtonText: '取消',
-        callback: async (action) => {
-          if (action === 'confirm') {
-            const result = await taskSetFinishReq(item)
-            toast()
-            getSuperviseList()
-            role !== 'admin' && getRelatedMeTask()
-          }
-        }
-      })
-    }
-
     const changePage = (val) => {
       state.page.pageSize = val.pageSize
       state.page.pageNum = val.pageNum - 1
@@ -304,6 +267,11 @@ export default {
       } else {
         getRelatedMeTask()
       }
+    }
+    const refreshList = () => {
+      toast()
+      getSuperviseList()
+      role.value !== 'admin' && getRelatedMeTask()
     }
     init()
 
@@ -316,8 +284,7 @@ export default {
       handleCommit,
       createTask,
       updateTask,
-      deleteTask,
-      setFinish,
+      refreshList,
       changePage,
       getRelatedMeTask
     }

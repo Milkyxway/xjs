@@ -80,6 +80,7 @@
 import { storeToRefs } from 'pinia'
 import { computed, reactive, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { deleteTaskReq, taskSetFinishReq } from '../api/list'
 import { taskStatusMap, taskCategoryMap, orgnizationTree } from '../constant/index'
 import { getLocalStore } from '../util/localStorage'
 import { userLoginStore } from '../stores/login'
@@ -106,7 +107,7 @@ const props = defineProps({
     type: String
   }
 })
-const emits = defineEmits(['updateTask', 'deleteTask', 'setFinish', 'changePage'])
+const emits = defineEmits(['updateTask', 'refreshList', 'changePage'])
 const role = getLocalStore('userInfo').role
 const userOrg = getLocalStore('userInfo').orgnization
 const state = reactive({
@@ -206,11 +207,34 @@ const rowExpansion = (row, expanded) => {
 const updateTask = (row) => {
   emits('updateTask', row)
 }
-const deleteTask = (row) => {
-  emits('deleteTask', row)
+const deleteTask = async (row) => {
+  const { taskId } = row
+  ElMessageBox.confirm('确定要删除这项专项任务吗?', '警告', {
+    type: 'warning',
+    confirmButtonText: '确认',
+    cancelButtonText: '取消',
+    callback: async (action) => {
+      if (action === 'confirm') {
+        await deleteTaskReq({ taskId })
+        emits('refreshList')
+      }
+    }
+  })
 }
-const setFinish = (row) => {
-  emits('setFinish', row)
+
+// 置为完成
+const setFinish = async (item) => {
+  ElMessageBox.confirm('确定要将这项专项任务置为完成吗?', '警告', {
+    type: 'warning',
+    confirmButtonText: '确认',
+    cancelButtonText: '取消',
+    callback: async (action) => {
+      if (action === 'confirm') {
+        await taskSetFinishReq(item)
+        emits('refreshList')
+      }
+    }
+  })
 }
 
 const checkTask = (row) => {

@@ -40,7 +40,11 @@
             type="primary"
             size="small"
             @click="checkTask(row)"
-            v-showByAuth="{ role, showCondition: 'section' }"
+            v-showByAuth="{
+              role,
+              showCondition: 'section',
+              otherCondition: row.children !== undefined
+            }"
             >查看</el-button
           >
           <el-button
@@ -82,6 +86,7 @@
 <script setup>
 import { storeToRefs } from 'pinia'
 import { computed, reactive, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { taskStatusMap, taskCategoryMap, orgnizationTree } from '../constant/index'
 import { getLocalStore } from '../util/localStorage'
 import { userLoginStore } from '../stores/login'
@@ -89,6 +94,7 @@ import { orgnizationListIdToName, orgnizationToName } from '../util/orgnization'
 import { dayjs } from 'element-plus'
 const authStore = userLoginStore()
 const { userInfo } = storeToRefs(authStore)
+const router = useRouter()
 const props = defineProps({
   tableData: {
     default: [],
@@ -146,12 +152,13 @@ const showFinishBtn = computed(() => {
     if (role === 'admin') {
       return true
     }
-    if (props.chooseTab === 'mine') {
-      if (row.leadOrg !== userOrg) {
-        // 只有牵头部门可以置为完成
-        return false
+
+    if (row.leadOrg === userOrg) {
+      // 责任部门可以置为完成
+      if (row.status === 3) {
+        return true
       }
-      return true
+      return false
     }
     return false
   }
@@ -214,7 +221,7 @@ const setFinish = (row) => {
 }
 
 const checkTask = (row) => {
-  emits('checkTask', row)
+  router.push(`/supervise/detail/${row.taskId}`)
 }
 const expandAll = () => {
   state.isExpand = true
@@ -234,7 +241,7 @@ const expandAll = () => {
   color: #b1b3b8;
 }
 .task-content {
-  width: 100px;
+  /* width: 100px; */
   word-break: break-all;
   text-overflow: ellipsis;
   overflow: hidden;

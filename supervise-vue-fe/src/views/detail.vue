@@ -4,7 +4,7 @@
       <template #header>
         <div class="card-header">
           <span class="bold">任务详情</span>
-          <div v-if="state.taskDetail.status === 1">
+          <div v-if="showAdjustBtns">
             <el-button @click="taskAppeal">任务调整</el-button>
             <el-button type="primary" @click="confirmTask">任务确认</el-button>
           </div>
@@ -23,7 +23,7 @@
           <div class="bold space">责任部门:</div>
           <div>{{ state.taskDetail.leadOrgName }}</div>
         </div>
-        <div v-if="state.taskDetail.assistOrg !== ''" class="row-item">
+        <div v-if="showAssitOrg" class="row-item">
           <div class="bold space">协办部门:</div>
           <div>{{ state.taskDetail.assistOrgName }}</div>
         </div>
@@ -61,6 +61,7 @@
       </div>
     </el-card>
 
+    <div class="white-space"></div>
     <el-card v-if="state.showTaskGoal">
       <template #header>
         <div class="card-header">
@@ -130,17 +131,18 @@
           ></el-form-item>
         </el-form-item>
       </el-form>
-      <el-form v-if="state.showInput" ref="inputForm">
+      <el-form v-if="state.showInput" ref="inputForm" :model="state.formInput">
         <el-form-item
           label="详细解释"
           :rules="[{ required: true, message: '请输入详细解释', trigger: 'blur' }]"
+          prop="comment"
         >
           <el-input
             type="textarea"
             rows="3"
             v-if="state.showInput"
             placeholder="请输入详细解释"
-            v-model="state.comment"
+            v-model="state.formInput.comment"
           ></el-input>
         </el-form-item>
       </el-form>
@@ -162,14 +164,15 @@ import TaskModal from '../components/TaskModal.vue'
 import { taskDetailReq, appealTaskReq, addSubTaskReq, updateTaskReq } from '../api/list'
 import { orgnizationListIdToName, orgnizationToName } from '../util/orgnization'
 import { taskCategoryMap, taskStatusMap } from '../constant/index'
+import { getLocalStore } from '../util/localStorage'
 import { toast } from '../util/toast'
-// import { route } from '../router'
 
 const inputForm = ref()
 const route = useRoute()
 const router = useRouter()
 
 const taskId = route.params.taskId
+const userInfo = getLocalStore('userInfo')
 
 let state = reactive({
   modalVisible: false,
@@ -205,7 +208,9 @@ let state = reactive({
   taskType: '',
   showForm: false,
   showInput: false,
-  comment: ''
+  formInput: {
+    comment: ''
+  }
 })
 
 watch(
@@ -238,6 +243,15 @@ const getTaskStatus = computed(() => {
   return taskStatusMap[state.taskDetail.status]
 })
 
+const showAdjustBtns = computed(() => {
+  const { orgnization } = userInfo
+  const { taskDetail } = state
+  if (taskDetail.status === 1 && orgnization === taskDetail.leadOrg) {
+    return true
+  }
+  return false
+})
+
 const getClassName = computed(() => {
   // return function (row) {
   let className = ''
@@ -254,11 +268,18 @@ const getClassName = computed(() => {
     case 4:
       className = 'status-finish'
       break
+    case 5:
+      className = 'status-delay'
+      break
     default:
       break
   }
   return className
   // }
+})
+
+const showAssitOrg = computed(() => {
+  return state.taskDetail?.assistOrg && state.taskDetail.assistOrg.length
 })
 
 const getTaskDetail = async () => {
@@ -302,11 +323,18 @@ const handleCommit = async (form) => {
   })
   state.modalVisible = false
   toast('提交成功！')
-  route.replace('list')
+  router.replace('/supervise/list')
 }
 
 const submitFn = async () => {
-  const { childTasks, childTasksFirst, hasChildTasks, taskType, comment } = state
+  const {
+    childTasks,
+    childTasksFirst,
+    hasChildTasks,
+    taskType,
+    taskDetail,
+    formInput: { comment }
+  } = state
   if (['非问题仅解释', '该问题已完成'].includes(taskType)) {
     return inputForm.value.validate().then(async (res) => {
       await updateTaskReq({
@@ -323,6 +351,7 @@ const submitFn = async () => {
     const list = [...childTasksFirst, ...childTasks].map((i) => {
       return {
         ...i,
+        leadOrg: taskDetail.leadOrg,
         finishTime: dayjs(i.finishTime).format(),
         parentId: taskId * 1,
         status: 3
@@ -400,10 +429,14 @@ getTaskDetail()
 .status-processing {
   color: #e6a23c;
 }
-.status-confirm {
+.status-confirm,
+.status-delay {
   color: #f56c6c;
 }
 .status-adjust {
   color: #b1b3b8;
+}
+.white-space {
+  height: 10px;
 }
 </style>

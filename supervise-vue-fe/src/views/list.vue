@@ -9,7 +9,6 @@
           @updateTask="updateTask"
           @deleteTask="deleteTask"
           @setFinish="setFinish"
-          @checkTask="checkTask"
           :total="myTableTotal"
           @changePage="changePage"
           :chooseTab="chooseTab"
@@ -22,7 +21,6 @@
           @updateTask="updateTask"
           @deleteTask="deleteTask"
           @setFinish="setFinish"
-          @checkTask="checkTask"
           :total="total"
           @changePage="changePage"
           :chooseTab="chooseTab"
@@ -136,7 +134,7 @@ export default {
           prop: 'createTime'
         },
         {
-          columnName: '修改时间',
+          columnName: '更新时间',
           prop: 'updateTime'
         }
       ],
@@ -279,10 +277,6 @@ export default {
       })
     }
 
-    const checkTask = (row) => {
-      router.push(`/detail/${row.taskId}`)
-    }
-
     const changePage = (val) => {
       state.page.pageSize = val.pageSize
       state.page.pageNum = val.pageNum - 1
@@ -305,7 +299,6 @@ export default {
       updateTask,
       deleteTask,
       setFinish,
-      checkTask,
       changePage,
       getRelatedMeTask
     }

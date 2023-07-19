@@ -1,5 +1,10 @@
 <template>
   <el-card>
+    <template #header>
+      <div class="card-header">
+        <span>修改密码</span>
+      </div>
+    </template>
     <el-form ref="formRef" :model="form">
       <el-form-item
         prop="oldPwd"

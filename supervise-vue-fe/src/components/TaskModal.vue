@@ -239,7 +239,7 @@ const getModalTitle = computed(() => {
   let title = ''
   switch (props.modalType) {
     case 'add':
-      title = '创建任务'
+      title = '新建任务'
       break
     case 'update':
       title = '修改任务'

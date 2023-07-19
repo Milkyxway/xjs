@@ -41,7 +41,7 @@ const logOutFn = () => {
         </el-aside>
         <el-container>
           <el-main><RouterView></RouterView></el-main>
-          <el-footer>江苏有线无锡分公司版权所有Copyright © 2023 </el-footer>
+          <!-- <el-footer>江苏有线无锡分公司版权所有Copyright © 2023 </el-footer> -->
         </el-container>
       </el-container>
     </el-container>

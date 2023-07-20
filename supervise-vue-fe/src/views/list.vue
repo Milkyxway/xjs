@@ -10,7 +10,6 @@
           @refreshList="refreshList"
           :total="myTableTotal"
           @changePage="changePage"
-          :chooseTab="chooseTab"
         />
       </el-tab-pane>
       <el-tab-pane label="所有" name="all">
@@ -21,7 +20,6 @@
           @refreshList="refreshList"
           :total="total"
           @changePage="changePage"
-          :chooseTab="chooseTab"
         />
       </el-tab-pane>
     </el-tabs>
@@ -45,6 +43,7 @@ import TableCommon from '../components/TableCommon.vue'
 import { getTaskListReq, createTaskReq, updateTaskReq, myTaskReq } from '../api/list'
 import { toast } from '../util/toast'
 import { getLocalStore } from '../util/localStorage'
+import { dayjs } from 'element-plus'
 
 export default {
   components: {
@@ -150,8 +149,11 @@ export default {
         }
       })
       state.querys = {
-        ...query
+        ...query,
+        createTime: dayjs(query.createTime).year()
       }
+      state.page.pageNum = 0
+      state.page.pageSize = 10
 
       getSuperviseList()
     }

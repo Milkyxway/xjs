@@ -64,7 +64,7 @@
         ></el-col>
         <el-col :span="2">关键字</el-col>
         <el-col :span="6"
-          ><el-input placeholder="请输入" v-model="queryForm.keyword"></el-input
+          ><el-input placeholder="请输入" v-model="queryForm.keyword" clearable></el-input
         ></el-col>
       </el-row>
     </form>

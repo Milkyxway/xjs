@@ -24,7 +24,7 @@ export const myTaskReq = (data) => {
 
 // 新建任务
 export const createTaskReq = (data) => {
-  return createRequest({
+  return createRequest()({
     url: '/api/task/add',
     method: 'post',
     data
@@ -65,6 +65,19 @@ export const deleteTaskReq = (data) => {
 export const addSubTaskReq = (data) => {
   return createRequest()({
     url: '/api/subtask/add',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 修改阶段任务
+ * @param {*} data
+ * @returns
+ */
+export const updateSubtaskReq = (data) => {
+  return createRequest()({
+    url: '/api/subtask/update',
     method: 'post',
     data
   })

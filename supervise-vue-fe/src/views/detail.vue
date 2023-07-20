@@ -65,13 +65,13 @@
     <el-card v-if="state.showTaskGoal">
       <template #header>
         <div class="card-header">
-          <span>确认任务</span>
+          <span>{{ getTitleByStatus }}</span>
           <div>
             <el-button type="primary" @click="submitFn">提交</el-button>
           </div>
         </div>
       </template>
-      <el-radio-group v-model="state.taskType">
+      <el-radio-group v-model="state.taskType" v-if="state.taskDetail.status === 1">
         <el-radio
           v-for="(item, index) in state.options"
           :label="item.label"
@@ -81,46 +81,18 @@
         >
       </el-radio-group>
       <el-form v-if="state.showForm">
-        <el-form-item label="是否拆分成阶段任务"
+        <el-form-item label="是否拆分成阶段任务" v-if="state.taskDetail.status === 1"
           ><el-switch v-model="state.hasChildTasks"></el-switch
         ></el-form-item>
         <el-form-item v-if="state.hasChildTasks" label="阶段任务1">
-          <div class="inline-wrap">
-            <div>
-              <span class="space">完成时间</span
-              ><el-date-picker v-model="state.childTasksFirst[0].finishTime"></el-date-picker>
-            </div>
-            <div>
-              <span class="space">完成目标</span
-              ><el-input
-                placeholder="请输入完成目标"
-                v-model="state.childTasksFirst[0].taskGoal"
-              ></el-input
-              ><el-icon color="#409eff" @click="addChild">
-                <CirclePlus />
-              </el-icon>
-            </div>
-          </div>
+          <ChildTask :data="state.childTasksFirst[0]" :isFirst="true" @addChild="addChild" />
         </el-form-item>
         <el-form-item
           v-for="(item, index) in state.childTasks"
           :label="`阶段任务${index + 2}`"
           v-bind:key="index"
         >
-          <div class="inline-wrap">
-            <div>
-              <span class="space">完成时间</span
-              ><el-date-picker v-model="state.childTasks[index].finishTime"></el-date-picker>
-            </div>
-            <div>
-              <span class="space">完成目标</span
-              ><el-input
-                placeholder="请输入完成目标"
-                v-model="state.childTasks[index].taskGoal"
-              ></el-input>
-              <el-icon @click="deleteChild(index)"><Delete /></el-icon>
-            </div>
-          </div>
+          <ChildTask :data="item" :isFirst="false" @deleteChild="deleteChild(index)" />
         </el-form-item>
         <el-form-item v-if="!state.hasChildTasks">
           <el-form-item label="完成目标"
@@ -128,6 +100,9 @@
           ></el-form-item>
           <el-form-item label="完成时间"
             ><el-date-picker v-model="state.formSingle.finishTime"></el-date-picker
+          ></el-form-item>
+          <el-form-item label="延期说明" v-if="state.taskDetail.status === 5"
+            ><el-date-picker v-model="state.formSingle.comment"></el-date-picker
           ></el-form-item>
         </el-form-item>
       </el-form>
@@ -161,7 +136,14 @@ import { reactive, computed, watch, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { dayjs } from 'element-plus'
 import TaskModal from '../components/TaskModal.vue'
-import { taskDetailReq, appealTaskReq, addSubTaskReq, updateTaskReq } from '../api/list'
+import ChildTask from '../components/ChildTask.vue'
+import {
+  taskDetailReq,
+  appealTaskReq,
+  addSubTaskReq,
+  updateTaskReq,
+  updateSubtaskReq
+} from '../api/list'
 import { orgnizationListIdToName, orgnizationToName } from '../util/orgnization'
 import { taskCategoryMap, taskStatusMap } from '../constant/index'
 import { getLocalStore } from '../util/localStorage'
@@ -182,13 +164,15 @@ let state = reactive({
   childTasksFirst: [
     {
       finishTime: null,
-      taskGoal: null
+      taskGoal: null,
+      delayReason: null
     }
   ],
   childTasks: [],
   formSingle: {
     taskGoal: '',
-    finishTime: ''
+    finishTime: '',
+    comment: ''
   },
 
   options: [
@@ -282,10 +266,18 @@ const showAssitOrg = computed(() => {
   return state.taskDetail?.assistOrg && state.taskDetail.assistOrg.length
 })
 
+const getTitleByStatus = computed(() => {
+  const statusTitleMap = {
+    1: '确认任务',
+    5: '修改任务'
+  }
+  return statusTitleMap[state.taskDetail.status]
+})
+
 const getTaskDetail = async () => {
   const result = await taskDetailReq({ taskId })
   const {
-    data: { category, leadOrg, assistOrg }
+    data: { category, leadOrg, assistOrg, finishTime, taskGoal }
   } = result
   state.taskDetail = {
     ...result.data,
@@ -293,6 +285,21 @@ const getTaskDetail = async () => {
     categoryName: taskCategoryMap[category],
     leadOrgName: orgnizationToName(leadOrg),
     assistOrgName: orgnizationListIdToName(result.data.assistOrg)
+  }
+  if (result.data.status === 5) {
+    confirmTask()
+
+    if (result.data.children.length) {
+      state.hasChildTasks = true
+      const child = result.data.children
+      state.childTasksFirst = [child[0]]
+      child.shift()
+      state.childTasks = child
+    } else {
+      state.hasChildTasks = false
+      state.formSingle.finishTime = finishTime
+      state.formSingle.taskGoal = taskGoal
+    }
   }
 }
 
@@ -306,7 +313,8 @@ const confirmTask = () => {
 const addChild = () => {
   state.childTasks.push({
     taskGoal: '',
-    finishTime: ''
+    finishTime: '',
+    delayReason: ''
   })
 }
 
@@ -358,10 +366,12 @@ const submitFn = async () => {
       }
     })
 
-    const result = await addSubTaskReq({
-      list,
-      taskId
-    })
+    taskDetail.status === 1
+      ? await addSubTaskReq({
+          list,
+          taskId
+        })
+      : await updateSubtaskReq({ list, taskId })
     toast('提交成功！')
     router.replace('/supervise/list')
   } else {
@@ -389,7 +399,7 @@ getTaskDetail()
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: center;
   margin: 0 0 10px 0;
 }
 .card-header {
@@ -413,7 +423,7 @@ getTaskDetail()
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
 }
 .inline-wrap {
   display: flex;

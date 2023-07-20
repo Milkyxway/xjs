@@ -12,11 +12,12 @@
             getStatusName(row)
           }}</span>
           <span v-if="item.prop === 'category'">{{ getCategoryName(row) }}</span>
-          <span v-if="item.prop === 'leadOrg'">{{ getLeadOrg(row) }}</span>
-          <span v-if="item.prop === 'assistOrg'">{{ getAssistOrg(row) }}</span>
-          <span v-if="item.prop === 'finishTime'">{{ getTime(row, item.prop) }}</span>
-          <span v-if="item.prop === 'createTime'">{{ getTime(row, item.prop) }}</span>
-          <span v-if="item.prop === 'updateTime'">{{ getTime(row, item.prop) }}</span>
+          <span v-if="['leadOrg', 'assistOrg', 'ariseOrg'].includes(item.prop)">{{
+            getOrgName(row, item.prop)
+          }}</span>
+          <span v-if="['finishTime', 'createTime', 'updateTime'].includes(item.prop)">{{
+            getTime(row, item.prop)
+          }}</span>
           <span
             v-if="item.prop === 'taskContent'"
             :class="isExpand ? 'task-content-expand' : 'task-content'"
@@ -101,10 +102,6 @@ const props = defineProps({
   total: {
     default: 0,
     type: Number
-  },
-  chooseTab: {
-    default: '',
-    type: String
   }
 })
 const emits = defineEmits(['updateTask', 'refreshList', 'changePage'])
@@ -183,16 +180,18 @@ const getClassName = computed(() => {
   }
 })
 
-const getLeadOrg = computed(() => {
-  return function (row) {
-    return orgnizationToName(row.leadOrg)
-    // return orgnizationTree.filter((i) => i.value === row.leadOrg)[0].label
-  }
-})
-
 const getAssistOrg = computed(() => {
   return function (row) {
     return orgnizationListIdToName(row.assistOrg)
+  }
+})
+
+const getOrgName = computed(() => {
+  return function (row, propName) {
+    if (propName === 'assistOrg') {
+      return orgnizationListIdToName(row[propName])
+    }
+    return orgnizationToName(row[propName])
   }
 })
 

@@ -1,4 +1,4 @@
-import { request } from '../request'
+import { createRequest } from '../request'
 
 /**
  * 登录
@@ -6,7 +6,7 @@ import { request } from '../request'
  * @returns
  */
 export const loginReq = (data) => {
-  return request({
+  return createRequest()({
     url: '/api/login',
     method: 'post',
     data
@@ -19,7 +19,7 @@ export const loginReq = (data) => {
  * @returns
  */
 export const logoutReq = (data) => {
-  return request({
+  return createRequest()({
     url: '/api/logout',
     method: 'post',
     data
@@ -32,7 +32,7 @@ export const logoutReq = (data) => {
  * @returns
  */
 export const modifyPwdReq = (data) => {
-  return request({
+  return createRequest()({
     url: '/api/modifypwd',
     method: 'post',
     data

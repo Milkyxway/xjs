@@ -1,8 +1,8 @@
-import { request } from '../request'
+import { createRequest } from '../request'
 
 // 查询任务列表
 export const getTaskListReq = (data) => {
-  return request({
+  return createRequest()({
     url: '/api/task/list',
     method: 'post',
     data
@@ -15,7 +15,7 @@ export const getTaskListReq = (data) => {
  * @returns
  */
 export const myTaskReq = (data) => {
-  return request({
+  return createRequest()({
     url: '/api/task/mine',
     method: 'post',
     data
@@ -24,7 +24,7 @@ export const myTaskReq = (data) => {
 
 // 新建任务
 export const createTaskReq = (data) => {
-  return request({
+  return createRequest({
     url: '/api/task/add',
     method: 'post',
     data
@@ -37,7 +37,7 @@ export const createTaskReq = (data) => {
  * @returns
  */
 export const updateTaskReq = (data) => {
-  return request({
+  return createRequest()({
     url: '/api/task/update',
     method: 'put',
     data
@@ -50,7 +50,7 @@ export const updateTaskReq = (data) => {
  * @returns
  */
 export const deleteTaskReq = (data) => {
-  return request({
+  return createRequest()({
     url: '/api/task/delete',
     method: 'delete',
     data
@@ -63,7 +63,7 @@ export const deleteTaskReq = (data) => {
  * @returns
  */
 export const addSubTaskReq = (data) => {
-  return request({
+  return createRequest()({
     url: '/api/subtask/add',
     method: 'post',
     data
@@ -76,7 +76,7 @@ export const addSubTaskReq = (data) => {
  * @returns
  */
 export const taskSetFinishReq = (data) => {
-  return request({
+  return createRequest()({
     url: '/api/task/finish',
     method: 'put',
     data
@@ -89,7 +89,7 @@ export const taskSetFinishReq = (data) => {
  * @returns
  */
 export const taskDetailReq = (data) => {
-  return request({
+  return createRequest()({
     url: '/api/task/detail',
     method: 'post',
     data
@@ -102,7 +102,7 @@ export const taskDetailReq = (data) => {
  * @returns
  */
 export const appealTaskReq = (data) => {
-  return request({
+  return createRequest()({
     url: '/api/task/appeal',
     method: 'post',
     data

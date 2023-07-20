@@ -3,8 +3,9 @@ import router from '../router'
 import { ElLoading } from 'element-plus'
 import { toast } from '../util/toast'
 
-export const request = createRequest()
-function createRequest() {
+// export const request = createRequest()
+
+export function createRequest() {
   const loading = ElLoading.service({
     lock: true,
     text: '加载中...',

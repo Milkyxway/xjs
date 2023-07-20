@@ -354,8 +354,7 @@ const submitFn = async () => {
         leadOrg: taskDetail.leadOrg,
         finishTime: dayjs(i.finishTime).format(),
         parentId: taskId * 1,
-        status: 3,
-        taskId: taskId * 1
+        status: 3
       }
     })
 
@@ -430,9 +429,12 @@ getTaskDetail()
 .status-processing {
   color: #e6a23c;
 }
-.status-confirm,
+.status-confirm {
+  color: #f56c6c;
+}
 .status-delay {
   color: #f56c6c;
+  font-weight: bold;
 }
 .status-adjust {
   color: #b1b3b8;

@@ -38,19 +38,11 @@
 
 <script>
 import { toRefs, reactive, watch, ref } from 'vue'
-import { ElMessageBox } from 'element-plus'
 import { useRouter } from 'vue-router'
 import QueryHeader from '../components/QueryHeader.vue'
 import TaskModal from '../components/TaskModal.vue'
 import TableCommon from '../components/TableCommon.vue'
-import {
-  getTaskListReq,
-  createTaskReq,
-  updateTaskReq,
-  deleteTaskReq,
-  taskSetFinishReq,
-  myTaskReq
-} from '../api/list'
+import { getTaskListReq, createTaskReq, updateTaskReq, myTaskReq } from '../api/list'
 import { toast } from '../util/toast'
 import { getLocalStore } from '../util/localStorage'
 

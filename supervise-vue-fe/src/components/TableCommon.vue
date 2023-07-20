@@ -173,6 +173,9 @@ const getClassName = computed(() => {
       case 4:
         className = 'status-finish'
         break
+      case 5:
+        className = 'status-delay'
+        break
       default:
         break
     }
@@ -252,6 +255,10 @@ const expandAll = () => {
   color: #e6a23c;
 }
 .status-confirm {
+  color: #f56c6c;
+}
+.status-delay {
+  font-weight: bold;
   color: #f56c6c;
 }
 .status-adjust {

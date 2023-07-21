@@ -44,7 +44,7 @@ import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { loginReq } from '../api/login'
 
-import { setLocalStore } from '../util/localStorage'
+import { getLocalStore, setLocalStore } from '../util/localStorage'
 import { userLoginStore } from '../stores/login'
 const authStore = userLoginStore()
 const { userInfo } = storeToRefs(authStore)
@@ -81,6 +81,14 @@ const login = () => {
       console.log(err)
     })
 }
+
+const redirect = () => {
+  const userInfo = getLocalStore('userInfo')
+  if (userInfo && userInfo.role) {
+    router.replace('/supervise/list')
+  }
+}
+redirect()
 </script>
 <style scoped>
 .login-page {

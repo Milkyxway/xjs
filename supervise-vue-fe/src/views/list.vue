@@ -103,8 +103,12 @@ export default {
           prop: 'taskGoal'
         },
         {
-          columnName: '完成计划',
+          columnName: '计划完成时间',
           prop: 'finishTime'
+        },
+        {
+          columnName: '实际完成时间',
+          prop: 'actualFinish'
         },
         {
           columnName: '任务状态',

@@ -65,7 +65,7 @@
     <el-card v-if="state.showTaskGoal">
       <template #header>
         <div class="card-header">
-          <span>{{ getTitleByStatus }}</span>
+          <span class="bold">{{ getTitleByStatus }}</span>
           <div>
             <el-button type="primary" @click="submitFn">提交</el-button>
           </div>
@@ -95,14 +95,24 @@
           <ChildTask :data="item" :isFirst="false" @deleteChild="deleteChild(index)" />
         </el-form-item>
         <el-form-item v-if="!state.hasChildTasks">
+          <!-- <ChildTask :data="state.formSingle" /> -->
           <el-form-item label="完成目标"
             ><el-input v-model="state.formSingle.taskGoal"></el-input
           ></el-form-item>
-          <el-form-item label="完成时间"
+          <el-form-item label="计划完成时间"
             ><el-date-picker v-model="state.formSingle.finishTime"></el-date-picker
           ></el-form-item>
+          <el-form-item label="实际完成时间" v-if="state.taskDetail.status === 3"
+            ><el-date-picker v-model="state.formSingle.actualFinish"></el-date-picker
+          ></el-form-item>
+          <el-form-item label="实际完成情况" v-if="state.taskDetail.status === 3"
+            ><el-input
+              placeholder="请输入实际完成情况"
+              v-model="state.formSingle.completeDesc"
+            ></el-input
+          ></el-form-item>
           <el-form-item label="延期说明" v-if="state.taskDetail.status === 5"
-            ><el-date-picker v-model="state.formSingle.comment"></el-date-picker
+            ><el-input v-model="state.formSingle.comment"></el-input
           ></el-form-item>
         </el-form-item>
       </el-form>
@@ -165,14 +175,16 @@ let state = reactive({
     {
       finishTime: null,
       taskGoal: null,
-      delayReason: null
+      comment: null
     }
   ],
   childTasks: [],
   formSingle: {
     taskGoal: '',
     finishTime: '',
-    comment: ''
+    comment: '',
+    actualFinish: '',
+    completeDesc: ''
   },
 
   options: [
@@ -269,7 +281,8 @@ const showAssitOrg = computed(() => {
 const getTitleByStatus = computed(() => {
   const statusTitleMap = {
     1: '确认任务',
-    5: '修改任务'
+    3: '填写完成情况',
+    5: '延期修改'
   }
   return statusTitleMap[state.taskDetail.status]
 })
@@ -286,9 +299,8 @@ const getTaskDetail = async () => {
     leadOrgName: orgnizationToName(leadOrg),
     assistOrgName: orgnizationListIdToName(result.data.assistOrg)
   }
-  if (result.data.status === 5) {
+  if ([3, 5].includes(result.data.status)) {
     confirmTask()
-
     if (result.data.children.length) {
       state.hasChildTasks = true
       const child = result.data.children
@@ -324,7 +336,7 @@ const deleteChild = (index) => {
 
 const handleCommit = async (form) => {
   const { categoryName, leadOrgName, assistOrgName, createTime, ...rest } = form
-  const result = await appealTaskReq({
+  await appealTaskReq({
     createTime: dayjs(createTime).format(),
     taskId,
     ...rest
@@ -334,13 +346,81 @@ const handleCommit = async (form) => {
   router.replace('/supervise/list')
 }
 
+const singleTaskSubmit = async () => {
+  const {
+    formSingle: { taskGoal, finishTime, comment, actualFinish, completeDesc },
+    taskDetail: { status }
+  } = state
+  if (!taskGoal) {
+    return toast('请填写完成目标!', 'error')
+  }
+  if (!finishTime) {
+    return toast('请填写计划完成时间!', 'error')
+  }
+  if (finishTime < dayjs().format()) {
+    return toast('请选择今天及以后的时间', 'warning')
+  }
+  if (status === 5 && !comment) {
+    return toast('请填写延期说明!', 'error')
+  }
+  if (status === 3 && !actualFinish) {
+    return toast('请填写实际完成时间', 'error')
+  }
+  if (status === 3 && !completeDesc) {
+    return toast('请填写实际完成情况', 'error')
+  }
+  await updateTaskReq({
+    ...state.formSingle,
+    finishTime: dayjs(state.formSingle.finishTime).format(),
+    taskId: taskId * 1,
+    status: 3
+  })
+  toast('提交成功！')
+  router.replace('/supervise/list')
+}
+
+const subtaskSubmit = async () => {
+  const { childTasks, childTasksFirst, taskDetail } = state
+  const mergeList = [...childTasksFirst, ...childTasks]
+  let unfill = ''
+  mergeList.map((i) => {
+    if (!i.taskGoal) {
+      unfill = '请填写完成目标'
+    }
+    if (!i.finishTime) {
+      unfill = '请填写完成时间'
+    }
+    if (i.finishTime < dayjs().format()) {
+      unfill = '请选择今天及以后的时间'
+    }
+    if (taskDetail.status === 5 && !i.comment) {
+      unfill = '请填写延期说明'
+    }
+  })
+  if (unfill) {
+    return toast(unfill, 'error')
+  }
+  const list = mergeList.map((i) => {
+    return {
+      ...i,
+      leadOrg: taskDetail.leadOrg,
+      finishTime: dayjs(i.finishTime).format(),
+      parentId: taskId * 1,
+      status: 3
+    }
+  })
+
+  taskDetail.status === 1
+    ? await addSubTaskReq({ list, taskId })
+    : await updateSubtaskReq({ list, taskId })
+  toast('提交成功！')
+  router.replace('/supervise/list')
+}
+
 const submitFn = async () => {
   const {
-    childTasks,
-    childTasksFirst,
     hasChildTasks,
     taskType,
-    taskDetail,
     formInput: { comment }
   } = state
   if (['非问题仅解释', '该问题已完成'].includes(taskType)) {
@@ -356,33 +436,9 @@ const submitFn = async () => {
     })
   }
   if (hasChildTasks) {
-    const list = [...childTasksFirst, ...childTasks].map((i) => {
-      return {
-        ...i,
-        leadOrg: taskDetail.leadOrg,
-        finishTime: dayjs(i.finishTime).format(),
-        parentId: taskId * 1,
-        status: 3
-      }
-    })
-
-    taskDetail.status === 1
-      ? await addSubTaskReq({
-          list,
-          taskId
-        })
-      : await updateSubtaskReq({ list, taskId })
-    toast('提交成功！')
-    router.replace('/supervise/list')
+    subtaskSubmit()
   } else {
-    await updateTaskReq({
-      ...state.formSingle,
-      finishTime: dayjs(state.formSingle.finishTime).format(),
-      taskId: taskId * 1,
-      status: 3
-    })
-    toast('提交成功！')
-    router.replace('/supervise/list')
+    singleTaskSubmit()
   }
 }
 

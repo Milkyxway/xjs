@@ -62,76 +62,78 @@
     </el-card>
 
     <div class="white-space"></div>
-    <el-card v-if="state.showTaskGoal">
-      <template #header>
-        <div class="card-header">
-          <span class="bold">{{ getTitleByStatus }}</span>
-          <div>
-            <el-button type="primary" @click="submitFn">提交</el-button>
+    <div v-showByAuth="{ role, showCondition: ['section'], otherCondition: state.showTaskGoal }">
+      <el-card>
+        <template #header>
+          <div class="card-header">
+            <span class="bold">{{ getTitleByStatus }}</span>
+            <div>
+              <el-button type="primary" @click="submitFn">提交</el-button>
+            </div>
           </div>
-        </div>
-      </template>
-      <el-radio-group v-model="state.taskType" v-if="state.taskDetail.status === 1">
-        <el-radio
-          v-for="(item, index) in state.options"
-          :label="item.label"
-          :name="item.name"
-          v-bind:key="index"
-          >{{ item.label }}</el-radio
-        >
-      </el-radio-group>
-      <el-form v-if="state.showForm">
-        <el-form-item label="是否拆分成阶段任务" v-if="state.taskDetail.status === 1"
-          ><el-switch v-model="state.hasChildTasks"></el-switch
-        ></el-form-item>
-        <el-form-item v-if="state.hasChildTasks" label="阶段任务1">
-          <ChildTask :data="state.childTasksFirst[0]" :isFirst="true" @addChild="addChild" />
-        </el-form-item>
-        <el-form-item
-          v-for="(item, index) in state.childTasks"
-          :label="`阶段任务${index + 2}`"
-          v-bind:key="index"
-        >
-          <ChildTask :data="item" :isFirst="false" @deleteChild="deleteChild(index)" />
-        </el-form-item>
-        <el-form-item v-if="!state.hasChildTasks">
-          <!-- <ChildTask :data="state.formSingle" /> -->
-          <el-form-item label="完成目标"
-            ><el-input v-model="state.formSingle.taskGoal"></el-input
+        </template>
+        <el-radio-group v-model="state.taskType" v-if="state.taskDetail.status === 1">
+          <el-radio
+            v-for="(item, index) in state.options"
+            :label="item.label"
+            :name="item.name"
+            v-bind:key="index"
+            >{{ item.label }}</el-radio
+          >
+        </el-radio-group>
+        <el-form v-if="state.showForm">
+          <el-form-item label="是否拆分成阶段任务" v-if="state.taskDetail.status === 1"
+            ><el-switch v-model="state.hasChildTasks"></el-switch
           ></el-form-item>
-          <el-form-item label="计划完成时间"
-            ><el-date-picker v-model="state.formSingle.finishTime"></el-date-picker
-          ></el-form-item>
-          <el-form-item label="实际完成时间" v-if="state.taskDetail.status === 3"
-            ><el-date-picker v-model="state.formSingle.actualFinish"></el-date-picker
-          ></el-form-item>
-          <el-form-item label="实际完成情况" v-if="state.taskDetail.status === 3"
-            ><el-input
-              placeholder="请输入实际完成情况"
-              v-model="state.formSingle.completeDesc"
-            ></el-input
-          ></el-form-item>
-          <el-form-item label="延期说明" v-if="state.taskDetail.status === 5"
-            ><el-input v-model="state.formSingle.comment"></el-input
-          ></el-form-item>
-        </el-form-item>
-      </el-form>
-      <el-form v-if="state.showInput" ref="inputForm" :model="state.formInput">
-        <el-form-item
-          label="详细解释"
-          :rules="[{ required: true, message: '请输入详细解释', trigger: 'blur' }]"
-          prop="comment"
-        >
-          <el-input
-            type="textarea"
-            rows="3"
-            v-if="state.showInput"
-            placeholder="请输入详细解释"
-            v-model="state.formInput.comment"
-          ></el-input>
-        </el-form-item>
-      </el-form>
-    </el-card>
+          <el-form-item v-if="state.hasChildTasks" label="阶段任务1">
+            <ChildTask :data="state.childTasksFirst[0]" :isFirst="true" @addChild="addChild" />
+          </el-form-item>
+          <el-form-item
+            v-for="(item, index) in state.childTasks"
+            :label="`阶段任务${index + 2}`"
+            v-bind:key="index"
+          >
+            <ChildTask :data="item" :isFirst="false" @deleteChild="deleteChild(index)" />
+          </el-form-item>
+          <el-form-item v-if="!state.hasChildTasks">
+            <!-- <ChildTask :data="state.formSingle" /> -->
+            <el-form-item label="完成目标"
+              ><el-input v-model="state.formSingle.taskGoal"></el-input
+            ></el-form-item>
+            <el-form-item label="计划完成时间"
+              ><el-date-picker v-model="state.formSingle.finishTime"></el-date-picker
+            ></el-form-item>
+            <el-form-item label="实际完成时间" v-if="state.taskDetail.status === 3"
+              ><el-date-picker v-model="state.formSingle.actualFinish"></el-date-picker
+            ></el-form-item>
+            <el-form-item label="实际完成情况" v-if="state.taskDetail.status === 3"
+              ><el-input
+                placeholder="请输入实际完成情况"
+                v-model="state.formSingle.completeDesc"
+              ></el-input
+            ></el-form-item>
+            <el-form-item label="延期说明" v-if="state.taskDetail.status === 5"
+              ><el-input v-model="state.formSingle.comment"></el-input
+            ></el-form-item>
+          </el-form-item>
+        </el-form>
+        <el-form v-if="state.showInput" ref="inputForm" :model="state.formInput">
+          <el-form-item
+            label="详细解释"
+            :rules="[{ required: true, message: '请输入详细解释', trigger: 'blur' }]"
+            prop="comment"
+          >
+            <el-input
+              type="textarea"
+              rows="3"
+              v-if="state.showInput"
+              placeholder="请输入详细解释"
+              v-model="state.formInput.comment"
+            ></el-input>
+          </el-form-item>
+        </el-form>
+      </el-card>
+    </div>
     <TaskModal
       :modalVisible="state.modalVisible"
       modalType="appeal"
@@ -165,6 +167,7 @@ const router = useRouter()
 
 const taskId = route.params.taskId
 const userInfo = getLocalStore('userInfo')
+const role = userInfo.role
 
 let state = reactive({
   modalVisible: false,
@@ -305,7 +308,7 @@ const getTaskDetail = async () => {
       state.hasChildTasks = true
       const child = result.data.children
       state.childTasksFirst = [child[0]]
-      child.shift()
+      child.shift() // todo
       state.childTasks = child
     } else {
       state.hasChildTasks = false
@@ -313,6 +316,7 @@ const getTaskDetail = async () => {
       state.formSingle.taskGoal = taskGoal
     }
   }
+  console.log(state.taskDetail)
 }
 
 const taskAppeal = () => {

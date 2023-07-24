@@ -23,5 +23,5 @@ app.directive('showByAuth', (el, binding) => {
   const {
     value: { role, showCondition, otherCondition = true }
   } = binding
-  el.style.display = role === showCondition && otherCondition ? 'inline' : 'none'
+  el.style.display = showCondition.includes(role) && otherCondition ? 'inline' : 'none'
 })

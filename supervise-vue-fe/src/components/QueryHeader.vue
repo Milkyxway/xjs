@@ -71,7 +71,7 @@
     <div class="btn-wrap">
       <el-button @click="reset" plain>重置查询</el-button>
       <el-button @click="handleQuery" type="primary">查询</el-button>
-      <el-button @click="createTask" type="danger" v-showByAuth="{ role, showCondition: 'admin' }"
+      <el-button @click="createTask" type="danger" v-showByAuth="{ role, showCondition: ['admin'] }"
         >新建任务</el-button
       >
     </div>

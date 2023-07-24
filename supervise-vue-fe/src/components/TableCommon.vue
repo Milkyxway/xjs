@@ -36,8 +36,7 @@
             @click="checkTask(row)"
             v-showByAuth="{
               role,
-              showCondition: 'section',
-              otherCondition: row.children !== undefined
+              showCondition: ['admin', 'section']
             }"
             >查看</el-button
           >
@@ -48,7 +47,7 @@
             @click="updateTask(row)"
             v-showByAuth="{
               role,
-              showCondition: 'admin',
+              showCondition: ['admin'],
               otherCondition: [1, 2].includes(row.status)
             }"
             >修改</el-button
@@ -58,7 +57,7 @@
             type="primary"
             size="small"
             @click="deleteTask(row)"
-            v-showByAuth="{ role, showCondition: 'admin' }"
+            v-showByAuth="{ role, showCondition: ['admin'] }"
             >删除</el-button
           >
           <el-button
@@ -234,7 +233,7 @@ const setFinish = async (item) => {
 }
 
 const checkTask = (row) => {
-  router.push(`/supervise/detail/${row.taskId}`)
+  router.push(`/supervise/detail/${row.taskId || row.parentId}`)
 }
 const expandAll = () => {
   state.isExpand = true

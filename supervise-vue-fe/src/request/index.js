@@ -3,8 +3,6 @@ import router from '../router'
 import { ElLoading } from 'element-plus'
 import { toast } from '../util/toast'
 
-// export const request = createRequest()
-
 export function createRequest() {
   const loading = ElLoading.service({
     lock: true,
@@ -34,7 +32,7 @@ export function createRequest() {
       return config
     },
     (error) => {
-      console.log(error)
+      // console.log(error)
       Promise.reject(error)
     }
   )

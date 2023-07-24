@@ -46,7 +46,11 @@
             type="primary"
             size="small"
             @click="updateTask(row)"
-            v-showByAuth="{ role, showCondition: 'admin', otherCondition: row.status !== 4 }"
+            v-showByAuth="{
+              role,
+              showCondition: 'admin',
+              otherCondition: [1, 2].includes(row.status)
+            }"
             >修改</el-button
           >
           <el-button
@@ -180,12 +184,6 @@ const getClassName = computed(() => {
   }
 })
 
-const getAssistOrg = computed(() => {
-  return function (row) {
-    return orgnizationListIdToName(row.assistOrg)
-  }
-})
-
 const getOrgName = computed(() => {
   return function (row, propName) {
     if (propName === 'assistOrg') {
@@ -201,10 +199,6 @@ const getTime = computed(() => {
     return dayjs(row[prop]).format('YYYY-MM-DD ')
   }
 })
-
-const rowExpansion = (row, expanded) => {
-  console.log(row, expanded)
-}
 
 const updateTask = (row) => {
   emits('updateTask', row)

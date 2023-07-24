@@ -106,6 +106,7 @@ const reset = () => {
   queryForm.leadOrg = null
   queryForm.assistOrg = null
   queryForm.status = null
+  handleQuery()
 }
 </script>
 <style scoped>

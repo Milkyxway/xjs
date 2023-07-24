@@ -78,7 +78,7 @@ const login = () => {
       router.replace('/supervise/list')
     })
     .catch((err) => {
-      console.log(err)
+      // console.log(err)
     })
 }
 

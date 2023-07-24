@@ -93,52 +93,6 @@
           ></el-select
         >
       </el-form-item>
-
-      <!-- <el-form-item label="任务目标" :label-width="formLabelWidth" prop="taskGoal">
-        <el-input
-          :autosize="inputProps.autoSize"
-          :type="inputProps.type"
-          :autocomplete="inputProps.autocomplete"
-          :placeholder="inputProps.placeHolder"
-          v-model="form.taskGoal"
-        />
-      </el-form-item> -->
-      <!-- <el-form-item
-        label="完成计划"
-        :label-width="formLabelWidth"
-        prop="deadline"
-        :rules="rules('请选择完成计划')"
-      >
-        <el-date-picker></el-date-picker>
-      </el-form-item> -->
-      <!-- <el-form-item label="任务状态" :label-width="formLabelWidth" prop="status">
-        <el-select v-model="form.status" placeholder="请选择"
-          ><el-option
-            v-for="(item, index) in taskStatus"
-            v-bind:key="index"
-            :label="item.label"
-            :value="item.value"
-            >{{ item.label }}</el-option
-          ></el-select
-        >
-      </el-form-item> -->
-      <!-- <el-form-item
-        label="调整类型"
-        :label-width="formLabelWidth"
-        prop="appealType"
-        v-if="modalType === 'appeal'"
-        :rules="[{ required: modalType === 'appeal', message: '请选择调整类型' }]"
-      >
-        <el-select placeholder="请选择调整类型" v-model="form.appealType">
-          <el-option
-            v-for="item in appealCategory"
-            :label="item.label"
-            :value="item.value"
-            v-bind:key="item.key"
-            >{{ item.label }}</el-option
-          >
-        </el-select>
-      </el-form-item> -->
       <el-form-item
         label="备注"
         :label-width="formLabelWidth"
@@ -207,7 +161,6 @@ let form = reactive({
   leadOrg: '',
   assistOrg: '',
   ariseOrg: null
-  // appealType: null
 })
 let state = reactive({
   taskCategory
@@ -268,7 +221,7 @@ const handleCommit = () => {
       })
     })
     .catch((err) => {
-      console.log(err)
+      // console.log(err)
     })
 }
 </script>

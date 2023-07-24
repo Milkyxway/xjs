@@ -43,7 +43,7 @@
       <el-row>
         <el-col :span="2">任务状态</el-col>
         <el-col :span="6"
-          ><el-select v-model="queryForm.status" placeholder="请选择" clearable>
+          ><el-select v-model="queryForm.status" placeholder="请选择任务状态" clearable>
             <el-option
               v-for="item in statusList"
               v-bind:key="item.key"
@@ -58,13 +58,13 @@
           ><el-date-picker
             type="year"
             v-model="queryForm.createTime"
-            placeholder="请选择"
+            placeholder="请选择任务年度"
             clearable
           ></el-date-picker
         ></el-col>
         <el-col :span="2">关键字</el-col>
         <el-col :span="6"
-          ><el-input placeholder="请输入" v-model="queryForm.keyword" clearable></el-input
+          ><el-input placeholder="请输入关键字" v-model="queryForm.keyword" clearable></el-input
         ></el-col>
       </el-row>
     </form>
@@ -106,6 +106,7 @@ const reset = () => {
   queryForm.leadOrg = null
   queryForm.assistOrg = null
   queryForm.status = null
+  queryForm.createTime = null
   handleQuery()
 }
 </script>

@@ -1,15 +1,23 @@
 <template>
   <div class="row-item">
     <div class="row-item">
-      <span class="paddingLR10">完成目标</span>
+      <span class="paddingLR10">计划完成目标</span>
       <el-input v-model="props.data.taskGoal"></el-input>
     </div>
     <div class="row-item">
-      <span class="paddingLR10">完成时间</span>
+      <span class="paddingLR10">计划完成时间</span>
       <el-date-picker v-model="props.data.finishTime"></el-date-picker>
     </div>
     <div class="row-item" v-if="props.data.status == 5">
       <span class="paddingLR10">延期说明</span>
+      <el-input></el-input>
+    </div>
+    <div class="row-item" v-if="props.data.status == 3">
+      <span class="paddingLR10">实际完成时间</span>
+      <el-date-picker></el-date-picker>
+    </div>
+    <div class="row-item" v-if="props.data.status == 3">
+      <span class="paddingLR10">完成情况说明</span>
       <el-input></el-input>
     </div>
     <el-icon color="#409eff" @click="addChild" v-if="props.isFirst">

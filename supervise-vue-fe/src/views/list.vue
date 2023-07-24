@@ -154,11 +154,12 @@ export default {
       })
       state.querys = {
         ...query,
+        status: query.status === 0 ? null : query.status,
+        category: query.category === 0 ? null : query.category,
         createTime: dayjs(query.createTime).year()
       }
       state.page.pageNum = 0
       state.page.pageSize = 10
-
       getSuperviseList()
     }
     const createTask = () => {

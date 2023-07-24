@@ -12,7 +12,7 @@
         prop="category"
         :rules="rules('请选择任务类别')"
       >
-        <el-select v-model="form.category" placeholder="请选择" :disabled="disableCondition"
+        <el-select v-model="form.category" placeholder="请选择任务类别" :disabled="disableCondition"
           ><el-option
             v-for="(item, index) in state.taskCategory"
             v-bind:key="index"
@@ -32,7 +32,7 @@
           :autosize="inputProps.autoSize"
           :type="inputProps.type"
           :autocomplete="inputProps.autocomplete"
-          :placeholder="inputProps.placeHolder"
+          :placeholder="'请输入任务内容'"
           v-model="form.taskContent"
           :disabled="disableCondition"
         />

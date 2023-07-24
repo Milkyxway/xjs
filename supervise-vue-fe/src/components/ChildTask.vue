@@ -2,23 +2,26 @@
   <div class="row-item">
     <div class="row-item">
       <span class="paddingLR10">计划完成目标</span>
-      <el-input v-model="props.data.taskGoal"></el-input>
+      <el-input v-model="props.data.taskGoal" placeholder="请填写计划完成目标"></el-input>
     </div>
     <div class="row-item">
       <span class="paddingLR10">计划完成时间</span>
-      <el-date-picker v-model="props.data.finishTime"></el-date-picker>
+      <el-date-picker
+        v-model="props.data.finishTime"
+        placeholder="请选择计划完成时间"
+      ></el-date-picker>
     </div>
     <div class="row-item" v-if="props.data.status == 5">
       <span class="paddingLR10">延期说明</span>
-      <el-input></el-input>
+      <el-input placeholder="请填写延期说明"></el-input>
     </div>
     <div class="row-item" v-if="props.data.status == 3">
       <span class="paddingLR10">实际完成时间</span>
-      <el-date-picker></el-date-picker>
+      <el-date-picker placeholder="请选择实际完成时间"></el-date-picker>
     </div>
     <div class="row-item" v-if="props.data.status == 3">
       <span class="paddingLR10">完成情况说明</span>
-      <el-input></el-input>
+      <el-input placeholder="请填写完成情况说明"></el-input>
     </div>
     <el-icon color="#409eff" @click="addChild" v-if="props.isFirst">
       <CirclePlus />

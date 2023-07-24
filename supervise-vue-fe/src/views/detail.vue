@@ -98,13 +98,19 @@
           <el-form-item v-if="!state.hasChildTasks">
             <!-- <ChildTask :data="state.formSingle" /> -->
             <el-form-item label="完成目标"
-              ><el-input v-model="state.formSingle.taskGoal"></el-input
+              ><el-input v-model="state.formSingle.taskGoal" placeholder="请填写完成目标"></el-input
             ></el-form-item>
             <el-form-item label="计划完成时间"
-              ><el-date-picker v-model="state.formSingle.finishTime"></el-date-picker
+              ><el-date-picker
+                v-model="state.formSingle.finishTime"
+                placeholder="请选择计划完成时间"
+              ></el-date-picker
             ></el-form-item>
             <el-form-item label="实际完成时间" v-if="state.taskDetail.status === 3"
-              ><el-date-picker v-model="state.formSingle.actualFinish"></el-date-picker
+              ><el-date-picker
+                v-model="state.formSingle.actualFinish"
+                placeholder="请选择实际完成时间"
+              ></el-date-picker
             ></el-form-item>
             <el-form-item label="实际完成情况" v-if="state.taskDetail.status === 3"
               ><el-input
@@ -187,7 +193,7 @@ let state = reactive({
     finishTime: '',
     comment: '',
     actualFinish: '',
-    completeDesc: ''
+    comment: ''
   },
 
   options: [
@@ -308,15 +314,20 @@ const getTaskDetail = async () => {
       state.hasChildTasks = true
       const child = result.data.children
       state.childTasksFirst = [child[0]]
-      child.shift() // todo
-      state.childTasks = child
+      state.childTasks = getSecondEnd(child)
     } else {
       state.hasChildTasks = false
       state.formSingle.finishTime = finishTime
       state.formSingle.taskGoal = taskGoal
     }
   }
-  console.log(state.taskDetail)
+}
+const getSecondEnd = (list) => {
+  const arr = []
+  for (let i = 1; i < list.length; i++) {
+    arr.push(list[i])
+  }
+  return arr
 }
 
 const taskAppeal = () => {
@@ -370,17 +381,41 @@ const singleTaskSubmit = async () => {
   if (status === 3 && !actualFinish) {
     return toast('请填写实际完成时间', 'error')
   }
+
   if (status === 3 && !completeDesc) {
     return toast('请填写实际完成情况', 'error')
   }
-  await updateTaskReq({
-    ...state.formSingle,
-    finishTime: dayjs(state.formSingle.finishTime).format(),
-    taskId: taskId * 1,
-    status: 3
-  })
+  await updateTaskReq(getParamsByStatus(status))
   toast('提交成功！')
   router.replace('/supervise/list')
+}
+
+const getParamsByStatus = (status) => {
+  let params = {}
+  const {
+    formSingle: { taskGoal, finishTime, comment, actualFinish, completeDesc }
+  } = state
+
+  switch (status) {
+    case 1:
+      params = {}
+      break
+    case 3:
+      params = { actualFinish: dayjs(actualFinish).format(), completeDesc }
+      break
+    case 5:
+      params = { comment }
+      break
+    default:
+      break
+  }
+  return {
+    ...params,
+    taskGoal,
+    finishTime: dayjs(finishTime).format(),
+    taskId: taskId * 1,
+    status: 3
+  }
 }
 
 const subtaskSubmit = async () => {

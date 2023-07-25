@@ -154,7 +154,7 @@ const handleQuery = (query) => {
   }
   state.page.pageNum = 0
   state.page.pageSize = 10
-  getSuperviseList()
+  state.chooseTab === 'mine' ? getRelatedMeTask() : getSuperviseList()
 }
 
 const createTask = () => {
@@ -247,6 +247,7 @@ const updateTask = (row) => {
 const getRelatedMeTask = async () => {
   const result = await myTaskReq({
     ...state.page,
+    ...state.querys,
     orgnizationId: userInfo.value.orgnization
   })
   state.myTable = insertIdIntoArr(result.data.list)

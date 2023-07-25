@@ -174,6 +174,7 @@ const router = useRouter()
 const taskId = route.params.taskId
 const userInfo = getLocalStore('userInfo')
 const role = userInfo.role
+const orgnization = userInfo.orgnization
 
 let state = reactive({
   modalVisible: false,
@@ -309,7 +310,7 @@ const getTaskDetail = async () => {
     assistOrgName: orgnizationListIdToName(result.data.assistOrg)
   }
   if ([3, 5].includes(result.data.status)) {
-    confirmTask()
+    orgnization === result.data.leadOrg && confirmTask() // 只有责任部门能修改任务计划
     if (result.data.children.length) {
       state.hasChildTasks = true
       const child = result.data.children

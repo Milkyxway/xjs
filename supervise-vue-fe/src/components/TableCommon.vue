@@ -15,9 +15,10 @@
           <span v-if="['leadOrg', 'assistOrg', 'ariseOrg'].includes(item.prop)">{{
             getOrgName(row, item.prop)
           }}</span>
-          <span v-if="['finishTime', 'createTime', 'updateTime'].includes(item.prop)">{{
-            getTime(row, item.prop)
-          }}</span>
+          <span
+            v-if="['finishTime', 'createTime', 'updateTime', 'actualFinish'].includes(item.prop)"
+            >{{ getTime(row, item.prop) }}</span
+          >
           <span
             v-if="item.prop === 'taskContent'"
             :class="isExpand ? 'task-content-expand' : 'task-content'"
@@ -128,6 +129,11 @@ watch(
 // 转换成状态名称
 const getStatusName = computed(() => {
   return function (row) {
+    if (row.status === 5) {
+      let text = taskStatusMap[row.status]
+      const distance = dayjs().diff(dayjs(row.finishTime), 'day')
+      return `${text} ${distance}天`
+    }
     return taskStatusMap[row.status]
   }
 })
@@ -147,13 +153,13 @@ const showFinishBtn = computed(() => {
       return true
     }
 
-    if (row.leadOrg === userOrg) {
-      // 责任部门可以置为完成
-      if (row.status === 3) {
-        return true
-      }
-      return false
-    }
+    // if (row.leadOrg === userOrg) {
+    //   // 责任部门可以置为完成
+    //   if (row.status === 3) {
+    //     return true
+    //   }
+    //   return false
+    // }
     return false
   }
 })
@@ -175,6 +181,9 @@ const getClassName = computed(() => {
         break
       case 5:
         className = 'status-delay'
+        break
+      case 6:
+        className = 'status-submit'
         break
       default:
         break
@@ -255,6 +264,9 @@ const expandAll = () => {
 }
 .status-adjust {
   color: #b1b3b8;
+}
+.status-submit {
+  color: #409eff;
 }
 .task-content {
   /* width: 100px; */

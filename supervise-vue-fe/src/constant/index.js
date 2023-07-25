@@ -4,7 +4,8 @@ const taskStatusMap = {
   2: '待调整',
   3: '进行中',
   4: '已完成',
-  5: '已延期'
+  5: '已延期',
+  6: '已提交' // 部门完成所有的任务提交后状态
 }
 
 const taskStatusList = [

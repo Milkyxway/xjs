@@ -104,6 +104,10 @@ const state = reactive({
       prop: 'actualFinish'
     },
     {
+      columnName: '实际完成情况',
+      prop: 'completeDesc'
+    },
+    {
       columnName: '任务状态',
       prop: 'status'
     },

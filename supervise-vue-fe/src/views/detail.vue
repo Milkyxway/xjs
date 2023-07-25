@@ -27,13 +27,21 @@
           <div class="bold space">协办部门:</div>
           <div>{{ state.taskDetail.assistOrgName }}</div>
         </div>
-        <div class="row-item" v-if="taskContentIsShow">
+        <div class="row-item">
           <div class="bold space">任务目标:</div>
           <div>{{ state.taskDetail.taskGoal }}</div>
         </div>
-        <div class="row-item" v-if="taskContentIsShow">
-          <div class="bold space">完成计划:</div>
-          <div>{{ state.taskDetail.finishTime }}</div>
+        <div class="row-item">
+          <div class="bold space">计划完成时间:</div>
+          <div>{{ getTime(state.taskDetail.finishTime) }}</div>
+        </div>
+        <div class="row-item" v-if="state.taskDetail.actualFinish">
+          <div class="bold space">实际完成时间:</div>
+          <div>{{ getTime(state.taskDetail.actualFinish) }}</div>
+        </div>
+        <div class="row-item" v-if="state.taskDetail.completeDesc">
+          <div class="bold space">实际完成情况:</div>
+          <div>{{ state.taskDetail.completeDesc }}</div>
         </div>
         <div v-if="state.taskDetail.children">
           <div
@@ -45,10 +53,6 @@
             <span class="space">{{ item.taskGoal }}</span>
             <span>{{ getTime(item.finishTime) }}</span>
           </div>
-        </div>
-        <div class="row-item" v-if="taskContentIsShow">
-          <div class="bold space">完成计划:</div>
-          <div>{{ state.taskDetail.finishTime }}</div>
         </div>
         <div class="row-item">
           <div class="bold space">任务状态:</div>
@@ -98,12 +102,17 @@
           <el-form-item v-if="!state.hasChildTasks">
             <!-- <ChildTask :data="state.formSingle" /> -->
             <el-form-item label="完成目标"
-              ><el-input v-model="state.formSingle.taskGoal" placeholder="请填写完成目标"></el-input
+              ><el-input
+                v-model="state.formSingle.taskGoal"
+                placeholder="请填写完成目标"
+                :disabled="state.taskDetail.status !== 1"
+              ></el-input
             ></el-form-item>
             <el-form-item label="计划完成时间"
               ><el-date-picker
                 v-model="state.formSingle.finishTime"
                 placeholder="请选择计划完成时间"
+                :disabled="state.taskDetail.status !== 1"
               ></el-date-picker
             ></el-form-item>
             <el-form-item label="实际完成时间" v-if="state.taskDetail.status === 3"
@@ -246,7 +255,15 @@ const getTime = computed(() => {
 })
 
 const getTaskStatus = computed(() => {
-  return taskStatusMap[state.taskDetail.status]
+  const {
+    taskDetail: { status, finishTime }
+  } = state
+  if (status == 5) {
+    let text = taskStatusMap[status]
+    const distance = dayjs().diff(dayjs(finishTime), 'day')
+    return `${text} ${distance}天`
+  }
+  return taskStatusMap[status]
 })
 
 const showAdjustBtns = computed(() => {
@@ -276,6 +293,9 @@ const getClassName = computed(() => {
       break
     case 5:
       className = 'status-delay'
+      break
+    case 6:
+      className = 'status-submit'
       break
     default:
       break
@@ -373,7 +393,7 @@ const singleTaskSubmit = async () => {
   if (!finishTime) {
     return toast('请填写计划完成时间!', 'error')
   }
-  if (finishTime < dayjs().format()) {
+  if (dayjs(finishTime).format() < dayjs().format()) {
     return toast('请选择今天及以后的时间', 'warning')
   }
   if (status === 5 && !comment) {
@@ -383,6 +403,9 @@ const singleTaskSubmit = async () => {
     return toast('请填写实际完成时间', 'error')
   }
 
+  if (status === 3 && dayjs(actualFinish).format() > dayjs(finishTime).format()) {
+    return toast('实际完成时间应晚于计划完成时间', 'warning')
+  }
   if (status === 3 && !completeDesc) {
     return toast('请填写实际完成情况', 'error')
   }
@@ -391,21 +414,21 @@ const singleTaskSubmit = async () => {
   router.replace('/supervise/list')
 }
 
-const getParamsByStatus = (status) => {
+const getParamsByStatus = (staskStatus) => {
   let params = {}
   const {
     formSingle: { taskGoal, finishTime, comment, actualFinish, completeDesc }
   } = state
 
-  switch (status) {
+  switch (staskStatus) {
     case 1:
-      params = {}
+      params = { status: 3 }
       break
     case 3:
-      params = { actualFinish: dayjs(actualFinish).format(), completeDesc }
+      params = { actualFinish: dayjs(actualFinish).format(), completeDesc, status: 6 }
       break
     case 5:
-      params = { comment }
+      params = { comment, status: 5 }
       break
     default:
       break
@@ -414,8 +437,7 @@ const getParamsByStatus = (status) => {
     ...params,
     taskGoal,
     finishTime: dayjs(finishTime).format(),
-    taskId: taskId * 1,
-    status: 3
+    taskId: taskId * 1
   }
 }
 
@@ -544,6 +566,9 @@ getTaskDetail()
 }
 .status-adjust {
   color: #b1b3b8;
+}
+.status-submit {
+  color: #409eff;
 }
 .white-space {
   height: 10px;

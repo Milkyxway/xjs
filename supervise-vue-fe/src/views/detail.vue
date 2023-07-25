@@ -378,17 +378,24 @@ const getSecondEnd = (list) => {
 }
 
 const handleItemSubmit = async (data) => {
-  const { actualFinish, finishTime } = data
+  const { actualFinish, finishTime, completeDesc } = data
   const {
     taskDetail: { status }
   } = state
   const statusProcess = {
-    1: 3,
-    3: 6,
-    5: 5
+    // 状态流转
+    1: 3, // 待确认-->进行中
+    3: 6, // 进行中-->已提交待管理员置为完成
+    5: 5 // 延期-->延期
+  }
+  if (!actualFinish) {
+    return toast('请填写实际完成时间', 'error')
   }
   if (dayjs(actualFinish).format() > dayjs(finishTime).format()) {
     return toast('实际完成时间应早于计划完成时间', 'error')
+  }
+  if (!completeDesc) {
+    return toast('请填写完成情况！', 'error')
   }
   await updateSubtaskReq({
     ...data,

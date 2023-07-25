@@ -27,11 +27,11 @@
           <div class="bold space">协办部门:</div>
           <div>{{ state.taskDetail.assistOrgName }}</div>
         </div>
-        <div class="row-item">
+        <div class="row-item" v-if="state.taskDetail.taskGoal">
           <div class="bold space">任务目标:</div>
           <div>{{ state.taskDetail.taskGoal }}</div>
         </div>
-        <div class="row-item">
+        <div class="row-item" v-if="state.taskDetail.finishTime">
           <div class="bold space">计划完成时间:</div>
           <div>{{ getTime(state.taskDetail.finishTime) }}</div>
         </div>
@@ -72,7 +72,7 @@
           <div class="card-header">
             <span class="bold">{{ getTitleByStatus }}</span>
             <div>
-              <el-button type="primary" @click="submitFn">提交</el-button>
+              <el-button type="primary" @click="submitFn" v-if="formSubmitShow">提交</el-button>
             </div>
           </div>
         </template>
@@ -90,14 +90,26 @@
             ><el-switch v-model="state.hasChildTasks"></el-switch
           ></el-form-item>
           <el-form-item v-if="state.hasChildTasks" label="阶段任务1">
-            <ChildTask :data="state.childTasksFirst[0]" :isFirst="true" @addChild="addChild" />
+            <ChildTask
+              :data="state.childTasksFirst[0]"
+              :isFirst="true"
+              @addChild="addChild"
+              :taskStatus="state.taskDetail.status"
+              @handleItemSubmit="handleItemSubmit"
+            />
           </el-form-item>
           <el-form-item
             v-for="(item, index) in state.childTasks"
             :label="`阶段任务${index + 2}`"
             v-bind:key="index"
           >
-            <ChildTask :data="item" :isFirst="false" @deleteChild="deleteChild(index)" />
+            <ChildTask
+              :data="item"
+              :isFirst="false"
+              @deleteChild="deleteChild(index)"
+              :taskStatus="state.taskDetail.status"
+              @handleItemSubmit="handleItemSubmit"
+            />
           </el-form-item>
           <el-form-item v-if="!state.hasChildTasks">
             <!-- <ChildTask :data="state.formSingle" /> -->
@@ -248,6 +260,20 @@ const taskContentIsShow = computed(() => {
   return state.taskDetail.taskGoal !== ''
 })
 
+const formSubmitShow = computed(() => {
+  const {
+    taskDetail: { status },
+    hasChildTasks
+  } = state
+  if (status === 1) {
+    return true
+  }
+  if (hasChildTasks) {
+    return false
+  }
+  return true
+})
+
 const getTime = computed(() => {
   return function (time) {
     return dayjs(time).format('YYYY-MM-DD')
@@ -351,6 +377,28 @@ const getSecondEnd = (list) => {
   return arr
 }
 
+const handleItemSubmit = async (data) => {
+  const { actualFinish, finishTime } = data
+  const {
+    taskDetail: { status }
+  } = state
+  const statusProcess = {
+    1: 3,
+    3: 6,
+    5: 5
+  }
+  if (dayjs(actualFinish).format() > dayjs(finishTime).format()) {
+    return toast('实际完成时间应早于计划完成时间', 'error')
+  }
+  await updateSubtaskReq({
+    ...data,
+    actualFinish: actualFinish ? dayjs(actualFinish).format() : null,
+    finishTime: dayjs(finishTime).format(),
+    status: statusProcess[status]
+  })
+  toast()
+  router.replace('/supervise/list')
+}
 const taskAppeal = () => {
   state.modalVisible = true
 }
@@ -447,14 +495,19 @@ const subtaskSubmit = async () => {
   let unfill = ''
   mergeList.map((i) => {
     if (!i.taskGoal) {
-      unfill = '请填写完成目标'
+      unfill = '请填写计划完成目标'
     }
     if (!i.finishTime) {
-      unfill = '请填写完成时间'
+      unfill = '请填写计划完成时间'
     }
-    if (i.finishTime < dayjs().format()) {
+    if (taskDetail.status === 1 && i.finishTime < dayjs().format()) {
       unfill = '请选择今天及以后的时间'
     }
+
+    if (taskDetail.status === 3 && dayjs(i.actualFinish) > dayjs(i.finishTime)) {
+      unfill = '实际完成时间应早于计划完成时间'
+    }
+
     if (taskDetail.status === 5 && !i.comment) {
       unfill = '请填写延期说明'
     }
@@ -467,14 +520,12 @@ const subtaskSubmit = async () => {
       ...i,
       leadOrg: taskDetail.leadOrg,
       finishTime: dayjs(i.finishTime).format(),
+      actualFinish: i.actualFinish ? dayjs(i.actualFinish).format() : null,
       parentId: taskId * 1,
       status: 3
     }
   })
-
-  taskDetail.status === 1
-    ? await addSubTaskReq({ list, taskId })
-    : await updateSubtaskReq({ list, taskId })
+  await addSubTaskReq({ list, taskId })
   toast('提交成功！')
   router.replace('/supervise/list')
 }

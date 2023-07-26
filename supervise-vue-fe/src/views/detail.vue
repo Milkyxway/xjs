@@ -94,7 +94,7 @@
               :data="state.childTasksFirst[0]"
               :isFirst="true"
               @addChild="addChild"
-              :taskStatus="state.taskDetail.status"
+              :taskStatus="state.childTasksFirst[0].status"
               @handleItemSubmit="handleItemSubmit"
             />
           </el-form-item>
@@ -107,7 +107,7 @@
               :data="item"
               :isFirst="false"
               @deleteChild="deleteChild(index)"
-              :taskStatus="state.taskDetail.status"
+              :taskStatus="item.status"
               @handleItemSubmit="handleItemSubmit"
             />
           </el-form-item>
@@ -527,9 +527,9 @@ const subtaskSubmit = async () => {
       unfill = '请填写计划完成时间'
     }
     // if (taskDetail.status === 1 && i.finishTime < dayjs().format()) {
-    if (i.finishTime < dayjs().format()) {
-      unfill = '请选择今天及以后的时间'
-    }
+    // if (i.finishTime < dayjs().format()) {
+    //   unfill = '请选择今天及以后的时间'
+    // }
 
     // if (taskDetail.status === 3 && dayjs(i.actualFinish) > dayjs(i.finishTime)) {
     //   unfill = '实际完成时间应早于计划完成时间'

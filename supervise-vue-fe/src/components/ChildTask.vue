@@ -13,7 +13,7 @@
       <el-date-picker
         v-model="props.data.finishTime"
         placeholder="请选择计划完成时间"
-        :disabled="[3, 7].includes(props.taskStatus)"
+        :disabled="[3, 7, 6].includes(props.taskStatus)"
       ></el-date-picker>
     </div>
     <div class="row-item" v-if="props.taskStatus == 5">

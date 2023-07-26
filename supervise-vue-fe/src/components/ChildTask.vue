@@ -13,21 +13,21 @@
       <el-date-picker
         v-model="props.data.finishTime"
         placeholder="请选择计划完成时间"
-        :disabled="props.taskStatus > 2"
+        :disabled="[3, 7].includes(props.taskStatus)"
       ></el-date-picker>
     </div>
     <div class="row-item" v-if="props.taskStatus == 5">
       <span class="paddingLR10">延期说明</span>
-      <el-input placeholder="请填写延期说明"></el-input>
+      <el-input placeholder="请填写延期说明" v-model="props.data.delayReason"></el-input>
     </div>
-    <div class="row-item" v-if="props.taskStatus == 3">
+    <div class="row-item" v-if="[3, 7].includes(props.taskStatus)">
       <span class="paddingLR10">实际完成时间</span>
       <el-date-picker
         placeholder="请选择实际完成时间"
         v-model="props.data.actualFinish"
       ></el-date-picker>
     </div>
-    <div class="row-item" v-if="props.taskStatus == 3">
+    <div class="row-item" v-if="[3, 7].includes(props.taskStatus)">
       <span class="paddingLR10">完成情况说明</span>
       <el-input placeholder="请填写完成情况说明" v-model="props.data.completeDesc"></el-input>
     </div>
@@ -37,7 +37,7 @@
     <el-icon @click="deleteChild(index)" v-if="!props.isFirst"
       ><Delete v-if="props.taskStatus == 1"
     /></el-icon>
-    <div v-if="[3, 5].includes(props.taskStatus)" @click="handleItemSubmit" class="submit-btn">
+    <div v-if="[3, 5, 7].includes(props.taskStatus)" @click="handleItemSubmit" class="submit-btn">
       提交
     </div>
   </div>

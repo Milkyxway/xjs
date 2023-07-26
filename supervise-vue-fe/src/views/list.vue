@@ -120,6 +120,10 @@ const state = reactive({
       prop: 'comment'
     },
     {
+      columnName: '延期说明',
+      prop: 'delayReason'
+    },
+    {
       columnName: '创建时间',
       prop: 'createTime'
     },

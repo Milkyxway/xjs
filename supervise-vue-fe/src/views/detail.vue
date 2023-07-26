@@ -124,23 +124,23 @@
               ><el-date-picker
                 v-model="state.formSingle.finishTime"
                 placeholder="请选择计划完成时间"
-                :disabled="state.taskDetail.status !== 1"
+                :disabled="modifyDisable"
               ></el-date-picker
             ></el-form-item>
-            <el-form-item label="实际完成时间" v-if="state.taskDetail.status === 3"
+            <el-form-item label="实际完成时间" v-if="modifyDisable"
               ><el-date-picker
                 v-model="state.formSingle.actualFinish"
                 placeholder="请选择实际完成时间"
               ></el-date-picker
             ></el-form-item>
-            <el-form-item label="实际完成情况" v-if="state.taskDetail.status === 3"
+            <el-form-item label="实际完成情况" v-if="modifyDisable"
               ><el-input
                 placeholder="请输入实际完成情况"
                 v-model="state.formSingle.completeDesc"
               ></el-input
             ></el-form-item>
             <el-form-item label="延期说明" v-if="state.taskDetail.status === 5"
-              ><el-input v-model="state.formSingle.comment"></el-input
+              ><el-input v-model="state.formSingle.delayReason"></el-input
             ></el-form-item>
           </el-form-item>
         </el-form>
@@ -215,7 +215,8 @@ let state = reactive({
     finishTime: '',
     comment: '',
     actualFinish: '',
-    comment: ''
+    comment: '',
+    delayReason: ''
   },
 
   options: [
@@ -258,6 +259,10 @@ const taskContentIsShow = computed(() => {
     return false
   }
   return state.taskDetail.taskGoal !== ''
+})
+
+const modifyDisable = computed(() => {
+  return [3, 7].includes(state.taskDetail.status)
 })
 
 const formSubmitShow = computed(() => {
@@ -323,6 +328,9 @@ const getClassName = computed(() => {
     case 6:
       className = 'status-submit'
       break
+    case 7:
+      className = 'status-delay-process'
+      break
     default:
       break
   }
@@ -338,7 +346,8 @@ const getTitleByStatus = computed(() => {
   const statusTitleMap = {
     1: '确认任务',
     3: '填写完成情况',
-    5: '延期修改'
+    5: '延期修改',
+    7: '填写完成情况'
   }
   return statusTitleMap[state.taskDetail.status]
 })
@@ -355,7 +364,7 @@ const getTaskDetail = async () => {
     leadOrgName: orgnizationToName(leadOrg),
     assistOrgName: orgnizationListIdToName(result.data.assistOrg)
   }
-  if ([3, 5].includes(result.data.status)) {
+  if ([3, 5, 7].includes(result.data.status)) {
     orgnization === result.data.leadOrg && confirmTask() // 只有责任部门能修改任务计划
     if (result.data.children.length) {
       state.hasChildTasks = true
@@ -386,15 +395,19 @@ const handleItemSubmit = async (data) => {
     // 状态流转
     1: 3, // 待确认-->进行中
     3: 6, // 进行中-->已提交待管理员置为完成
-    5: 5 // 延期-->延期
+    5: 7, // 延期-->延期再进行
+    7: 6 // 延期再进行 --> 已提交待管理员置为完成
   }
-  if (!actualFinish) {
+  if ([3, 7].includes(status) && !actualFinish) {
     return toast('请填写实际完成时间', 'error')
   }
-  if (dayjs(actualFinish).format() > dayjs(finishTime).format()) {
+  if (dayjs(finishTime).format() < dayjs().format()) {
+    return toast('请选择今天及以后的时间', 'error')
+  }
+  if ([3, 7].includes(status) && dayjs(actualFinish).format() > dayjs(finishTime).format()) {
     return toast('实际完成时间应早于计划完成时间', 'error')
   }
-  if (!completeDesc) {
+  if ([3, 7].includes(status) && !completeDesc) {
     return toast('请填写完成情况！', 'error')
   }
   await updateSubtaskReq({
@@ -439,7 +452,7 @@ const handleCommit = async (form) => {
 
 const singleTaskSubmit = async () => {
   const {
-    formSingle: { taskGoal, finishTime, comment, actualFinish, completeDesc },
+    formSingle: { taskGoal, finishTime, comment, actualFinish, completeDesc, delayReason },
     taskDetail: { status }
   } = state
   if (!taskGoal) {
@@ -451,17 +464,17 @@ const singleTaskSubmit = async () => {
   if (dayjs(finishTime).format() < dayjs().format()) {
     return toast('请选择今天及以后的时间', 'warning')
   }
-  if (status === 5 && !comment) {
+  if (status === 5 && !delayReason) {
     return toast('请填写延期说明!', 'error')
   }
-  if (status === 3 && !actualFinish) {
+  if ([3, 7].includes(status) && !actualFinish) {
     return toast('请填写实际完成时间', 'error')
   }
 
-  if (status === 3 && dayjs(actualFinish).format() > dayjs(finishTime).format()) {
+  if ([3, 7].includes(status) && dayjs(actualFinish).format() > dayjs(finishTime).format()) {
     return toast('实际完成时间应晚于计划完成时间', 'warning')
   }
-  if (status === 3 && !completeDesc) {
+  if ([3, 7].includes(status) && !completeDesc) {
     return toast('请填写实际完成情况', 'error')
   }
   await updateTaskReq(getParamsByStatus(status))
@@ -472,18 +485,24 @@ const singleTaskSubmit = async () => {
 const getParamsByStatus = (staskStatus) => {
   let params = {}
   const {
-    formSingle: { taskGoal, finishTime, comment, actualFinish, completeDesc }
+    formSingle: { taskGoal, finishTime, comment, actualFinish, completeDesc, delayReason }
   } = state
 
   switch (staskStatus) {
     case 1:
       params = { status: 3 }
       break
-    case 3:
-      params = { actualFinish: dayjs(actualFinish).format(), completeDesc, status: 6 }
-      break
     case 5:
-      params = { comment, status: 5 }
+      params = { delayReason, status: 7 }
+      break
+    case 3:
+    case 7:
+      params = {
+        actualFinish: dayjs(actualFinish).format(),
+        completeDesc,
+        status: 6,
+        delayReason: ''
+      }
       break
     default:
       break
@@ -507,17 +526,18 @@ const subtaskSubmit = async () => {
     if (!i.finishTime) {
       unfill = '请填写计划完成时间'
     }
-    if (taskDetail.status === 1 && i.finishTime < dayjs().format()) {
-      unfill = '请选择今天及以后的时间'
-    }
+    // if (taskDetail.status === 1 && i.finishTime < dayjs().format()) {
+    // if (i.finishTime < dayjs().format()) {
+    //   unfill = '请选择今天及以后的时间'
+    // }
 
-    if (taskDetail.status === 3 && dayjs(i.actualFinish) > dayjs(i.finishTime)) {
-      unfill = '实际完成时间应早于计划完成时间'
-    }
+    // if (taskDetail.status === 3 && dayjs(i.actualFinish) > dayjs(i.finishTime)) {
+    //   unfill = '实际完成时间应早于计划完成时间'
+    // }
 
-    if (taskDetail.status === 5 && !i.comment) {
-      unfill = '请填写延期说明'
-    }
+    // if (taskDetail.status === 5 && !i.delayReason) {
+    //   unfill = '请填写延期说明'
+    // }
   })
   if (unfill) {
     return toast(unfill, 'error')
@@ -611,6 +631,10 @@ getTaskDetail()
 }
 .status-finish {
   color: #67c23a;
+}
+.status-delay-process {
+  color: #e6a23c;
+  font-weight: bold;
 }
 .status-processing {
   color: #e6a23c;

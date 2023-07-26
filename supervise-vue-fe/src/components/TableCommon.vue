@@ -131,8 +131,9 @@ const getStatusName = computed(() => {
   return function (row) {
     if (row.status === 5) {
       let text = taskStatusMap[row.status]
-      const distance = dayjs().diff(dayjs(row.finishTime), 'day')
-      return `${text} ${distance}天`
+      let distance = dayjs().diff(dayjs(row.finishTime), 'day')
+      distance = distance > 0 ? `${distance}天` : ''
+      return `${text} ${distance}`
     }
     return taskStatusMap[row.status]
   }
@@ -184,6 +185,9 @@ const getClassName = computed(() => {
         break
       case 6:
         className = 'status-submit'
+        break
+      case 7:
+        className = 'status-delay-process'
         break
       default:
         break
@@ -267,6 +271,10 @@ const expandAll = () => {
 }
 .status-submit {
   color: #409eff;
+}
+.status-delay-process {
+  color: #e6a23c;
+  font-weight: bold;
 }
 .task-content {
   /* width: 100px; */

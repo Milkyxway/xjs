@@ -96,6 +96,7 @@
               @addChild="addChild"
               :taskStatus="state.childTasksFirst[0].status"
               @handleItemSubmit="handleItemSubmit"
+              :fatherStatus="state.taskDetail.status"
             />
           </el-form-item>
           <el-form-item
@@ -109,6 +110,7 @@
               @deleteChild="deleteChild(index)"
               :taskStatus="item.status"
               @handleItemSubmit="handleItemSubmit"
+              :fatherStatus="state.taskDetail.status"
             />
           </el-form-item>
           <el-form-item v-if="!state.hasChildTasks">

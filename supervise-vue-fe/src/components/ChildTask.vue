@@ -32,10 +32,10 @@
       <el-input placeholder="请填写完成情况说明" v-model="props.data.completeDesc"></el-input>
     </div>
     <el-icon color="#409eff" @click="addChild" v-if="props.isFirst">
-      <CirclePlus v-if="props.taskStatus == 1" />
+      <CirclePlus v-if="props.fatherStatus == 1" />
     </el-icon>
     <el-icon @click="deleteChild(index)" v-if="!props.isFirst"
-      ><Delete v-if="props.taskStatus == 1"
+      ><Delete v-if="props.fatherStatus == 1"
     /></el-icon>
     <div v-if="[3, 5, 7].includes(props.taskStatus)" @click="handleItemSubmit" class="submit-btn">
       提交
@@ -53,6 +53,10 @@ const props = defineProps({
     default: true
   },
   taskStatus: {
+    type: Number,
+    default: 0
+  },
+  fatherStatus: {
     type: Number,
     default: 0
   }

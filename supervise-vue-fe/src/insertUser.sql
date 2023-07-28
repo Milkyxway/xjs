@@ -1,0 +1,10 @@
+INSERT into task_base.user value('dangqun', 'dangqun123456', 3, 'section', 2, '党群工作部');
+INSERT into task_base.user value('renli', 'renli123456', 4, 'section', 3, '人力资源部');
+INSERT into task_base.user value('caiwu', 'caiwu123456', 5, 'section', 4, '财务资产部');
+INSERT into task_base.user value('qyfz', 'qyfz123456', 6, 'section', 5, '企业发展部');
+INSERT into task_base.user value('shichang', 'shichang123456', 7, 'section', 6, '市场运营部');
+INSERT into task_base.user value('zhengqi', 'zhengqi123456', 8, 'section', 7, '政企客户部');
+INSERT into task_base.user value('gongke', 'gongke123456', 9, 'section', 8, '公共客户部');
+INSERT into task_base.user value('jszc', 'jszc123456', 10, 'section', 9, '技术支撑部');
+INSERT into task_base.user value('gcjs', 'gcjs123456', 11, 'section', 10, '工程建设部');
+INSERT into task_base.user value('abyw', 'abyw123456', 12, 'section', 11, '安播运维部');

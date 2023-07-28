@@ -24,6 +24,11 @@
             :class="isExpand ? 'task-content-expand' : 'task-content'"
             >{{ row.taskContent }}</span
           >
+          <span
+            v-if="item.prop === 'completeDesc'"
+            :class="isExpand ? 'task-content-expand' : 'task-content'"
+            >{{ row.completeDesc }}</span
+          >
           <!-- <span v-if="item.prop === 'taskContent'" @click="expandAll">展开</span> -->
         </template></el-table-column
       >
@@ -283,7 +288,7 @@ const expandAll = () => {
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3; /* 这里是超出几行省略 */
+  -webkit-line-clamp: 4; /* 这里是超出几行省略 */
 }
 .task-content-expand {
   display: block;

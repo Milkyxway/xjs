@@ -67,7 +67,8 @@ const state = reactive({
     status: null,
     comment: null,
     createTime: null,
-    ariseOrg: null
+    ariseOrg: null,
+    taskSource: null
     // appealType: null
   },
   tableColumns: [
@@ -78,6 +79,10 @@ const state = reactive({
     {
       columnName: '任务内容',
       prop: 'taskContent'
+    },
+    {
+      columnName: '任务来源',
+      prop: 'taskSource'
     },
     {
       columnName: '提出部门',
@@ -200,7 +205,7 @@ const init = () => {
     state.chooseTab = 'all'
   } else {
     getRelatedMeTask()
-    state.tableColumns = state.tableColumns.filter((i) => i.prop !== 'ariseOrg') // 部门权限看不见问题提出部门
+    state.tableColumns = state.tableColumns.filter((i) => i.prop !== 'taskSource') // 部门权限看不见问题提出部门
   }
 }
 
@@ -219,10 +224,15 @@ watch(
 
 // 弹窗里确定按钮触发
 const handleCommit = async (form) => {
-  const { assistOrg, category, taskContent, leadOrg, comment, taskId } = form
+  const { assistOrg, category, taskContent, leadOrg, comment, taskId, ariseOrg } = form
+  let params = form
+  if (!ariseOrg) {
+    const { ariseOrg, ...rest } = form
+    params = rest
+  }
   const result =
     state.modalType === 'add'
-      ? await createTaskReq(form)
+      ? await createTaskReq(params)
       : await updateTaskReq({
           assistOrg,
           category,

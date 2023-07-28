@@ -23,7 +23,7 @@ CREATE TABLE `task_base`.`task_list` (
   PRIMARY KEY (`taskId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=108 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
-
+ALTER TABLE `task_base`.`task_list` ADD COLUMN `taskSource` INT NULL AFTER `delayReason`;
 
 CREATE TABLE `task_base`.`subtask_list` (
   `parentId` int DEFAULT NULL,

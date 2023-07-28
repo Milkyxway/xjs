@@ -38,11 +38,27 @@
         />
       </el-form-item>
       <el-form-item
-        label="提出部门"
+        label="任务来源"
         :label-width="formLabelWidth"
-        prop="ariseOrg"
-        :rules="rules('请选择提出部门')"
+        prop="taskContent"
+        :rules="rules('请选择任务来源')"
       >
+        <el-select
+          v-model="form.taskSource"
+          placeholder="请选择任务来源"
+          clearable
+          :disabled="disableCondition"
+        >
+          <el-option
+            v-for="item in taskOrigin"
+            v-bind:key="item.key"
+            :value="item.value"
+            :label="item.label"
+            >{{ item.label }}</el-option
+          >
+        </el-select>
+      </el-form-item>
+      <el-form-item label="提出部门" :label-width="formLabelWidth" prop="ariseOrg">
         <el-select
           v-model="form.ariseOrg"
           placeholder="请选择提出部门"
@@ -119,7 +135,13 @@
 
 <script setup>
 import { reactive, ref, watch, computed } from 'vue'
-import { taskStatusList, taskCategory, orgnizationTree, appealCategory } from '../constant/index'
+import {
+  taskStatusList,
+  taskCategory,
+  orgnizationTree,
+  appealCategory,
+  taskOrigin
+} from '../constant/index'
 const props = defineProps({
   modalVisible: {
     default: false,
@@ -160,7 +182,8 @@ let form = reactive({
   childTask: true,
   leadOrg: '',
   assistOrg: '',
-  ariseOrg: null
+  ariseOrg: null,
+  taskSource: ''
 })
 let state = reactive({
   taskCategory

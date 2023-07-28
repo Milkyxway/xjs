@@ -19,6 +19,7 @@
             v-if="['finishTime', 'createTime', 'updateTime', 'actualFinish'].includes(item.prop)"
             >{{ getTime(row, item.prop) }}</span
           >
+          <span v-if="item.prop === 'taskSource'">{{ getTaskSourceName(row) }}</span>
           <span
             v-if="item.prop === 'taskContent'"
             :class="isExpand ? 'task-content-expand' : 'task-content'"
@@ -91,7 +92,7 @@ import { storeToRefs } from 'pinia'
 import { computed, reactive, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { deleteTaskReq, taskSetFinishReq } from '../api/list'
-import { taskStatusMap, taskCategoryMap, orgnizationTree } from '../constant/index'
+import { taskStatusMap, taskCategoryMap, orgnizationTree, taskSourceMap } from '../constant/index'
 import { getLocalStore } from '../util/localStorage'
 import { userLoginStore } from '../stores/login'
 import { orgnizationListIdToName, orgnizationToName } from '../util/orgnization'
@@ -141,6 +142,13 @@ const getStatusName = computed(() => {
       return `${text} ${distance}`
     }
     return taskStatusMap[row.status]
+  }
+})
+
+// 转换成任务来源名称
+const getTaskSourceName = computed(() => {
+  return function (row) {
+    return taskSourceMap[row.taskSource]
   }
 })
 

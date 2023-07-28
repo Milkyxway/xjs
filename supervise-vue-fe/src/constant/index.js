@@ -294,11 +294,43 @@ const appealCategory = [
   }
 ]
 
+const taskOrigin = [
+  {
+    label: '专项调研',
+    value: 1
+  },
+  {
+    label: '公司重点工作',
+    value: 2
+  },
+  {
+    label: '安全检查整改',
+    value: 3
+  },
+  {
+    label: '审计整改',
+    value: 4
+  },
+  {
+    label: '党委巡察整改',
+    value: 5
+  }
+]
+const taskSourceMap = {
+  1: '专项调研',
+  2: '公司重点工作',
+  3: '安全检查整改',
+  4: '审计整改',
+  5: '党委巡察整改'
+}
+
 export {
   taskStatusMap,
   taskStatusList,
   taskCategory,
   taskCategoryMap,
   orgnizationTree,
-  appealCategory
+  appealCategory,
+  taskOrigin,
+  taskSourceMap
 }

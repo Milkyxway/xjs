@@ -38,3 +38,16 @@ export const modifyPwdReq = (data) => {
     data
   })
 }
+
+/**
+ * 创建账号
+ * @param {*} data
+ * @returns
+ */
+export const createAccountReq = (data) => {
+  return createRequest()({
+    url: '/api/createaccount',
+    method: 'post',
+    data
+  })
+}

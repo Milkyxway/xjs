@@ -2,7 +2,7 @@
   <QueryHeader type="add" @handleQuery="handleQuery" @createTask="createTask" />
   <div>
     <el-tabs v-model="state.chooseTab">
-      <el-tab-pane label="我的" name="mine" v-if="role !== 'admin'">
+      <el-tab-pane label="我的" name="mine" v-if="role === 'section'">
         <TableCommon
           :table-data="state.myTable"
           :table-columns="state.tableColumns"
@@ -201,7 +201,7 @@ const insertIdIntoArr = (data) => {
 
 const init = () => {
   getSuperviseList()
-  if (role.value === 'admin') {
+  if (role.value !== 'section') {
     state.chooseTab = 'all'
   } else {
     getRelatedMeTask()

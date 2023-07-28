@@ -33,7 +33,7 @@ export const routeList = [
         ]
       },
       {
-        name: '个人中心',
+        name: '账号模块',
         path: '/personal',
         component: () => import('../views/PersonalHome.vue'),
         children: [
@@ -42,6 +42,13 @@ export const routeList = [
             name: '修改密码',
             isSider: true,
             component: () => import('../views/password.vue')
+          },
+          {
+            path: '/personal/createaccount',
+            name: '创建账号',
+            isSider: true,
+            auth: ['admin'],
+            component: () => import('../views/createaccount.vue')
           }
         ]
       }

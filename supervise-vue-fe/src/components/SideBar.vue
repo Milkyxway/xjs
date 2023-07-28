@@ -15,7 +15,7 @@
         v-for="child in item.children.filter((i) => i.isSider)"
         v-bind:key="child.key"
       >
-        <el-menu-item :key="child.path" :index="child.path">{{
+        <el-menu-item :key="child.path" :index="child.path" v-if="showMenuItem(child)">{{
           child.name
         }}</el-menu-item></el-menu-item-group
       >
@@ -24,6 +24,7 @@
 </template>
 <script setup>
 import { reactive, computed } from 'vue'
+import { getLocalStore } from '../util/localStorage'
 import router, { routeList } from '../router/index'
 
 const homeMenu = routeList.filter((item) => item.id === 'home')[0]?.children || []
@@ -36,8 +37,16 @@ const currentSiderPath = computed(() => {
 })
 const defaultSelectedKey =
   currentPath === '/' || menuLevel < 3 ? '/dataCenter/project' : currentPath
-
+const role = getLocalStore('userInfo').role
 const handleOpen = () => {}
 const handleClose = () => {}
+const showMenuItem = computed(() => {
+  return function (item) {
+    if (item.auth) {
+      return item.auth.includes(role)
+    }
+    return true
+  }
+})
 </script>
 <style></style>

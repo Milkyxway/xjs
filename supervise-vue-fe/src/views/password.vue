@@ -7,6 +7,7 @@
     </template>
     <el-form ref="formRef" :model="form">
       <el-form-item
+        :label-width="formLabelWidth"
         prop="oldPwd"
         label="旧密码"
         :rules="[{ required: true, message: '请输入旧密码', trigger: 'blur' }]"
@@ -14,6 +15,7 @@
         <el-input placeholder="请输入旧密码" v-model="form.oldPwd" type="password"></el-input>
       </el-form-item>
       <el-form-item
+        :label-width="formLabelWidth"
         prop="newPwd"
         label="新密码"
         :rules="[{ required: true, message: '请输入新密码', trigger: 'blur' }]"
@@ -21,6 +23,7 @@
         <el-input placeholder="请输入新密码" v-model="form.newPwd" type="password"></el-input>
       </el-form-item>
       <el-form-item
+        :label-width="formLabelWidth"
         prop="newPwdAgn"
         label="新密码重复"
         :rules="[{ required: true, message: '请再次输入旧密码', trigger: 'blur' }]"
@@ -47,6 +50,7 @@ const form = ref({
   newPwd: '',
   newPwdAgn: ''
 })
+const formLabelWidth = '140px'
 const modifyPwd = () => {
   const { userId } = getLocalStore('userInfo')
   formRef.value.validate().then(async (res) => {

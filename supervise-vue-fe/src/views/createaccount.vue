@@ -1,5 +1,10 @@
 <template>
   <el-card>
+    <template #header>
+      <div class="card-header">
+        <span>创建账号</span>
+      </div>
+    </template>
     <el-form ref="formRef" :model="state.formData">
       <el-form-item
         :label-width="formLabelWidth"

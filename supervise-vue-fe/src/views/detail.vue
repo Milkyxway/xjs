@@ -1,5 +1,6 @@
 <template>
   <div>
+    <NavBack />
     <el-card class="box-card">
       <template #header>
         <div class="card-header">
@@ -178,6 +179,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { dayjs } from 'element-plus'
 import TaskModal from '../components/TaskModal.vue'
 import ChildTask from '../components/ChildTask.vue'
+import NavBack from '../components/NavBack.vue'
 import {
   taskDetailReq,
   appealTaskReq,

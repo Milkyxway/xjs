@@ -31,7 +31,8 @@ const logOutFn = () => {
         ><span><img src="../assets/logo.png" class="logo-icon" /></span>
 
         <div class="user-wrap">
-          <el-icon><User /></el-icon><span>{{ userInfoLocal.usernameCn }}</span>
+          <el-icon><User /></el-icon
+          ><span>{{ userInfoLocal.usernameCn || userInfoLocal.username }}</span>
           <span @click="logOutFn" class="logout">登出</span>
         </div>
       </el-header>

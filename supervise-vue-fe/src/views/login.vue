@@ -31,6 +31,7 @@
             :placeholder="passwordProps.placeHolder"
             v-model="formData.password"
             type="password"
+            :show-password="true"
           ></el-input>
         </el-form-item>
         <el-button type="primary" @click="login" class="login-btn">确认登录</el-button>

@@ -296,6 +296,10 @@ const appealCategory = [
 
 const taskOrigin = [
   {
+    label: '全部',
+    value: 0
+  },
+  {
     label: '专项调研',
     value: 1
   },

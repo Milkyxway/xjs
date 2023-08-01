@@ -21,14 +21,9 @@
           >
           <span v-if="item.prop === 'taskSource'">{{ getTaskSourceName(row) }}</span>
           <span
-            v-if="item.prop === 'taskContent'"
+            v-if="['taskContent', 'completeDesc', 'comment'].includes(item.prop)"
             :class="isExpand ? 'task-content-expand' : 'task-content'"
-            >{{ row.taskContent }}</span
-          >
-          <span
-            v-if="item.prop === 'completeDesc'"
-            :class="isExpand ? 'task-content-expand' : 'task-content'"
-            >{{ row.completeDesc }}</span
+            >{{ row[item.prop] }}</span
           >
           <!-- <span v-if="item.prop === 'taskContent'" @click="expandAll">展开</span> -->
         </template></el-table-column
@@ -208,7 +203,6 @@ const getClassName = computed(() => {
     return className
   }
 })
-
 const getOrgName = computed(() => {
   return function (row, propName) {
     if (propName === 'assistOrg') {

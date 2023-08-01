@@ -153,6 +153,8 @@ const getSuperviseList = async () => {
   state.total = result.data.total
 }
 
+const handleQueryAll = (param) => (param === 0 ? null : param)
+
 const handleQuery = (query) => {
   Object.keys(query).map((i) => {
     if (query[i] === '') {
@@ -161,8 +163,9 @@ const handleQuery = (query) => {
   })
   state.querys = {
     ...query,
-    status: query.status === 0 ? null : query.status, // 全部 给后端传null
-    category: query.category === 0 ? null : query.category,
+    taskSource: handleQueryAll(query.taskSource),
+    status: handleQueryAll(query.status), // 全部 给后端传null
+    category: handleQueryAll(query.category),
     createTime: dayjs(query.createTime).year()
   }
   state.page.pageNum = 0

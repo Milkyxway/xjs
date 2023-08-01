@@ -2,8 +2,8 @@
   <el-card>
     <form :v-model="queryForm">
       <el-row>
-        <el-col :span="2">任务类别</el-col>
-        <el-col :span="6">
+        <el-col :span="styleByRole.spanSpace">任务类别</el-col>
+        <el-col :span="styleByRole.elSpace">
           <el-select v-model="queryForm.category" placeholder="请选择任务类别" clearable>
             <el-option
               v-for="item in taskCategoryList"
@@ -14,8 +14,20 @@
             >
           </el-select>
         </el-col>
-        <el-col :span="2">牵头部门</el-col>
-        <el-col :span="6">
+        <el-col :span="styleByRole.spanSpace" v-if="['admin'].includes(role)">任务来源</el-col>
+        <el-col :span="styleByRole.elSpace" v-if="['admin'].includes(role)">
+          <el-select v-model="queryForm.taskSource" placeholder="请选择任务来源" clearable>
+            <el-option
+              v-for="item in taskOriginRef"
+              v-bind:key="item.key"
+              :value="item.value"
+              :label="item.label"
+              >{{ item.label }}</el-option
+            >
+          </el-select>
+        </el-col>
+        <el-col :span="styleByRole.spanSpace">牵头部门</el-col>
+        <el-col :span="styleByRole.elSpace">
           <el-select placeholder="请选择牵头部门" v-model="queryForm.leadOrg" clearable>
             <el-option
               v-for="org in orgnizationList"
@@ -26,8 +38,8 @@
             >
           </el-select>
         </el-col>
-        <el-col :span="2">协办部门</el-col>
-        <el-col :span="6">
+        <el-col :span="styleByRole.spanSpace">协办部门</el-col>
+        <el-col :span="styleByRole.elSpace">
           <el-select placeholder="请选择协办部门" v-model="queryForm.assistOrg" clearable>
             <el-option
               v-for="org in orgnizationList"
@@ -41,8 +53,20 @@
       </el-row>
       <div class="white-space"></div>
       <el-row>
-        <el-col :span="2">任务状态</el-col>
-        <el-col :span="6"
+        <el-col :span="styleByRole.spanSpace" v-if="['admin'].includes(role)">提出部门</el-col>
+        <el-col :span="styleByRole.elSpace" v-if="['admin'].includes(role)"
+          ><el-select v-model="queryForm.ariseOrg" placeholder="请选择提出部门" clearable>
+            <el-option
+              v-for="item in orgnizationList"
+              v-bind:key="item.key"
+              :value="item.value"
+              :label="item.label"
+              >{{ item.label }}</el-option
+            >
+          </el-select></el-col
+        >
+        <el-col :span="styleByRole.spanSpace">任务状态</el-col>
+        <el-col :span="styleByRole.elSpace"
           ><el-select v-model="queryForm.status" placeholder="请选择任务状态" clearable>
             <el-option
               v-for="item in statusList"
@@ -53,8 +77,8 @@
             >
           </el-select></el-col
         >
-        <el-col :span="2">任务年度</el-col>
-        <el-col :span="6"
+        <el-col :span="styleByRole.spanSpace">任务年度</el-col>
+        <el-col :span="styleByRole.elSpace"
           ><el-date-picker
             type="year"
             v-model="queryForm.createTime"
@@ -62,8 +86,8 @@
             clearable
           ></el-date-picker
         ></el-col>
-        <el-col :span="2">关键字</el-col>
-        <el-col :span="6"
+        <el-col :span="styleByRole.spanSpace">关键字</el-col>
+        <el-col :span="styleByRole.elSpace"
           ><el-input placeholder="请输入关键字" v-model="queryForm.keyword" clearable></el-input
         ></el-col>
       </el-row>
@@ -78,8 +102,8 @@
   </el-card>
 </template>
 <script setup>
-import { ref, reactive } from 'vue'
-import { taskStatusList, taskCategory, orgnizationTree } from '../constant'
+import { ref, reactive, computed } from 'vue'
+import { taskStatusList, taskCategory, orgnizationTree, taskOrigin } from '../constant'
 import { getLocalStore } from '../util/localStorage'
 const emit = defineEmits(['handleQuery', 'createTask'])
 const role = getLocalStore('userInfo').role
@@ -89,11 +113,25 @@ let queryForm = reactive({
   keyword: '',
   createTime: null,
   leadOrg: null,
-  assistOrg: null
+  assistOrg: null,
+  taskSource: null,
+  ariseOrg: null
 })
 const statusList = ref(taskStatusList)
 const taskCategoryList = ref(taskCategory)
 const orgnizationList = ref(orgnizationTree)
+const taskOriginRef = ref(taskOrigin)
+const styleByRole = computed(() => {
+  return ['admin'].includes(role)
+    ? {
+        spanSpace: 2,
+        elSpace: 4
+      }
+    : {
+        spanSpace: 2,
+        elSpace: 6
+      }
+})
 const handleQuery = () => {
   emit('handleQuery', queryForm)
 }
@@ -107,6 +145,8 @@ const reset = () => {
   queryForm.assistOrg = null
   queryForm.status = null
   queryForm.createTime = null
+  queryForm.ariseOrg = null
+  queryForm.taskSource = null
   handleQuery()
 }
 </script>

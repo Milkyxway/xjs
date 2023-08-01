@@ -465,7 +465,7 @@ const singleTaskSubmit = async () => {
   if (!finishTime) {
     return toast('请填写计划完成时间!', 'error')
   }
-  if (dayjs(finishTime).format() < dayjs().format()) {
+  if ([1, 5].includes(status) && dayjs(finishTime).format() < dayjs().format()) {
     return toast('请选择今天及以后的时间', 'warning')
   }
   if (status === 5 && !delayReason) {

@@ -1,5 +1,5 @@
 <template>
-  <el-card>
+  <el-card :class="[`card-${role}`]">
     <form :v-model="queryForm">
       <el-row>
         <el-col :span="styleByRole.spanSpace">任务类别</el-col>
@@ -161,7 +161,14 @@ const reset = () => {
   align-items: center;
   padding: 15px 0 0 0;
 }
-:deep(.el-input) {
-  width: 250px !important;
+.card-admin {
+  :deep(.el-input) {
+    width: 185px !important;
+  }
+}
+.card-section {
+  :deep(.el-input) {
+    width: 280px !important;
+  }
 }
 </style>

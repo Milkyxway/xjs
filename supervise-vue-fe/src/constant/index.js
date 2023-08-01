@@ -81,6 +81,10 @@ const taskCategory = [
   {
     label: '制度管理',
     value: 10
+  },
+  {
+    label: '财务资产',
+    value: 11
   }
 ]
 
@@ -94,7 +98,8 @@ const taskCategoryMap = {
   7: '器材保障',
   8: '技术支撑',
   9: '组织人事',
-  10: '制度管理'
+  10: '制度管理',
+  11: '财务资产'
 }
 
 const orgnizationTree = [

@@ -34,3 +34,9 @@ UPDATE task_base.task_list  SET completeDesc = '高清升级是省政府对于�
 UPDATE task_base.task_list  SET completeDesc = '现有的体验政策都有后续订购策略。' WHERE taskId = 118
 UPDATE task_base.task_list  SET completeDesc = '目前利用各种新媒体手段和渠道制作了各种宣传视频，希望一线同事能积极转发、宣传。' WHERE taskId = 119
 UPDATE task_base.task_list  SET completeDesc = '无锡各镇（街道）与各广电站对口联络，已结合先前及目前对接情况梳理完毕，同时各镇（街道）与多个广电站有交集的，已与各站沟通确定，并已将名单发至各站。后期行政区划调整的，各涉及站协商后作相应调整。' WHERE taskId = 120
+
+
+UPDATE `task_base`.`task_list` SET status = 6 WHERE taskId = 144;
+UPDATE `task_base`.`task_list` SET status = 6 WHERE taskId = 143;
+UPDATE `task_base`.`task_list` SET status = 6 WHERE taskId = 140;
+UPDATE `task_base`.`task_list` SET status = 6 WHERE taskId = 135;

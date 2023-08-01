@@ -405,7 +405,7 @@ const handleItemSubmit = async (data) => {
   if ([3, 7].includes(status) && !actualFinish) {
     return toast('请填写实际完成时间', 'error')
   }
-  if (dayjs(finishTime).format() < dayjs().format()) {
+  if ([1, 5].includes(status) && dayjs(finishTime).format() < dayjs().format()) {
     return toast('请选择今天及以后的时间', 'error')
   }
   if ([3, 7].includes(status) && dayjs(actualFinish).format() > dayjs(finishTime).format()) {
@@ -573,7 +573,7 @@ const submitFn = async () => {
         taskId: taskId * 1,
         comment,
         resolveType: taskType,
-        status: 3
+        status: 6 // 变成已提交
       })
       toast('提交成功！')
       router.replace('/supervise/list')

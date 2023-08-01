@@ -40,3 +40,8 @@ UPDATE `task_base`.`task_list` SET status = 6 WHERE taskId = 144;
 UPDATE `task_base`.`task_list` SET status = 6 WHERE taskId = 143;
 UPDATE `task_base`.`task_list` SET status = 6 WHERE taskId = 140;
 UPDATE `task_base`.`task_list` SET status = 6 WHERE taskId = 135;
+UPDATE `task_base`.`task_list` SET status = 3 WHERE taskId = 123;
+UPDATE `task_base`.`subtask_list` SET status = 6  WHERE subtaskId = 50;
+UPDATE `task_base`.`subtask_list` SET status = 3 WHERE subtaskId = 51;
+UPDATE `task_base`.`subtask_list` SET status = 3, completeDesc="3月份收集汇总产品素材" WHERE subtaskId = 53;
+UPDATE `task_base`.`subtask_list` SET status = 3, completeDesc="3月份收集汇总产品素材" WHERE subtaskId = 53;

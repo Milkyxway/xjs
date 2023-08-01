@@ -196,7 +196,7 @@ const inputForm = ref()
 const route = useRoute()
 const router = useRouter()
 
-const taskId = route.params.taskId
+const taskId = route.params.taskId * 1
 const userInfo = getLocalStore('userInfo')
 const role = userInfo.role
 const orgnization = userInfo.orgnization
@@ -443,11 +443,10 @@ const deleteChild = (index) => {
 }
 
 const handleCommit = async (form) => {
-  const { categoryName, leadOrgName, assistOrgName, createTime, ...rest } = form
   await appealTaskReq({
-    createTime: dayjs(createTime).format(),
-    taskId,
-    ...rest
+    status: 2,
+    comment: form.comment,
+    taskId
   })
   state.modalVisible = false
   toast('提交成功！')
@@ -515,7 +514,7 @@ const getParamsByStatus = (staskStatus) => {
     ...params,
     taskGoal,
     finishTime: dayjs(finishTime).format(),
-    taskId: taskId * 1
+    taskId
   }
 }
 
@@ -552,7 +551,7 @@ const subtaskSubmit = async () => {
       leadOrg: taskDetail.leadOrg,
       finishTime: dayjs(i.finishTime).format(),
       actualFinish: i.actualFinish ? dayjs(i.actualFinish).format() : null,
-      parentId: taskId * 1,
+      parentId: taskId,
       status: 3
     }
   })
@@ -570,7 +569,7 @@ const submitFn = async () => {
   if (['非问题仅解释', '该问题已完成'].includes(taskType)) {
     return inputForm.value.validate().then(async (res) => {
       await updateTaskReq({
-        taskId: taskId * 1,
+        taskId,
         comment,
         resolveType: taskType,
         status: 6 // 变成已提交

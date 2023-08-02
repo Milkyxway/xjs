@@ -139,14 +139,9 @@ const createTask = () => {
   emit('createTask')
 }
 const reset = () => {
-  queryForm.keyword = ''
-  queryForm.category = null
-  queryForm.leadOrg = null
-  queryForm.assistOrg = null
-  queryForm.status = null
-  queryForm.createTime = null
-  queryForm.ariseOrg = null
-  queryForm.taskSource = null
+  Object.keys(queryForm).map((i) => {
+    queryForm[i] = null
+  })
   handleQuery()
 }
 </script>

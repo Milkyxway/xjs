@@ -20,6 +20,7 @@
     "scss": "^0.2.4",
     "scss-loader": "^0.0.1",
     "vue": "^3.3.4",
+    "vue-echarts": "^6.6.0",
     "vue-router": "^4.2.2"
   },
   "devDependencies": {

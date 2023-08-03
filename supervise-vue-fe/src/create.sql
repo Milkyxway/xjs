@@ -84,3 +84,5 @@ CREATE TABLE `subtask_list` (
 ) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
+ALTER TABLE `task_supervise_schema`.`task_list` 
+ADD COLUMN `delayTimes` INT ZEROFILL NULL AFTER `taskSource`;

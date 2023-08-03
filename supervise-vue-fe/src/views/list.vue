@@ -85,6 +85,10 @@ const state = reactive({
       prop: 'taskSource'
     },
     {
+      columnName: '来源描述',
+      prop: 'sourceDesc'
+    },
+    {
       columnName: '提出部门',
       prop: 'ariseOrg'
     },

@@ -58,6 +58,14 @@
           >
         </el-select>
       </el-form-item>
+      <el-form-item label="来源描述" :label-width="formLabelWidth" prop="sourceDesc">
+        <el-input
+          clearable
+          :disabled="disableCondition"
+          placeholder="请填写来源描述"
+          v-model="form.sourceDesc"
+        ></el-input>
+      </el-form-item>
       <el-form-item label="提出部门" :label-width="formLabelWidth" prop="ariseOrg">
         <el-select
           v-model="form.ariseOrg"
@@ -183,7 +191,8 @@ let form = reactive({
   leadOrg: '',
   assistOrg: '',
   ariseOrg: null,
-  taskSource: ''
+  taskSource: '',
+  sourceDesc: ''
 })
 let state = reactive({
   taskCategory

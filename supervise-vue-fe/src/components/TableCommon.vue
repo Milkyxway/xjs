@@ -132,12 +132,6 @@ watch(
   }
 )
 
-const getRowClassName = computed(() => {
-  return function (row) {
-    return row?.row?.children?.length > 0 ? '123' : '456'
-  }
-})
-
 // 转换成状态名称
 const getStatusName = computed(() => {
   return function (row) {
@@ -148,6 +142,12 @@ const getStatusName = computed(() => {
       return `${text} ${distance}`
     }
     return taskStatusMap[row.status]
+  }
+})
+
+const getRowClassName = computed(() => {
+  return function (row) {
+    return row.row.parentId ? 'subtask-row' : 'task-row'
   }
 })
 
@@ -270,7 +270,7 @@ const expandAll = () => {
   state.isExpand = true
 }
 </script>
-<style scoped>
+<style>
 .status-finish {
   color: #67c23a;
 }
@@ -313,6 +313,9 @@ const expandAll = () => {
   align-items: center;
   margin-top: 10px;
 }
-.children-row {
+.el-table .subtask-row {
+  /* background-color: rgba(103, 194, 58, 0.2) !important; */
+  font-size: 12px;
+  color: #adadad;
 }
 </style>

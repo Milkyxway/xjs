@@ -96,7 +96,7 @@
               :isFirst="true"
               @addChild="addChild"
               :taskStatus="state.childTasksFirst[0].status"
-              @handleItemSubmit="handleItemSubmit"
+              @handleItemSubmit="(data) => handleItemSubmit(data, state.childTasksFirst[0].status)"
               :fatherStatus="state.taskDetail.status"
             />
           </el-form-item>
@@ -110,7 +110,7 @@
               :isFirst="false"
               @deleteChild="deleteChild(index)"
               :taskStatus="item.status"
-              @handleItemSubmit="handleItemSubmit"
+              @handleItemSubmit="(data) => handleItemSubmit(data, item.status)"
               :fatherStatus="state.taskDetail.status"
             />
           </el-form-item>
@@ -390,11 +390,8 @@ const getSecondEnd = (list) => {
   return arr
 }
 
-const handleItemSubmit = async (data) => {
+const handleItemSubmit = async (data, status) => {
   const { actualFinish, finishTime, completeDesc } = data
-  const {
-    taskDetail: { status }
-  } = state
   const statusProcess = {
     // 状态流转
     1: 3, // 待确认-->进行中

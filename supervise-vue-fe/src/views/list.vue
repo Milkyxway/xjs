@@ -158,6 +158,15 @@ const getSuperviseList = async () => {
 }
 
 const handleQueryAll = (param) => (param === 0 ? null : param)
+const getRangeDateParam = (range) => {
+  if (range) {
+    return [
+      dayjs(range[0]).format('YYYY-MM-DD HH:mm:ss'),
+      dayjs(range[1]).format('YYYY-MM-DD HH:mm:ss')
+    ]
+  }
+  return null
+}
 
 const handleQuery = (query) => {
   Object.keys(query).map((i) => {
@@ -170,7 +179,7 @@ const handleQuery = (query) => {
     taskSource: handleQueryAll(query.taskSource),
     status: handleQueryAll(query.status), // 全部 给后端传null
     category: handleQueryAll(query.category),
-    createTime: dayjs(query.createTime).year()
+    createTime: getRangeDateParam(query.createTime)
   }
   state.page.pageNum = 0
   state.page.pageSize = 10

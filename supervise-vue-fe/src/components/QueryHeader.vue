@@ -1,9 +1,9 @@
 <template>
   <el-card :class="[`card-${role}`]">
     <form :v-model="queryForm">
-      <el-row>
-        <el-col :span="styleByRole.spanSpace">任务类别</el-col>
-        <el-col :span="styleByRole.elSpace">
+      <div class="row-item">
+        <div class="query-select">
+          <span class="query-title">任务类别</span>
           <el-select v-model="queryForm.category" placeholder="请选择任务类别" clearable>
             <el-option
               v-for="item in taskCategoryList"
@@ -13,9 +13,9 @@
               >{{ item.label }}</el-option
             >
           </el-select>
-        </el-col>
-        <el-col :span="styleByRole.spanSpace" v-if="['admin'].includes(role)">任务来源</el-col>
-        <el-col :span="styleByRole.elSpace" v-if="['admin'].includes(role)">
+        </div>
+        <div v-if="['admin'].includes(role)" class="query-select">
+          <span class="query-title">任务来源</span>
           <el-select v-model="queryForm.taskSource" placeholder="请选择任务来源" clearable>
             <el-option
               v-for="item in taskOriginRef"
@@ -25,9 +25,14 @@
               >{{ item.label }}</el-option
             >
           </el-select>
-        </el-col>
-        <el-col :span="styleByRole.spanSpace">牵头部门</el-col>
-        <el-col :span="styleByRole.elSpace">
+        </div>
+        <div v-if="['admin'].includes(role)" class="query-select">
+          <span class="query-title">来源描述</span>
+          <el-input v-model="queryForm.sourceDesc" placeholder="请填写来源描述" clearable>
+          </el-input>
+        </div>
+        <div class="query-select">
+          <span class="query-title">牵头部门</span>
           <el-select placeholder="请选择牵头部门" v-model="queryForm.leadOrg" clearable>
             <el-option
               v-for="org in orgnizationList"
@@ -37,9 +42,9 @@
               >{{ org.label }}</el-option
             >
           </el-select>
-        </el-col>
-        <el-col :span="styleByRole.spanSpace">协办部门</el-col>
-        <el-col :span="styleByRole.elSpace">
+        </div>
+        <div class="query-select">
+          <span class="query-title">协办部门</span>
           <el-select placeholder="请选择协办部门" v-model="queryForm.assistOrg" clearable>
             <el-option
               v-for="org in orgnizationList"
@@ -49,13 +54,10 @@
               >{{ org.label }}</el-option
             >
           </el-select>
-        </el-col>
-      </el-row>
-      <div class="white-space"></div>
-      <el-row>
-        <el-col :span="styleByRole.spanSpace" v-if="['admin'].includes(role)">提出部门</el-col>
-        <el-col :span="styleByRole.elSpace" v-if="['admin'].includes(role)"
-          ><el-select v-model="queryForm.ariseOrg" placeholder="请选择提出部门" clearable>
+        </div>
+        <div v-if="['admin'].includes(role)" class="query-select">
+          <span class="query-title">提出部门</span>
+          <el-select v-model="queryForm.ariseOrg" placeholder="请选择提出部门" clearable>
             <el-option
               v-for="item in orgnizationList"
               v-bind:key="item.key"
@@ -63,11 +65,11 @@
               :label="item.label"
               >{{ item.label }}</el-option
             >
-          </el-select></el-col
-        >
-        <el-col :span="styleByRole.spanSpace">任务状态</el-col>
-        <el-col :span="styleByRole.elSpace"
-          ><el-select v-model="queryForm.status" placeholder="请选择任务状态" clearable>
+          </el-select>
+        </div>
+        <div class="query-select">
+          <span class="query-title">任务状态</span>
+          <el-select v-model="queryForm.status" placeholder="请选择任务状态" clearable>
             <el-option
               v-for="item in statusList"
               v-bind:key="item.key"
@@ -75,22 +77,24 @@
               :label="item.label"
               >{{ item.label }}</el-option
             >
-          </el-select></el-col
-        >
-        <el-col :span="styleByRole.spanSpace">任务年度</el-col>
-        <el-col :span="styleByRole.elSpace"
-          ><el-date-picker
-            type="year"
+          </el-select>
+        </div>
+        <div class="query-select">
+          <span class="query-title">任务年度</span>
+          <el-date-picker
+            type="daterange"
+            range-separator="-"
+            start-placeholder="开始时间"
+            end-placeholder="结束时间"
             v-model="queryForm.createTime"
-            placeholder="请选择任务年度"
             clearable
-          ></el-date-picker
-        ></el-col>
-        <el-col :span="styleByRole.spanSpace">关键字</el-col>
-        <el-col :span="styleByRole.elSpace"
-          ><el-input placeholder="请输入关键字" v-model="queryForm.keyword" clearable></el-input
-        ></el-col>
-      </el-row>
+          ></el-date-picker>
+        </div>
+        <div :class="['admin'].includes(role) ? 'query-select-keyword' : 'query-select'">
+          <span class="query-title">关键字</span>
+          <el-input placeholder="请输入关键字" v-model="queryForm.keyword" clearable></el-input>
+        </div>
+      </div>
     </form>
     <div class="btn-wrap">
       <el-button @click="reset" plain>重置查询</el-button>
@@ -146,6 +150,26 @@ const reset = () => {
 }
 </script>
 <style scoped>
+.row-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.query-select {
+  margin: 0 20px 10px 0;
+  /* flex: auto; */
+}
+.query-select-keyword {
+  margin: 0 20px 10px 0;
+}
+.query-title {
+  display: inline-block;
+  width: 60px;
+  margin-right: 10px;
+}
 .white-space {
   height: 10px;
 }
@@ -158,11 +182,17 @@ const reset = () => {
 }
 .card-admin {
   :deep(.el-input) {
-    width: 185px !important;
+    width: 195px !important;
+  }
+  :deep(.el-input__wrapper) {
+    width: 195px !important;
   }
 }
 .card-section {
   :deep(.el-input) {
+    width: 280px !important;
+  }
+  :deep(.el-input__wrapper) {
     width: 280px !important;
   }
 }

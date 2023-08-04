@@ -1,6 +1,11 @@
 <template>
   <div>
-    <el-table :data="props.tableData" row-key="id" default-expand-all>
+    <el-table
+      :data="props.tableData"
+      row-key="id"
+      :default-expand-all="false"
+      :row-class-name="(row) => getRowClassName(row)"
+    >
       <el-table-column
         v-for="item in props.tableColumns"
         :label="item.columnName"
@@ -126,6 +131,12 @@ watch(
     emits('changePage', { pageNum: val[0], pageSize: val[1] })
   }
 )
+
+const getRowClassName = computed(() => {
+  return function (row) {
+    return row?.row?.children?.length > 0 ? '123' : '456'
+  }
+})
 
 // 转换成状态名称
 const getStatusName = computed(() => {
@@ -301,5 +312,7 @@ const expandAll = () => {
   justify-content: flex-end;
   align-items: center;
   margin-top: 10px;
+}
+.children-row {
 }
 </style>

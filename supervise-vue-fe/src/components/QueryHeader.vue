@@ -1,5 +1,5 @@
 <template>
-  <el-card :class="[`card-${role}`]">
+  <el-card :class="['admin', 'leader'].includes(role) ? 'card-admin' : 'card-section'">
     <form :v-model="queryForm">
       <div class="row-item">
         <div class="query-select">
@@ -14,7 +14,7 @@
             >
           </el-select>
         </div>
-        <div v-if="['admin'].includes(role)" class="query-select">
+        <div v-if="['admin', 'leader'].includes(role)" class="query-select">
           <span class="query-title">任务来源</span>
           <el-select v-model="queryForm.taskSource" placeholder="请选择任务来源" clearable>
             <el-option
@@ -26,7 +26,7 @@
             >
           </el-select>
         </div>
-        <div v-if="['admin'].includes(role)" class="query-select">
+        <div v-if="['admin', 'leader'].includes(role)" class="query-select">
           <span class="query-title">来源描述</span>
           <el-input v-model="queryForm.sourceDesc" placeholder="请填写来源描述" clearable>
           </el-input>
@@ -55,7 +55,7 @@
             >
           </el-select>
         </div>
-        <div v-if="['admin'].includes(role)" class="query-select">
+        <div v-if="['admin', 'leader'].includes(role)" class="query-select">
           <span class="query-title">提出部门</span>
           <el-select v-model="queryForm.ariseOrg" placeholder="请选择提出部门" clearable>
             <el-option
@@ -90,7 +90,7 @@
             clearable
           ></el-date-picker>
         </div>
-        <div :class="['admin'].includes(role) ? 'query-select-keyword' : 'query-select'">
+        <div :class="['admin', 'leader'].includes(role) ? 'query-select-keyword' : 'query-select'">
           <span class="query-title">关键字</span>
           <el-input placeholder="请输入关键字" v-model="queryForm.keyword" clearable></el-input>
         </div>
@@ -126,7 +126,7 @@ const taskCategoryList = ref(taskCategory)
 const orgnizationList = ref(orgnizationTree)
 const taskOriginRef = ref(taskOrigin)
 const styleByRole = computed(() => {
-  return ['admin'].includes(role)
+  return ['admin', 'leader'].includes(role)
     ? {
         spanSpace: 2,
         elSpace: 4
@@ -160,15 +160,23 @@ const reset = () => {
 
 .query-select {
   margin: 0 20px 10px 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  /* align-items: center; */
   /* flex: auto; */
 }
 .query-select-keyword {
   margin: 0 20px 10px 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
 }
 .query-title {
   display: inline-block;
   width: 60px;
   margin-right: 10px;
+  white-space: nowrap;
 }
 .white-space {
   height: 10px;

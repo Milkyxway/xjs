@@ -22,6 +22,21 @@
           @changePage="changePage"
         />
       </el-tab-pane>
+      <el-tab-pane
+        v-for="(item, index) in state.leaderTabs"
+        v-if="['leader'].includes(role)"
+        :label="item.label"
+        :name="item.name"
+        v-bind:key="index"
+      >
+        <TableCommon
+          :table-data="state.tableData"
+          :table-columns="state.tableColumns"
+          @updateTask="updateTask"
+          @refreshList="refreshList"
+          :total="state.total"
+          @changePage="changePage"
+      /></el-tab-pane>
     </el-tabs>
 
     <TaskModal
@@ -47,7 +62,6 @@ import { dayjs } from 'element-plus'
 
 const userInfo = ref(getLocalStore('userInfo'))
 const role = ref(getLocalStore('userInfo').role)
-const router = useRouter()
 const state = reactive({
   chooseTab: 'mine',
   modalType: '',
@@ -69,7 +83,6 @@ const state = reactive({
     createTime: null,
     ariseOrg: null,
     taskSource: null
-    // appealType: null
   },
   tableColumns: [
     {
@@ -125,10 +138,6 @@ const state = reactive({
       prop: 'resolveType'
     },
     {
-      columnName: '反馈',
-      prop: 'comment'
-    },
-    {
       columnName: '延期说明',
       prop: 'delayReason'
     },
@@ -143,7 +152,21 @@ const state = reactive({
   ],
   tableData: [],
   total: 0,
-  modalVisible: false
+  modalVisible: false,
+  leaderTabs: [
+    {
+      label: '专项调研',
+      name: 1
+    },
+    {
+      label: '公司重点工作',
+      name: 2
+    },
+    {
+      label: '审计整改',
+      name: 4
+    }
+  ]
 })
 
 const getSuperviseList = async () => {
@@ -217,11 +240,24 @@ const insertIdIntoArr = (data) => {
 
 const init = () => {
   getSuperviseList()
-  if (role.value !== 'section') {
-    state.chooseTab = 'all'
-  } else {
-    getRelatedMeTask()
-    state.tableColumns = state.tableColumns.filter((i) => i.prop !== 'taskSource') // 部门权限看不见问题提出部门
+  switch (role.value) {
+    case 'section':
+      getRelatedMeTask()
+      state.tableColumns = state.tableColumns.filter((i) => i.prop !== 'taskSource') // 部门权限看不见问题提出部门
+      break
+    case 'leader':
+      state.chooseTab = 'all'
+      leaderViewTableColumn()
+      break
+    case 'employee':
+      state.chooseTab = 'all'
+      employeeViewTableColumn()
+      break
+    case 'admin':
+      state.chooseTab = 'all'
+      break
+    default:
+      break
   }
 }
 
@@ -230,13 +266,37 @@ watch(
   () => state.chooseTab,
   (val) => {
     state.page.pageNum = 0
-    if (val === 'mine') {
-      getRelatedMeTask()
-    } else {
-      getSuperviseList()
+    switch (val) {
+      case 'mine':
+        getRelatedMeTask()
+        break
+      case 'all':
+        state.querys = {}
+        getSuperviseList()
+        break
+      case 1:
+      case 2:
+      case 4:
+        state.querys.taskSource = val
+        getSuperviseList()
+        break
+      default:
+        break
     }
   }
 )
+
+const leaderViewTableColumn = () => {
+  state.tableColumns = state.tableColumns.filter(
+    (i) => !['assistOrg', 'createTime', 'updateTime', 'sourceDesc'].includes(i.prop)
+  )
+}
+
+const employeeViewTableColumn = () => {
+  state.tableColumns = state.tableColumns.filter(
+    (i) => !['assistOrg', 'taskGoal', 'finishTime', 'sourceDesc'].includes(i.prop)
+  )
+}
 
 // 弹窗里确定按钮触发
 const handleCommit = async (form) => {

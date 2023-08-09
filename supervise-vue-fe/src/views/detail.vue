@@ -229,7 +229,7 @@ let state = reactive({
       value: 1
     },
     {
-      label: '该问题已完成',
+      label: '暂时无法解决',
       value: 2
     },
     {
@@ -258,12 +258,6 @@ watch(
   }
 )
 state.taskType = '该问题待解决'
-const taskContentIsShow = computed(() => {
-  if (state.taskDetail.children) {
-    return false
-  }
-  return state.taskDetail.taskGoal !== ''
-})
 
 const modifyDisable = computed(() => {
   return [3, 7].includes(state.taskDetail.status)
@@ -526,18 +520,6 @@ const subtaskSubmit = async () => {
     if (!i.finishTime) {
       unfill = '请填写计划完成时间'
     }
-    // if (taskDetail.status === 1 && i.finishTime < dayjs().format()) {
-    // if (i.finishTime < dayjs().format()) {
-    //   unfill = '请选择今天及以后的时间'
-    // }
-
-    // if (taskDetail.status === 3 && dayjs(i.actualFinish) > dayjs(i.finishTime)) {
-    //   unfill = '实际完成时间应早于计划完成时间'
-    // }
-
-    // if (taskDetail.status === 5 && !i.delayReason) {
-    //   unfill = '请填写延期说明'
-    // }
   })
   if (unfill) {
     return toast(unfill, 'error')
@@ -563,13 +545,13 @@ const submitFn = async () => {
     taskType,
     formInput: { comment }
   } = state
-  if (['非问题仅解释', '该问题已完成'].includes(taskType)) {
+  if (['非问题仅解释', '暂时无法解决'].includes(taskType)) {
     return inputForm.value.validate().then(async (res) => {
       await updateTaskReq({
         taskId,
-        comment,
+        completeDesc: comment,
         resolveType: taskType,
-        status: 6 // 变成已提交
+        status: taskType === '非问题仅解释' ? 6 : 3 // 暂时无法解决修改为进行中，非问题仅解释改为已提交
       })
       toast('提交成功！')
       router.replace('/supervise/list')

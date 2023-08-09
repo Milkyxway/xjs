@@ -173,7 +173,8 @@ const getSuperviseList = async () => {
   state.tableData = []
   const params = {
     ...state.page,
-    ...state.querys
+    ...state.querys,
+    role: role.value
   }
   const result = await getTaskListReq(params)
   state.tableData = insertIdIntoArr(result.data.list)

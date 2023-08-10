@@ -87,20 +87,20 @@ const state = reactive({
   },
   tableColumns: [
     {
-      columnName: '任务类别',
-      prop: 'category'
-    },
-    {
-      columnName: '任务内容',
-      prop: 'taskContent'
-    },
-    {
       columnName: '任务来源',
       prop: 'taskSource'
     },
     {
       columnName: '来源描述',
       prop: 'sourceDesc'
+    },
+    {
+      columnName: '任务类别',
+      prop: 'category'
+    },
+    {
+      columnName: '任务内容',
+      prop: 'taskContent'
     },
     {
       columnName: '提出部门',
@@ -245,7 +245,7 @@ const init = () => {
   switch (role.value) {
     case 'section':
       getRelatedMeTask()
-      state.tableColumns = state.tableColumns.filter((i) => i.prop !== 'taskSource') // 部门权限看不见问题提出部门
+      state.tableColumns = state.tableColumns.filter((i) => i.prop !== 'ariseOrg') // 部门权限看不见问题提出部门
       break
     case 'leader':
       state.chooseTab = 'all'
@@ -290,13 +290,13 @@ watch(
 
 const leaderViewTableColumn = () => {
   state.tableColumns = state.tableColumns.filter(
-    (i) => !['assistOrg', 'createTime', 'updateTime', 'sourceDesc'].includes(i.prop)
+    (i) => !['assistOrg', 'createTime', 'updateTime', 'sourceDesc', 'ariseOrg'].includes(i.prop)
   )
 }
 
 const employeeViewTableColumn = () => {
   state.tableColumns = state.tableColumns.filter(
-    (i) => !['assistOrg', 'taskGoal', 'finishTime', 'sourceDesc'].includes(i.prop)
+    (i) => !['assistOrg', 'taskGoal', 'finishTime', 'sourceDesc', 'ariseOrg'].includes(i.prop)
   )
 }
 

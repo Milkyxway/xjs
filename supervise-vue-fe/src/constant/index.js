@@ -33,6 +33,14 @@ const taskStatusList = [
   {
     label: '已延期',
     value: 5
+  },
+  {
+    label: '已提交',
+    value: 6
+  },
+  {
+    label: '延期后再进行',
+    value: 7
   }
 ]
 

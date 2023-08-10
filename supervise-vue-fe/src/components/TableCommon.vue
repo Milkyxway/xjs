@@ -27,7 +27,7 @@
           >
           <span v-if="item.prop === 'taskSource'">{{ getTaskSourceName(row) }}</span>
           <span
-            v-if="['taskContent', 'completeDesc', 'comment'].includes(item.prop)"
+            v-if="['taskContent', 'completeDesc', 'taskGoal'].includes(item.prop)"
             :class="isExpand ? 'task-content-expand' : 'task-content'"
             >{{ row[item.prop] }}</span
           >

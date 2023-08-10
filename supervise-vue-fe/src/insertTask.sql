@@ -45,3 +45,6 @@ UPDATE `task_base`.`subtask_list` SET status = 6  WHERE subtaskId = 50;
 UPDATE `task_base`.`subtask_list` SET status = 3 WHERE subtaskId = 51;
 UPDATE `task_base`.`subtask_list` SET status = 3, completeDesc="3月份收集汇总产品素材" WHERE subtaskId = 53;
 UPDATE `task_base`.`subtask_list` SET status = 3, completeDesc="3月份收集汇总产品素材" WHERE subtaskId = 53;
+
+
+ALTER TABLE `task_base`.`task_list` ADD COLUMN `statusWeight` INT NULL AFTER `delayTimes`;

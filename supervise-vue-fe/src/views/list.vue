@@ -59,6 +59,7 @@ import { getTaskListReq, createTaskReq, updateTaskReq, myTaskReq } from '../api/
 import { toast } from '../util/toast'
 import { getLocalStore } from '../util/localStorage'
 import { dayjs } from 'element-plus'
+import { statusWeight } from '../constant/index'
 
 const userInfo = ref(getLocalStore('userInfo'))
 const role = ref(getLocalStore('userInfo').role)
@@ -267,12 +268,12 @@ watch(
   () => state.chooseTab,
   (val) => {
     state.page.pageNum = 0
+    state.querys = {}
     switch (val) {
       case 'mine':
         getRelatedMeTask()
         break
       case 'all':
-        state.querys = {}
         getSuperviseList()
         break
       case 1:
@@ -309,7 +310,7 @@ const handleCommit = async (form) => {
   }
   const result =
     state.modalType === 'add'
-      ? await createTaskReq(params)
+      ? await createTaskReq({ ...params, statusWeight: statusWeight[1] })
       : await updateTaskReq({
           assistOrg,
           category,
@@ -317,6 +318,7 @@ const handleCommit = async (form) => {
           leadOrg,
           comment,
           status: 1,
+          statusWeight: statusWeight[1],
           taskId
         })
   state.page = {

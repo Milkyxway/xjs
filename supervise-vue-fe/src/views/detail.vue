@@ -188,7 +188,7 @@ import {
   updateSubtaskReq
 } from '../api/list'
 import { orgnizationListIdToName, orgnizationToName } from '../util/orgnization'
-import { taskCategoryMap, taskStatusMap } from '../constant/index'
+import { taskCategoryMap, taskStatusMap, statusWeight } from '../constant/index'
 import { getLocalStore } from '../util/localStorage'
 import { toast } from '../util/toast'
 
@@ -476,13 +476,13 @@ const singleTaskSubmit = async () => {
   router.replace('/supervise/list')
 }
 
-const getParamsByStatus = (staskStatus) => {
+const getParamsByStatus = (taskStatus) => {
   let params = {}
   const {
     formSingle: { taskGoal, finishTime, comment, actualFinish, completeDesc, delayReason }
   } = state
 
-  switch (staskStatus) {
+  switch (taskStatus) {
     case 1:
       params = { status: 3 }
       break
@@ -505,7 +505,8 @@ const getParamsByStatus = (staskStatus) => {
     ...params,
     taskGoal,
     finishTime: dayjs(finishTime).format(),
-    taskId
+    taskId,
+    statusWeight: statusWeight[taskStatus]
   }
 }
 
@@ -551,7 +552,8 @@ const submitFn = async () => {
         taskId,
         completeDesc: comment,
         resolveType: taskType,
-        status: taskType === '非问题仅解释' ? 6 : 3 // 暂时无法解决修改为进行中，非问题仅解释改为已提交
+        status: taskType === '非问题仅解释' ? 6 : 3, // 暂时无法解决修改为进行中，非问题仅解释改为已提交
+        statusWeight: statusWeight[taskType === '非问题仅解释' ? 6 : 3]
       })
       toast('提交成功！')
       router.replace('/supervise/list')

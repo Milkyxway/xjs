@@ -36,6 +36,17 @@ const taskStatusList = [
   }
 ]
 
+// 状态权重
+const statusWeight = {
+  1: 5, // 待确认权重5
+  2: 4, // 待调整
+  3: 3, // 进行中
+  4: 7, // 已完成
+  5: 1, // 已延期
+  6: 6, // 已提交
+  7: 2 // 延期后再进行
+}
+
 const taskCategory = [
   {
     label: '全部',
@@ -346,5 +357,6 @@ export {
   orgnizationTree,
   appealCategory,
   taskOrigin,
-  taskSourceMap
+  taskSourceMap,
+  statusWeight
 }

@@ -48,3 +48,5 @@ UPDATE `task_base`.`subtask_list` SET status = 3, completeDesc="3月份收集汇
 
 
 ALTER TABLE `task_base`.`task_list` ADD COLUMN `statusWeight` INT NULL AFTER `delayTimes`;
+ALTER TABLE `task_base`.`subtask_list` ADD COLUMN `statusWeight` INT NULL AFTER `delayTimes`;
+

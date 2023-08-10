@@ -409,7 +409,8 @@ const handleItemSubmit = async (data, status) => {
     ...data,
     actualFinish: actualFinish ? dayjs(actualFinish).format() : null,
     finishTime: dayjs(finishTime).format(),
-    status: statusProcess[status]
+    status: statusProcess[status],
+    statusWeight: statusWeight[statusProcess[status]]
   })
   toast()
   router.replace('/supervise/list')
@@ -532,7 +533,8 @@ const subtaskSubmit = async () => {
       finishTime: dayjs(i.finishTime).format(),
       actualFinish: i.actualFinish ? dayjs(i.actualFinish).format() : null,
       parentId: taskId,
-      status: 3
+      status: 3,
+      statusWeight: statusWeight[3]
     }
   })
   await addSubTaskReq({ list, taskId })

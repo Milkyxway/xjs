@@ -245,7 +245,8 @@ const init = () => {
   switch (role.value) {
     case 'section':
       getRelatedMeTask()
-      state.tableColumns = state.tableColumns.filter((i) => i.prop !== 'ariseOrg') // 部门权限看不见问题提出部门
+      sectionViewTableColumn()
+      // 部门权限看不见问题提出部门
       break
     case 'leader':
       state.chooseTab = 'all'
@@ -290,16 +291,42 @@ watch(
 
 const leaderViewTableColumn = () => {
   state.tableColumns = state.tableColumns.filter(
-    (i) => !['assistOrg', 'createTime', 'updateTime', 'sourceDesc', 'ariseOrg'].includes(i.prop)
+    (i) =>
+      ![
+        'assistOrg',
+        'createTime',
+        'updateTime',
+        'sourceDesc',
+        'ariseOrg',
+        'actualFinish',
+        'delayReason',
+        'resolveType'
+      ].includes(i.prop)
   )
 }
 
 const employeeViewTableColumn = () => {
   state.tableColumns = state.tableColumns.filter(
-    (i) => !['assistOrg', 'taskGoal', 'finishTime', 'sourceDesc', 'ariseOrg'].includes(i.prop)
+    (i) =>
+      ![
+        'assistOrg',
+        'taskGoal',
+        'finishTime',
+        'sourceDesc',
+        'ariseOrg',
+        'updateTime',
+        'createTime',
+        'delayReason',
+        'resolveType'
+      ].includes(i.prop)
   )
 }
 
+const sectionViewTableColumn = () => {
+  state.tableColumns = state.tableColumns.filter(
+    (i) => !['sourceDesc', 'ariseOrg'].includes(i.prop)
+  )
+}
 // 弹窗里确定按钮触发
 const handleCommit = async (form) => {
   const { assistOrg, category, taskContent, leadOrg, comment, taskId, ariseOrg } = form

@@ -11,7 +11,7 @@
         :label="item.columnName"
         :prop="item.prop"
         :key="item.key"
-        :width="['taskContent', 'taskGoal'].includes(item.prop) && 180"
+        :width="['taskContent', 'taskGoal', 'completeDesc'].includes(item.prop) && 180"
       >
         <template #default="{ row }">
           <span v-if="item.prop === 'status'" :class="getClassName(row)">{{
@@ -62,7 +62,7 @@
           >
           <el-button
             link
-            type="primary"
+            type="danger"
             size="small"
             @click="deleteTask(row)"
             v-showByAuth="{ role, showCondition: ['admin'] }"
@@ -80,6 +80,7 @@
       </el-table-column>
     </el-table>
     <el-pagination
+      class="pagination"
       v-model:current-page="state.page.pageNum"
       v-model:page-size="state.page.pageSize"
       :page-sizes="[10, 20, 30, 40]"
@@ -148,7 +149,7 @@ const getStatusName = computed(() => {
 
 const getRowClassName = computed(() => {
   return function (row) {
-    return row.row.parentId ? 'subtask-row' : 'task-row'
+    return row.row.parentId ? 'subtask-row' : `task-row-${row.row.status}`
   }
 })
 
@@ -307,16 +308,29 @@ const expandAll = () => {
 .task-content-expand {
   display: block;
 }
-.el-pagination {
+.pagination {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
   margin-top: 10px;
+  :deep(.el-pager) {
+    .number {
+      height: 30px;
+      width: 30px;
+      border-radius: 50%;
+    }
+  }
 }
 .el-table .subtask-row {
   /* background-color: rgba(103, 194, 58, 0.2) !important; */
   font-size: 12px;
   color: #adadad;
+}
+.el-table .task-row-5 {
+  background: rgba(245, 108, 108, 0.1);
+}
+.el-table .task-row-7 {
+  background: rgba(230, 162, 60, 0.1);
 }
 </style>

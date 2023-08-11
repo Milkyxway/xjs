@@ -69,19 +69,22 @@ header {
 
   .el-header,
   .el-footer {
-    background-color: var(--el-color-primary-light-7);
+    background: #fff;
+    /* background-color: var(--el-color-primary-light-7); */
     color: var(--el-text-color-primary);
     text-align: center;
   }
 
   .el-aside {
-    background-color: var(--el-color-primary-light-8);
+    /* background: rgba(1, 92, 172, 0.2); */
+    /* background-color: var(--el-color-primary-light-8); */
     color: var(--el-text-color-primary);
     text-align: center;
   }
 
   .el-main {
-    background-color: var(--el-color-primary-light-9);
+    background: #f7f8fb;
+    /* background-color: var(--el-color-primary-light-9); */
     color: var(--el-text-color-primary);
     text-align: center;
   }

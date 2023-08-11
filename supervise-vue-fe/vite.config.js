@@ -14,12 +14,31 @@ export default defineConfig({
     vue(),
     vueJsx(),
     AutoImport({
-      resolvers: [ElementPlusResolver()]
+      resolvers: [
+        ElementPlusResolver({
+          importStyle: 'sass'
+        })
+      ]
     }),
     Components({
-      resolvers: [ElementPlusResolver()]
+      resolvers: [
+        ElementPlusResolver({
+          importStyle: 'sass'
+        })
+      ]
     })
   ],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        // 自动导入定制化样式进行文件覆盖
+        additionalData: `
+          @use "@/styles/element/index.scss" as *;
+        `
+      }
+    }
+  },
+
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))

@@ -189,19 +189,25 @@ const reset = () => {
   padding: 15px 0 0 0;
 }
 .card-admin {
+  border: none;
   :deep(.el-input) {
     width: 195px !important;
   }
   :deep(.el-input__wrapper) {
     width: 195px !important;
+    /* border: 1px solid #7f7fd5; */
+    /* border-radius: 4px; */
   }
 }
 .card-section {
+  border: none;
   :deep(.el-input) {
     width: 280px !important;
   }
   :deep(.el-input__wrapper) {
     width: 280px !important;
+    /* border: 1px solid #7f7fd5; */
+    /* border-radius: 4px; */
   }
 }
 </style>

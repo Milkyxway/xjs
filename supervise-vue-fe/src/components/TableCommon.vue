@@ -11,7 +11,13 @@
         :label="item.columnName"
         :prop="item.prop"
         :key="item.key"
-        :width="['taskContent', 'taskGoal', 'completeDesc'].includes(item.prop) && 180"
+        :width="
+          ['taskContent', 'taskGoal', 'completeDesc', 'finishTime', 'actualFinish'].includes(
+            item.prop
+          )
+            ? 180
+            : 100
+        "
       >
         <template #default="{ row }">
           <span v-if="item.prop === 'status'" :class="getClassName(row)">{{

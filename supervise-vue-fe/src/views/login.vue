@@ -34,7 +34,9 @@
             :show-password="true"
           ></el-input>
         </el-form-item>
-        <el-button type="primary" @click="login" class="login-btn">确认登录</el-button>
+        <div class="btn-wrap">
+          <el-button type="primary" @click="login" class="login-btn">确认登录</el-button>
+        </div>
       </el-form>
     </div>
   </div>
@@ -99,6 +101,7 @@ const redirect = () => {
   align-items: flex-start;
   height: 100vh;
   width: 100%;
+  font-size: 32px;
   /* position: relative; */
   /* background-image: url('../assets/loginbg.png');
   background-repeat: no-repeat;
@@ -110,15 +113,22 @@ const redirect = () => {
 }
 
 .login-form {
-  width: 10.5rem;
+  width: 336px;
   position: absolute;
-  top: 14rem;
-  left: 38rem;
+  top: 360px;
+  left: 860px;
 }
 .title {
   color: #cecece;
   font-weight: bold;
   font-size: 28px;
+}
+.btn-wrap {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 .login-btn {
   width: 10.5rem;

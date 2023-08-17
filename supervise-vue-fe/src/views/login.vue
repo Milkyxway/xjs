@@ -91,7 +91,7 @@ const redirect = () => {
     router.replace('/supervise/list')
   }
 }
-// redirect()
+redirect()
 </script>
 <style scoped>
 .login-page {

@@ -12,7 +12,7 @@
         </div>
       </template>
       <div class="card-content">
-        <div class="row-item">
+        <div class="row-item" v-if="state.taskDetail?.categoryName">
           <div class="bold space">任务类别:</div>
           <div>{{ state.taskDetail?.categoryName }}</div>
         </div>
@@ -30,7 +30,7 @@
         </div>
         <div class="row-item" v-if="state.taskDetail.taskGoal">
           <div class="bold space">任务目标:</div>
-          <div>{{ state.taskDetail.taskGoal }}</div>
+          <div class="content">{{ state.taskDetail.taskGoal }}</div>
         </div>
         <div class="row-item" v-if="state.taskDetail.finishTime">
           <div class="bold space">计划完成时间:</div>
@@ -42,7 +42,7 @@
         </div>
         <div class="row-item" v-if="state.taskDetail.completeDesc">
           <div class="bold space">实际完成情况:</div>
-          <div>{{ state.taskDetail.completeDesc }}</div>
+          <div class="content">{{ state.taskDetail.completeDesc }}</div>
         </div>
         <div v-if="state.taskDetail.children">
           <div
@@ -61,7 +61,7 @@
         </div>
         <div class="row-item" v-if="state.taskDetail.comment">
           <div class="bold space">备注及回复:</div>
-          <div>{{ state.taskDetail.comment }}</div>
+          <div class="content">{{ state.taskDetail.comment }}</div>
         </div>
       </div>
     </el-card>
@@ -287,11 +287,11 @@ const getTaskStatus = computed(() => {
   const {
     taskDetail: { status, finishTime }
   } = state
-  if (status == 5) {
-    let text = taskStatusMap[status]
-    const distance = dayjs().diff(dayjs(finishTime), 'day')
-    return `${text} ${distance}天`
-  }
+  // if (status == 5) {
+  //   let text = taskStatusMap[status]
+  //   const distance = dayjs().diff(dayjs(finishTime), 'day')
+  //   return `${text} ${distance}天`
+  // }
   return taskStatusMap[status]
 })
 
@@ -357,7 +357,7 @@ const getTaskDetail = async () => {
   } = result
   state.taskDetail = {
     ...result.data,
-    assistOrg: assistOrg === '' ? [] : assistOrg.split(',').map((i) => Number(i)),
+    assistOrg: !assistOrg ? [] : assistOrg.split(',').map((i) => Number(i)),
     categoryName: taskCategoryMap[category],
     leadOrgName: orgnizationToName(leadOrg),
     assistOrgName: orgnizationListIdToName(result.data.assistOrg)

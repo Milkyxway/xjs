@@ -78,7 +78,7 @@ const login = () => {
     .then(async (res) => {
       const result = await loginReq(formData.value)
       setLocalStore('userInfo', result.data.userInfo)
-      router.replace('/supervise/list')
+      router.replace('/report/list')
     })
     .catch((err) => {
       // console.log(err)
@@ -88,7 +88,7 @@ const login = () => {
 const redirect = () => {
   const userInfo = getLocalStore('userInfo')
   if (userInfo && userInfo.role) {
-    router.replace('/supervise/list')
+    router.replace('/report/list')
   }
 }
 redirect()

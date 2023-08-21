@@ -78,21 +78,6 @@ const showMenuItem = computed(() => {
       .sub_menu_title {
         font-weight: 600;
       }
-      /* .icon_data_center {
-          background-image: url('@/assets/imgs/sider/icon_data_center_active.png');
-        }
-        .icon_report_center {
-          background-image: url('@/assets/imgs/sider/icon_report_center_active.png');
-        }
-        .icon_system_manage {
-          background-image: url('@/assets/imgs/sider/icon_system_manage_active.png');
-        }
-        .icon_config_center {
-          background-image: url('@/assets/imgs/sider/icon_config_center_active.png');
-        }
-        .icon_analysis_center {
-          background-image: url('@/assets/imgs/sider/icon_analysis_center_active.png');
-        } */
     }
   }
   .menu_item {

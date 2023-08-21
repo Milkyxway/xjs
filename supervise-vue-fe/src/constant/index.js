@@ -6,7 +6,8 @@ const taskStatusMap = {
   4: '已完成',
   5: '已延期',
   6: '已提交', // 部门完成所有的任务提交后状态
-  7: '延期后再进行'
+  7: '延期后再进行',
+  8: '已取消'
 }
 
 const taskStatusList = [
@@ -41,6 +42,10 @@ const taskStatusList = [
   {
     label: '延期后再进行',
     value: 7
+  },
+  {
+    label: '已取消',
+    value: 8
   }
 ]
 
@@ -52,7 +57,8 @@ const statusWeight = {
   4: 7, // 已完成
   5: 1, // 已延期
   6: 6, // 已提交
-  7: 2 // 延期后再进行
+  7: 2, // 延期后再进行
+  8: 8 // 已取消
 }
 
 const taskCategory = [

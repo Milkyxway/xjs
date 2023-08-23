@@ -58,6 +58,19 @@ export const deleteTaskReq = (data) => {
 }
 
 /**
+ * 删除子任务
+ * @param {*} data
+ * @returns
+ */
+export const deleteSubTaskReq = (data) => {
+  return createRequest()({
+    url: '/api/subtask/delete',
+    method: 'delete',
+    data
+  })
+}
+
+/**
  * 增加阶段任务
  * @param {*} data
  * @returns

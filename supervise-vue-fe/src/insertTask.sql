@@ -93,3 +93,71 @@ AFTER `delayTimes`;
 ALTER TABLE `task_base`.`subtask_list`
 ADD COLUMN `statusWeight` INT NULL
 AFTER `delayTimes`;
+UPDATE `task_base`.`subtask_list`
+SET taskGoal = '召开2023年度智慧广电乡村工程建设推进会，同步开展16个乡镇的调研工作，联合技术部及已建成智慧乡镇广电站讨论确认开机分组方案，明确升级计划并实施'
+WHERE subtaskId = 124;
+UPDATE `task_base`.`subtask_list`
+SET taskGoal = '进行16个智慧广电乡镇（街道）建设，重点推进“一镇一品”乡镇电视平台建设，不断纳入乡镇治理、积分制管理等方面的创新业态，试点推广，增广业务范围'
+WHERE subtaskId = 125;
+UPDATE `task_base`.`subtask_list`
+SET taskGoal = '进行16个智慧广电乡镇（街道）建设，重点推进“一镇一品”乡镇电视平台建设，不断纳入乡镇治理、积分制管理等方面的创新业态，试点推广，增广业务范围'
+WHERE subtaskId = 126;
+UPDATE `task_base`.`subtask_list`
+SET taskGoal = '进行16个智慧广电乡镇（街道）建设，重点推进“一镇一品”乡镇电视平台建设，不断纳入乡镇治理、积分制管理等方面的创新业态，试点推广，增广业务范围'
+WHERE subtaskId = 127;
+UPDATE `task_base`.`subtask_list`
+SET taskGoal = '针对已经建成的智慧广电乡镇（街道），进一步丰富平台内容，加强与其他宣传平台的互融互通，提高点击率，提升覆盖面'
+WHERE subtaskId = 129;
+UPDATE `task_base`.`subtask_list`
+SET taskGoal = '针对已经建成的智慧广电乡镇（街道），进一步丰富平台内容，加强与其他宣传平台的互融互通，提高点击率，提升覆盖面'
+WHERE subtaskId = 130;
+UPDATE `task_base`.`subtask_list`
+SET taskGoal = '针对已经建成的智慧广电乡镇（街道），进一步丰富平台内容，加强与其他宣传平台的互融互通，提高点击率，提升覆盖面'
+WHERE subtaskId = 131;
+UPDATE `task_base`.`subtask_list`
+SET taskGoal = '针对已经建成的智慧广电乡镇（街道），进一步丰富平台内容，加强与其他宣传平台的互融互通，提高点击率，提升覆盖面'
+WHERE subtaskId = 132;
+UPDATE `task_base`.`subtask_list`
+SET taskGoal = '针对已经建成的智慧广电乡镇（街道），进一步丰富平台内容，加强与其他宣传平台的互融互通，提高点击率，提升覆盖面'
+WHERE subtaskId = 133;
+UPDATE `task_base`.`subtask_list`
+SET status = 8
+WHERE subtaskId = 155;
+INSERT into task_base.user value(
+    'dangqun',
+    'dangqun123456',
+    3,
+    'section',
+    2,
+    '党群工作部'
+  );
+INSERT into task_base.user value('renli', 'renli123456', 4, 'section', 3, '人力资源部');
+INSERT into task_base.user value('caiwu', 'caiwu123456', 5, 'section', 4, '财务资产部');
+INSERT into task_base.user value('qyfz', 'qyfz123456', 6, 'section', 5, '企业发展部');
+INSERT into task_base.user value(
+    'shichang',
+    'shichang123456',
+    7,
+    'section',
+    6,
+    '市场运营部'
+  );
+INSERT into task_base.user value(
+    'zhengqi',
+    'zhengqi123456',
+    8,
+    'section',
+    7,
+    '政企客户部'
+  );
+INSERT into task_base.user value(
+    'gongke',
+    'gongke123456',
+    9,
+    'section',
+    8,
+    '公共客户部'
+  );
+INSERT into task_base.user value('jszc', 'jszc123456', 10, 'section', 9, '技术支撑部');
+INSERT into task_base.user value('gcjs', 'gcjs123456', 11, 'section', 10, '工程建设部');
+INSERT into task_base.user value('abyw', 'abyw123456', 12, 'section', 11, '安播运维部');

@@ -99,7 +99,7 @@
 import { storeToRefs } from 'pinia'
 import { computed, reactive, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { deleteTaskReq, taskSetFinishReq } from '../api/list'
+import { deleteTaskReq, taskSetFinishReq, deleteSubTaskReq } from '../api/list'
 import { taskStatusMap, taskCategoryMap, orgnizationTree, taskSourceMap } from '../constant/index'
 import { getLocalStore } from '../util/localStorage'
 import { userLoginStore } from '../stores/login'
@@ -249,7 +249,9 @@ const deleteTask = async (row) => {
     cancelButtonText: '取消',
     callback: async (action) => {
       if (action === 'confirm') {
-        await deleteTaskReq({ taskId })
+        row.parentId
+          ? await deleteSubTaskReq({ subtaskId: row.subtaskId })
+          : await deleteTaskReq({ taskId })
         emits('refreshList')
       }
     }

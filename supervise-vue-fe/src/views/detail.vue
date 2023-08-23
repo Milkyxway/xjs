@@ -51,7 +51,7 @@
             class="row-item"
           >
             <span class="bold space">阶段计划{{ index + 1 }}</span>
-            <span class="space">{{ item.taskGoal }}</span>
+            <span class="space task-goal">{{ item.taskGoal }}</span>
             <span>{{ getTime(item.finishTime) }}</span>
           </div>
         </div>
@@ -640,5 +640,8 @@ getTaskDetail()
 }
 .white-space {
   height: 10px;
+}
+.task-goal {
+  width: 500px;
 }
 </style>

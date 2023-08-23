@@ -45,19 +45,32 @@
           <div class="content">{{ state.taskDetail.completeDesc }}</div>
         </div>
         <div v-if="state.taskDetail.children">
+          <div class="row-item">
+            <span class="bold space"></span>
+            <span class="space task-goal">任务目标</span>
+            <span class="space task-goal">完成情况</span>
+            <span class="space task-goal">计划完成时间</span>
+            <span class="space task-goal">实际完成时间</span>
+            <span class="space task-goal">任务状态</span>
+          </div>
           <div
             v-for="(item, index) in state.taskDetail.children"
             v-bind:key="index"
             class="row-item"
           >
-            <span class="bold space">阶段计划{{ index + 1 }}</span>
+            <span class="bold space">阶段任务{{ index + 1 }}</span>
             <span class="space task-goal">{{ item.taskGoal }}</span>
-            <span>{{ getTime(item.finishTime) }}</span>
+            <span class="space task-goal">{{ item.completeDesc || '-' }}</span>
+            <span class="space task-goal">{{ getTime(item.finishTime) }}</span>
+            <span class="space task-goal">{{ getTime(item.actualFinish) }}</span>
+            <span :class="['space', 'task-goal', getClassName(item)]">{{
+              taskStatusMap[item.status]
+            }}</span>
           </div>
         </div>
         <div class="row-item">
           <div class="bold space">任务状态:</div>
-          <div :class="getClassName">{{ getTaskStatus }}</div>
+          <div :class="getClassName()">{{ getTaskStatus }}</div>
         </div>
         <div class="row-item" v-if="state.taskDetail.comment">
           <div class="bold space">备注及回复:</div>
@@ -279,6 +292,9 @@ const formSubmitShow = computed(() => {
 
 const getTime = computed(() => {
   return function (time) {
+    if (!time) {
+      return '-'
+    }
     return dayjs(time).format('YYYY-MM-DD')
   }
 })
@@ -305,35 +321,36 @@ const showAdjustBtns = computed(() => {
 })
 
 const getClassName = computed(() => {
-  // return function (row) {
-  let className = ''
-  switch (state.taskDetail.status) {
-    case 1: //
-      className = 'status-confirm'
-      break
-    case 2:
-      className = 'status-adjust'
-      break
-    case 3:
-      className = 'status-processing'
-      break
-    case 4:
-      className = 'status-finish'
-      break
-    case 5:
-      className = 'status-delay'
-      break
-    case 6:
-      className = 'status-submit'
-      break
-    case 7:
-      className = 'status-delay-process'
-      break
-    default:
-      break
+  return function (row) {
+    let className = ''
+    const status = row ? row.status : state.taskDetail.status
+    switch (status) {
+      case 1: //
+        className = 'status-confirm'
+        break
+      case 2:
+        className = 'status-adjust'
+        break
+      case 3:
+        className = 'status-processing'
+        break
+      case 4:
+        className = 'status-finish'
+        break
+      case 5:
+        className = 'status-delay'
+        break
+      case 6:
+        className = 'status-submit'
+        break
+      case 7:
+        className = 'status-delay-process'
+        break
+      default:
+        break
+    }
+    return className
   }
-  return className
-  // }
 })
 
 const showAssitOrg = computed(() => {
@@ -581,7 +598,7 @@ getTaskDetail()
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
   margin: 0 0 10px 0;
 }
 .card-header {
@@ -642,6 +659,6 @@ getTaskDetail()
   height: 10px;
 }
 .task-goal {
-  width: 500px;
+  width: 200px;
 }
 </style>

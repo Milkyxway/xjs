@@ -161,3 +161,28 @@ INSERT into task_base.user value(
 INSERT into task_base.user value('jszc', 'jszc123456', 10, 'section', 9, '技术支撑部');
 INSERT into task_base.user value('gcjs', 'gcjs123456', 11, 'section', 10, '工程建设部');
 INSERT into task_base.user value('abyw', 'abyw123456', 12, 'section', 11, '安播运维部');
+INSERT INTO `task_base`.`subtask_list`
+SET taskGoal = '完成5G业务相关工作的培训、受理流程的规范执行和稽核的监管，5G号卡发展留存6.2万张',
+  finishTime = '2023-06-30 00:00:00',
+  actualFinish = '2023-06-30 00:00:00',
+  status = 4,
+  parentId = 20,
+  completeDesc = '组织完成5月16日服务促营销培训，6月14日电信运营商服务质量管理培训（一期）。发布《5G移网业务合规操作指导手册》，涉及业务受理场景、业务办理环节、开卡销户、业务稽核、二次认证、相关法律法规等，持续做好5G融合业务相关的服务规范、客户诉求处置管理。6月底5G号卡留存7.23万张。';
+INSERT INTO `task_base`.`subtask_list`
+SET taskGoal = '完成5G业务受理流程的规范执行、稽核监管，落实相关业务的培训，5G号卡发展留存7.9万张',
+  finishTime = '2023-09-30 00:00:00',
+  status = 3,
+  parentId = 209;
+ALTER TABLE `task_base`.`subtask_list` CHANGE COLUMN `completeDesc` `completeDesc` VARCHAR(300) NULL DEFAULT NULL;
+UPDATE `task_base`.`subtask_list`
+SET finishTime = '2023-11-30 00:00:00'
+WHERE subtaskId = 133;
+UPDATE `task_base`.`subtask_list`
+SET finishTime = '2023-08-31 00:00:00'
+where subtaskId = 159;
+UPDATE `task_base`.`subtask_list`
+SET finishTime = '2023-09-30 00:00:00'
+where subtaskId = 160;
+UPDATE `task_base`.`subtask_list`
+SET finishTime = '2023-10-31 00:00:00'
+where subtaskId = 161;

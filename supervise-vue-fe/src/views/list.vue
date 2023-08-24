@@ -164,8 +164,16 @@ const state = reactive({
       name: 2
     },
     {
+      label: '安全检查整改',
+      name: 3
+    },
+    {
       label: '审计整改',
       name: 4
+    },
+    {
+      label: '党委巡察整改',
+      name: 5
     }
   ]
 })
@@ -279,7 +287,9 @@ watch(
         break
       case 1:
       case 2:
+      case 3:
       case 4:
+      case 5:
         state.querys.taskSource = val
         getSuperviseList()
         break

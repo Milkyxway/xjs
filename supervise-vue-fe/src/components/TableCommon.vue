@@ -11,13 +11,7 @@
         :label="item.columnName"
         :prop="item.prop"
         :key="item.key"
-        :width="
-          ['taskContent', 'taskGoal', 'completeDesc', 'finishTime', 'actualFinish'].includes(
-            item.prop
-          )
-            ? 180
-            : 100
-        "
+        :width="getColumnWidth(item)"
       >
         <template #default="{ row }">
           <span v-if="item.prop === 'status'" :class="getClassName(row)">{{
@@ -163,6 +157,18 @@ const getRowClassName = computed(() => {
 const getTaskSourceName = computed(() => {
   return function (row) {
     return taskSourceMap[row.taskSource]
+  }
+})
+
+const getColumnWidth = computed(() => {
+  return function (item) {
+    if (['admin', 'section'].includes(role)) {
+      return ['taskContent', 'taskGoal', 'completeDesc', 'finishTime', 'actualFinish'].includes(
+        item.prop
+      )
+        ? 180
+        : 100
+    }
   }
 })
 

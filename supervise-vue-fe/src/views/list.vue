@@ -391,7 +391,7 @@ const getRelatedMeTask = async () => {
 const changePage = (val) => {
   state.page.pageSize = val.pageSize
   state.page.pageNum = val.pageNum - 1
-  if (state.chooseTab === 'all') {
+  if (['all', 1, 2, 3, 4, 5].includes(state.chooseTab)) {
     getSuperviseList()
   } else {
     getRelatedMeTask()

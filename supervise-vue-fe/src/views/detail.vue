@@ -44,7 +44,7 @@
           <div class="bold space">实际完成情况:</div>
           <div class="content">{{ state.taskDetail.completeDesc }}</div>
         </div>
-        <div v-if="state.taskDetail.children.length">
+        <div v-if="state.taskDetail?.children?.length">
           <div class="row-item">
             <span class="bold space"></span>
             <span class="space task-goal">任务目标</span>

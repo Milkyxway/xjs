@@ -39,7 +39,7 @@
         <template #default="{ row }">
           <el-button
             link
-            type="primary"
+            type="info"
             size="small"
             @click="checkTask(row)"
             v-showByAuth="{
@@ -50,7 +50,7 @@
           >
           <el-button
             link
-            type="primary"
+            type="info"
             size="small"
             @click="updateTask(row)"
             v-showByAuth="{
@@ -197,6 +197,7 @@ const showFinishBtn = computed(() => {
     return false
   }
 })
+
 const getClassName = computed(() => {
   return function (row) {
     let className = ''

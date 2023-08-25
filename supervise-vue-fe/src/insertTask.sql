@@ -186,3 +186,31 @@ where subtaskId = 160;
 UPDATE `task_base`.`subtask_list`
 SET finishTime = '2023-10-31 00:00:00'
 where subtaskId = 161;
+UPDATE `task_base`.`subtask_list`
+SET taskGoal = '技术支撑部和工程管理部
+3.项目的统一管理，技术、工程前期介入，做好项目的反馈与托底（技术、工程）',
+  finishTime = "2023-09-30 00:00:00",
+  status = 3
+where subtaskId = 68;
+UPDATE `task_base`.`task_list`
+SET status = 4,
+  finishTime = "2023-07-31 00:00:00",
+  actualFinish = "2023-07-31 00:00:00",
+  taskGoal = "第一阶段 完成5G营业终端升级优化项目的招标采购 完成时间：6月
+第二阶段 完成5G营业终端升级优化项目的到货验收 完成时间：7月上旬
+第三阶段 完成5G营业终端升级优化项目的安装部署 完成时间：7月下旬",
+  completeDesc = '已完成 7月份已完成了全部营业厅终端的更换，目前使用情况正常。'
+where taskId = 132;
+UPDATE `task_base`.`task_list`
+SET status = 3,
+  statusWeight = 3
+where taskId = 133;
+UPDATE `task_base`.`subtask_list`
+SET status = 3,
+  statusWeight = 3
+where subtaskId = 66;
+INSERT INTO `task_base`.`subtask_list`
+SET finishTime = '2023-11-31 00:00:00',
+  taskGoal = '第二阶段 对故障数据异常的器件组织专项处理。完成时间：11月。',
+  status = 3,
+  parentId = 131;

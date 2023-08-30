@@ -1,14 +1,28 @@
 <template>
   <QueryReport @handleQuery="handleQuery" />
   <div>
-    <TableCommon
-      :table-data="state.myTable"
-      :table-columns="state.tableColumns"
-      @updateTask="updateTask"
-      @refreshList="refreshList"
-      :total="state.myTableTotal"
-      @changePage="changePage"
-    />
+    <el-tabs v-model="state.chooseTab">
+      <el-tab-pane
+        v-for="(item, index) in periodType"
+        v-bind:key="index"
+        :label="item.label"
+        :name="item.value"
+      >
+        <el-table :data="state.tableData">
+          <el-table-column
+            v-for="item in state.tableColumns"
+            :label="item.columnName"
+            :prop="item.prop"
+            :key="item.key"
+          ></el-table-column>
+          <el-table-column fixed="right" label="操作" width="150">
+            <template #default="{ row }">
+              <el-button link type="primary" size="small" @click="setFinish(row)">下载</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 
@@ -22,27 +36,61 @@ import { getReportListReq } from '../api/report'
 import { toast } from '../util/toast'
 import { getLocalStore } from '../util/localStorage'
 import { dayjs } from 'element-plus'
+import { periodType, periodTypeMap } from '../constant/index'
 
 const userInfo = ref(getLocalStore('userInfo'))
 const role = ref(getLocalStore('userInfo').role)
 const state = reactive({
+  chooseTab: 3,
   page: {
     pageSize: 10,
     pageNum: 0
   },
-  querys: {},
+  querys: {
+    reportType: 3
+  },
 
   tableColumns: [
     {
       columnName: '文件名称',
-      prop: 'fileName'
+      prop: 'reportName'
+    },
+    {
+      columnName: '文件地址',
+      prop: 'reportLink'
+    },
+    {
+      columnName: '所属部门',
+      prop: 'section'
+    },
+    {
+      columnName: '报表周期类型',
+      prop: 'reportType'
     }
   ],
   tableData: [],
   total: 0
 })
 
-const getReportList = async () => {}
+watch(
+  () => state.chooseTab,
+  (val) => {
+    state.querys.reportType = val
+    state.tableData = []
+    state.total = 0
+    getReportList()
+  }
+)
+
+const getReportList = async () => {
+  const params = {
+    ...state.querys,
+    ...state.page
+  }
+  const result = await getReportListReq(params)
+  state.tableData = result.data.list
+  state.total = result.data.total
+}
 
 const handleQueryAll = (param) => (param === 0 ? null : param)
 const getRangeDateParam = (range) => {

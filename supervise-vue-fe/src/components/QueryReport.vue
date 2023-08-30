@@ -1,9 +1,9 @@
 <template>
-  <el-card :class="['admin', 'leader'].includes(role) ? 'card-admin' : 'card-section'">
+  <el-card class="card-admin">
     <form :v-model="queryForm">
       <div class="row-item">
         <div class="query-select">
-          <span class="query-title">任务年度</span>
+          <span class="query-title">报表时间范围</span>
           <el-date-picker
             type="daterange"
             range-separator="-"
@@ -13,7 +13,7 @@
             clearable
           ></el-date-picker>
         </div>
-        <div :class="['admin', 'leader'].includes(role) ? 'query-select-keyword' : 'query-select'">
+        <div class="query-select-keyword">
           <span class="query-title">关键字</span>
           <el-input placeholder="请输入关键字" v-model="queryForm.keyword" clearable></el-input>
         </div>
@@ -24,6 +24,7 @@
 <script setup>
 import { ref, reactive, computed } from 'vue'
 import { getLocalStore } from '../util/localStorage'
+
 const emit = defineEmits(['handleQuery', 'createTask'])
 const role = getLocalStore('userInfo').role
 let queryForm = reactive({

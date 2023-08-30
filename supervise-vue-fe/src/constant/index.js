@@ -363,6 +363,31 @@ const taskSourceMap = {
   5: '党委巡察整改'
 }
 
+const periodType = [
+  {
+    label: '日报',
+    value: 1
+  },
+  {
+    label: '周报',
+    value: 2
+  },
+  {
+    label: '月报',
+    value: 3
+  },
+  {
+    label: '年报',
+    value: 4
+  }
+]
+const periodTypeMap = {
+  1: '日报',
+  2: '周报',
+  3: '月报',
+  4: '年报'
+}
+
 export {
   taskStatusMap,
   taskStatusList,
@@ -372,5 +397,7 @@ export {
   appealCategory,
   taskOrigin,
   taskSourceMap,
-  statusWeight
+  statusWeight,
+  periodTypeMap,
+  periodType
 }

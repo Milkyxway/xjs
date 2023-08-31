@@ -4,6 +4,7 @@ import 'element-plus/dist/index.css'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import Vue3Clipboard from 'vue3-clipboard'
 // import './util/rem'
 import App from './App.vue'
 import router from './router'
@@ -15,6 +16,10 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 
 app.use(createPinia())
 app.use(router)
+app.use(Vue3Clipboard, {
+  autoSetContainer: true,
+  appendToBody: true
+})
 
 app.mount('#app')
 app.directive('showByAuth', (el, binding) => {

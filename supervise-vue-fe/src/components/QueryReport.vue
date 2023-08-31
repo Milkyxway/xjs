@@ -67,7 +67,7 @@ const handleQuery = () => {
 }
 .query-title {
   display: inline-block;
-  width: 60px;
+  /* width: 60px; */
   margin-right: 10px;
   white-space: nowrap;
 }

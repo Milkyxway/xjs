@@ -45,6 +45,20 @@ export const routeList = [
             component: () => import('../views/reportlist.vue')
           }
         ]
+      },
+      {
+        path: '/develop',
+        name: '开发模块',
+        iconName: 'view',
+        component: () => import('../views/SuperviseHome.vue'),
+        children: [
+          {
+            path: '/develop/match',
+            name: '匹配需求',
+            isSider: true,
+            component: () => import('../views/matchfunc.vue')
+          }
+        ]
       }
       // {
       //   name: '账号模块',

@@ -78,23 +78,23 @@ const state = reactive({
 })
 
 const beforeUpload = async (e) => {
-  await analysisExcel(e.target.files[0])
+  analysisExcel(e.target.files[0])
 }
 const analysisExcel = (file) => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      const data = e.target.result
-      let datajson = XLSX.read(data, {
-        type: 'binary'
-      })
-      const sheetName = datajson.SheetNames[0]
-      const result = XLSX.utils.sheet_to_json(datajson.Sheets[sheetName])
-      state.excelData = result
-    }
-    state.fileName = file.name
-    reader.readAsBinaryString(file)
-  })
+  // return new Promise((resolve, reject) => {
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    const data = e.target.result
+    let datajson = XLSX.read(data, {
+      type: 'binary'
+    })
+    const sheetName = datajson.SheetNames[0]
+    const result = XLSX.utils.sheet_to_json(datajson.Sheets[sheetName])
+    state.excelData = result
+  }
+  state.fileName = file.name
+  reader.readAsBinaryString(file)
+  // })
 }
 const removeContent = (type) => {
   state[type] = ''
@@ -102,33 +102,37 @@ const removeContent = (type) => {
 
 const createMatchStr = () => {
   const { excelData, fieldName } = state
+  if (validFieldName()) {
+    state.matchArrToStr = `(${excelData.map((i) => i[fieldName.toUpperCase()]).join(',')})`
+  }
+}
+
+const validFieldName = () => {
+  const { excelData, fieldName } = state
   const hasField = excelData[0][fieldName] || excelData[0][fieldName.toUpperCase()]
   if (!fieldName) {
     toast('请输入需要匹配的字段名称', 'error')
-    return
+    return false
   }
   if (!hasField) {
-    return toast('excel文件中没有匹配到字段名称相同的列', 'error')
+    toast('excel文件中没有匹配到字段名称相同的列', 'error')
+    return false
   }
-  state.matchArrToStr = `(${excelData.map((i) => i[fieldName.toUpperCase()]).join(',')})`
+  return true
 }
 
 const createInsertStr = () => {
   const { tmpTableName, excelData, fieldName } = state
-  if (!fieldName) {
-    toast('请输入需要匹配的字段名称', 'error')
-    return
+  if (validFieldName()) {
+    if (!tmpTableName) {
+      return toast('请填写临时表名称', 'error')
+    }
+    state.matchArrToSql = excelData
+      .map(
+        (i, k) => `insert into ${tmpTableName} values(${k + 1}, ${i[fieldName.toUpperCase()]});\n`
+      )
+      .join('')
   }
-  if (!tmpTableName) {
-    return toast('请填写临时表名称', 'error')
-  }
-  const hasField = excelData[0][fieldName] || excelData[0][fieldName.toUpperCase()]
-  if (!hasField) {
-    return toast('excel文件中没有匹配到字段名称相同的列', 'error')
-  }
-  state.matchArrToSql = excelData
-    .map((i, k) => `insert into ${tmpTableName} values(${k + 1}, ${i[fieldName.toUpperCase()]});\n`)
-    .join('')
 }
 
 const handleCopy = (content) => {

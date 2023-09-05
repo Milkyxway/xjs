@@ -32,20 +32,20 @@ export const routeList = [
       //     }
       //   ]
       // },
-      {
-        path: '/report',
-        name: '报表模块',
-        iconName: 'view',
-        component: () => import('../views/SuperviseHome.vue'),
-        children: [
-          {
-            path: '/report/list',
-            name: '报表列表',
-            isSider: true,
-            component: () => import('../views/reportlist.vue')
-          }
-        ]
-      },
+      // {
+      //   path: '/report',
+      //   name: '报表模块',
+      //   iconName: 'view',
+      //   component: () => import('../views/SuperviseHome.vue'),
+      //   children: [
+      //     {
+      //       path: '/report/list',
+      //       name: '报表列表',
+      //       isSider: true,
+      //       component: () => import('../views/reportlist.vue')
+      //     }
+      //   ]
+      // },
       {
         path: '/develop',
         name: '开发模块',

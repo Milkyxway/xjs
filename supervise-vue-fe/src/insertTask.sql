@@ -214,3 +214,7 @@ SET finishTime = '2023-11-31 00:00:00',
   taskGoal = '第二阶段 对故障数据异常的器件组织专项处理。完成时间：11月。',
   status = 3,
   parentId = 131;
+UPDATE `task_base`.`task_list`
+SET taskGoal = '第一阶段 完成5G营业终端升级优化项目的招标采购 完成时间：6月 第二阶段 完成5G营业终端升级优化项目的到货验收 完成时间：7月上旬 第三阶段 完成5G营业终端升级优化项目的安装部署 完成时间：7月下旬'
+where taskId = 132;
+ALTER TABLE `task_base`.`task_list` CHANGE COLUMN `taskGoal` `taskGoal` VARCHAR(300) NULL DEFAULT NULL;

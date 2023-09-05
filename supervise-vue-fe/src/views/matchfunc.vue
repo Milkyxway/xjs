@@ -3,12 +3,20 @@
     <div class="row-item">
       <div class="row-item">
         <span class="item-title">字段名称</span>
-        <el-input
-          placeholder="请输入需要匹配的字段名称"
+        <el-select
           v-model="state.fieldName"
-          class="field-input"
           clearable
-        ></el-input>
+          placeholder="请选择需要匹配的字段名称"
+          class="field-input"
+        >
+          <el-option
+            v-for="(item, index) in state.commonFieldsList"
+            v-bind:key="index"
+            :label="item.label"
+            :value="item.value"
+            >{{ item.label }}</el-option
+          >
+        </el-select>
       </div>
       <div class="row-item">
         <el-button @click="onUpload" type="primary">选择文件</el-button>
@@ -74,7 +82,13 @@ const state = reactive({
   matchArrToSql: '',
   tmpTableName: '',
   excelData: [],
-  fileName: ''
+  fileName: '',
+  commonFieldsList: [
+    {
+      label: 'cust_code',
+      value: 'cust_code'
+    }
+  ]
 })
 
 const beforeUpload = async (e) => {
@@ -103,7 +117,7 @@ const removeContent = (type) => {
 const createMatchStr = () => {
   const { excelData, fieldName } = state
   if (validFieldName()) {
-    state.matchArrToStr = `(${excelData.map((i) => i[fieldName.toUpperCase()]).join(',')})`
+    state.matchArrToStr = `(${excelData.map((i) => `'${i[fieldName.toUpperCase()]}'`).join(',\n')})`
   }
 }
 

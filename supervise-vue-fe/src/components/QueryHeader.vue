@@ -102,6 +102,7 @@
       <el-button @click="createTask" type="danger" v-showByAuth="{ role, showCondition: ['admin'] }"
         >新建任务</el-button
       >
+      <Upload :btn-txt="'批量上传'" />
     </div>
   </el-card>
 </template>
@@ -109,6 +110,7 @@
 import { ref, reactive, computed } from 'vue'
 import { taskStatusList, taskCategory, orgnizationTree, taskOrigin } from '../constant'
 import { getLocalStore } from '../util/localStorage'
+import Upload from './Upload.vue'
 const emit = defineEmits(['handleQuery', 'createTask'])
 const role = getLocalStore('userInfo').role
 let queryForm = reactive({

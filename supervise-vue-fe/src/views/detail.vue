@@ -656,7 +656,7 @@ getTaskDetail()
   color: #b1b3b8;
 }
 .status-submit {
-  color: #409eff;
+  color: #0076fe;
 }
 .white-space {
   height: 10px;

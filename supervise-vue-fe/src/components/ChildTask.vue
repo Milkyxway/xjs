@@ -87,6 +87,6 @@ const handleItemSubmit = () => {
   padding: 0 10px;
 }
 .submit-btn {
-  color: #409eff;
+  color: #0076fe;
 }
 </style>

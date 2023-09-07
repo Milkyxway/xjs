@@ -305,7 +305,7 @@ const expandAll = () => {
   color: #b1b3b8;
 }
 .status-submit {
-  color: #409eff;
+  color: #0076fe;
 }
 .status-delay-process {
   color: #e6a23c;

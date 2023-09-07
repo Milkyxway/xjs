@@ -134,3 +134,16 @@ export const appealTaskReq = (data) => {
     data
   })
 }
+
+/**
+ * 批量导入任务
+ * @param {*} data
+ * @returns
+ */
+export const batchAddTasksReq = (data) => {
+  return createRequest()({
+    url: '/api/task/batchadd',
+    method: 'post',
+    data
+  })
+}

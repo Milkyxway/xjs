@@ -102,7 +102,9 @@
       <el-button @click="createTask" type="danger" v-showByAuth="{ role, showCondition: ['admin'] }"
         >新建任务</el-button
       >
-      <Upload :btn-txt="'批量上传'" />
+      <div class="upload-wrap">
+        <Upload :btn-txt="'批量上传'" @handleChange="handleChange" />
+      </div>
     </div>
   </el-card>
 </template>
@@ -110,7 +112,9 @@
 import { ref, reactive, computed } from 'vue'
 import { taskStatusList, taskCategory, orgnizationTree, taskOrigin } from '../constant'
 import { getLocalStore } from '../util/localStorage'
+import { orgnizationNameToId, taskSourceNameToId, taskCategoryNameToId } from '../util/orgnization'
 import Upload from './Upload.vue'
+import { batchAddTasksReq } from '../api/list'
 const emit = defineEmits(['handleQuery', 'createTask'])
 const role = getLocalStore('userInfo').role
 let queryForm = reactive({
@@ -149,6 +153,20 @@ const reset = () => {
     queryForm[i] = null
   })
   handleQuery()
+}
+const handleChange = async (data) => {
+  const dealData = data.map((i) => {
+    return {
+      taskContent: i.taskContent,
+      leadOrg: orgnizationNameToId(i.leadOrg),
+      category: taskCategoryNameToId(i.taskCategory),
+      taskSource: taskSourceNameToId(i.taskSource)
+    }
+  })
+  try {
+    await batchAddTasksReq(dealData)
+    handleQuery()
+  } catch (e) {}
 }
 </script>
 <style scoped>
@@ -189,6 +207,9 @@ const reset = () => {
   justify-content: flex-end;
   align-items: center;
   padding: 15px 0 0 0;
+}
+.upload-wrap {
+  margin: 0 0 0 15px;
 }
 .card-admin {
   border: none;

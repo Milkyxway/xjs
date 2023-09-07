@@ -1,6 +1,6 @@
 <template>
-  <div class="row-item">
-    <div class="row-item">
+  <div class="child-task-row">
+    <div class="child-task-row">
       <span class="paddingLR10">计划完成目标</span>
       <el-input
         v-model="props.data.taskGoal"
@@ -8,7 +8,7 @@
         :disabled="props.taskStatus > 2"
       ></el-input>
     </div>
-    <div class="row-item">
+    <div class="child-task-row">
       <span class="paddingLR10">计划完成时间</span>
       <el-date-picker
         v-model="props.data.finishTime"
@@ -16,22 +16,22 @@
         :disabled="[3, 7, 6].includes(props.taskStatus)"
       ></el-date-picker>
     </div>
-    <div class="row-item" v-if="props.taskStatus == 5">
+    <div class="child-task-row" v-if="props.taskStatus == 5">
       <span class="paddingLR10">延期说明</span>
       <el-input placeholder="请填写延期说明" v-model="props.data.delayReason"></el-input>
     </div>
-    <div class="row-item" v-if="[3, 7].includes(props.taskStatus)">
+    <div class="child-task-row" v-if="[3, 7].includes(props.taskStatus)">
       <span class="paddingLR10">实际完成时间</span>
       <el-date-picker
         placeholder="请选择实际完成时间"
         v-model="props.data.actualFinish"
       ></el-date-picker>
     </div>
-    <div class="row-item" v-if="[3, 7].includes(props.taskStatus)">
+    <div class="child-task-row" v-if="[3, 7].includes(props.taskStatus)">
       <span class="paddingLR10">完成情况说明</span>
       <el-input placeholder="请填写完成情况说明" v-model="props.data.completeDesc"></el-input>
     </div>
-    <el-icon color="#409eff" @click="addChild" v-if="props.isFirst">
+    <el-icon color="#0076fe" @click="addChild" v-if="props.isFirst">
       <CirclePlus v-if="props.fatherStatus == 1" />
     </el-icon>
     <el-icon @click="deleteChild(index)" v-if="!props.isFirst"
@@ -76,7 +76,7 @@ const handleItemSubmit = () => {
 }
 </script>
 <style scoped>
-.row-item {
+.child-task-row {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;

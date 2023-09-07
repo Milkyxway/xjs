@@ -539,6 +539,9 @@ const subtaskSubmit = async () => {
     if (!i.finishTime) {
       unfill = '请填写计划完成时间'
     }
+    if (dayjs(i.finishTime).format() < dayjs().format()) {
+      unfill = '请选择今天及以后的时间'
+    }
   })
   if (unfill) {
     return toast(unfill, 'error')

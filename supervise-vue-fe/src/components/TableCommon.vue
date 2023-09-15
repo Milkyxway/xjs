@@ -14,6 +14,13 @@
         :width="getColumnWidth(item)"
       >
         <template #default="{ row }">
+          <el-icon v-if="item.prop === 'focus'"
+            ><Star v-if="!row.isFocus" @click="setFocus(0, row.taskId)" /><StarFilled
+              :color="'#f7ba2a'"
+              :size="14"
+              v-if="row.isFocus"
+              @click="setFocus(1, row.taskId)"
+          /></el-icon>
           <span v-if="item.prop === 'status'" :class="getClassName(row)">{{
             getStatusName(row)
           }}</span>
@@ -93,12 +100,13 @@
 import { storeToRefs } from 'pinia'
 import { computed, reactive, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { deleteTaskReq, taskSetFinishReq, deleteSubTaskReq } from '../api/list'
+import { deleteTaskReq, taskSetFinishReq, deleteSubTaskReq, setTaskFocusReq } from '../api/list'
 import { taskStatusMap, taskCategoryMap, orgnizationTree, taskSourceMap } from '../constant/index'
 import { getLocalStore } from '../util/localStorage'
 import { userLoginStore } from '../stores/login'
 import { orgnizationListIdToName, orgnizationToName } from '../util/orgnization'
 import { dayjs } from 'element-plus'
+import { toast } from '../util/toast'
 const authStore = userLoginStore()
 const { userInfo } = storeToRefs(authStore)
 const router = useRouter()
@@ -116,7 +124,7 @@ const props = defineProps({
     type: Number
   }
 })
-const emits = defineEmits(['updateTask', 'refreshList', 'changePage'])
+const emits = defineEmits(['updateTask', 'refreshList', 'changePage', 'updateFocus'])
 const role = getLocalStore('userInfo').role
 const userOrg = getLocalStore('userInfo').orgnization
 const state = reactive({
@@ -133,6 +141,15 @@ watch(
     emits('changePage', { pageNum: val[0], pageSize: val[1] })
   }
 )
+
+const showStar = computed(() => {
+  return function (prop) {
+    if (prop === 'focus') {
+      return true
+    }
+    return false
+  }
+})
 
 // 转换成状态名称
 const getStatusName = computed(() => {
@@ -285,6 +302,18 @@ const checkTask = (row) => {
 }
 const expandAll = () => {
   state.isExpand = true
+}
+
+const setFocus = async (status, taskId) => {
+  try {
+    await setTaskFocusReq({
+      isFocus: status === 0 ? 1 : 0,
+      taskId
+    })
+    status === 0 ? toast('关注成功') : toast('取消关注')
+    emits('updateFocus', { status, taskId })
+  } catch (e) {}
+  // emits('refreshList')
 }
 </script>
 <style>

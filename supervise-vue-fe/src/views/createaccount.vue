@@ -60,6 +60,10 @@ const roleList = [
     value: 'leader'
   },
   {
+    label: '分管领导',
+    value: 'sub-leader'
+  },
+  {
     label: '部门',
     value: 'section'
   },

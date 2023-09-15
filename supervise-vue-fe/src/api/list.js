@@ -147,3 +147,16 @@ export const batchAddTasksReq = (data) => {
     data
   })
 }
+
+/**
+ * 设置任务关注
+ * @param {*} data
+ * @returns
+ */
+export const setTaskFocusReq = (data) => {
+  return createRequest()({
+    url: '/api/task/focus',
+    method: 'post',
+    data
+  })
+}

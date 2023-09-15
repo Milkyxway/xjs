@@ -2,7 +2,7 @@
   <QueryHeader type="add" @handleQuery="handleQuery" @createTask="createTask" />
   <div>
     <el-tabs v-model="state.chooseTab">
-      <el-tab-pane label="我的" name="mine" v-if="role === 'section'">
+      <el-tab-pane label="我的" name="mine" v-if="['section', 'sub-leader'].includes(role)">
         <TableCommon
           :table-data="state.myTable"
           :table-columns="state.tableColumns"
@@ -10,6 +10,18 @@
           @refreshList="refreshList"
           :total="state.myTableTotal"
           @changePage="changePage"
+          @updateFocus="updateFocus"
+        />
+      </el-tab-pane>
+      <el-tab-pane label="已关注" name="focus" v-if="['leader', 'sub-leader'].includes(role)">
+        <TableCommon
+          :table-data="state.tableData"
+          :table-columns="state.tableColumns"
+          @updateTask="updateTask"
+          @refreshList="refreshList"
+          :total="state.total"
+          @changePage="changePage"
+          @updateFocus="updateFocus"
         />
       </el-tab-pane>
       <el-tab-pane label="所有" name="all">
@@ -20,6 +32,7 @@
           @refreshList="refreshList"
           :total="state.total"
           @changePage="changePage"
+          @updateFocus="updateFocus"
         />
       </el-tab-pane>
       <el-tab-pane
@@ -86,6 +99,10 @@ const state = reactive({
     taskSource: null
   },
   tableColumns: [
+    {
+      columnName: '',
+      prop: 'focus'
+    },
     {
       columnName: '任务来源',
       prop: 'taskSource'
@@ -260,6 +277,9 @@ const init = () => {
       state.chooseTab = 'all'
       leaderViewTableColumn()
       break
+    case 'sub-leader':
+      leaderViewTableColumn()
+      break
     case 'employee':
       state.chooseTab = 'all'
       employeeViewTableColumn()
@@ -285,6 +305,8 @@ watch(
       case 'all':
         getSuperviseList()
         break
+      case 'focus':
+        state.query
       case 1:
       case 2:
       case 3:
@@ -327,14 +349,15 @@ const employeeViewTableColumn = () => {
         'updateTime',
         'createTime',
         'delayReason',
-        'resolveType'
+        'resolveType',
+        'focus'
       ].includes(i.prop)
   )
 }
 
 const sectionViewTableColumn = () => {
   state.tableColumns = state.tableColumns.filter(
-    (i) => !['sourceDesc', 'ariseOrg'].includes(i.prop)
+    (i) => !['sourceDesc', 'ariseOrg', 'focus'].includes(i.prop)
   )
 }
 // 弹窗里确定按钮触发
@@ -379,11 +402,18 @@ const updateTask = (row) => {
 }
 
 const getRelatedMeTask = async () => {
-  const result = await myTaskReq({
+  let params = {
     ...state.page,
     ...state.querys,
-    orgnizationId: userInfo.value.orgnization
-  })
+    role: role.value
+  }
+  if (role.value === 'section') {
+    params = {
+      ...params,
+      orgnizationId: userInfo.value.orgnization
+    }
+  }
+  const result = await myTaskReq(params)
   state.myTable = insertIdIntoArr(result.data.list)
   state.myTableTotal = result.data.total
 }
@@ -402,6 +432,30 @@ const refreshList = () => {
   toast()
   getSuperviseList()
   role.value !== 'admin' && getRelatedMeTask()
+}
+
+const updateFocus = (params) => {
+  const { taskId, status } = params
+  let type = ''
+  switch (state.chooseTab) {
+    case 'mine':
+      type = 'myTable'
+      break
+    case 'all':
+      type = 'tableData'
+      break
+    case '':
+      break
+  }
+  state[type] = state[type].map((i) => {
+    if (i.taskId === taskId) {
+      return {
+        ...i,
+        isFocus: status === 0 ? 1 : 0
+      }
+    }
+    return i
+  })
 }
 
 init()

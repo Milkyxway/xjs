@@ -15,11 +15,11 @@
       >
         <template #default="{ row }">
           <el-icon v-if="item.prop === 'focus'"
-            ><Star v-if="!row.isFocus" @click="setFocus(0, row.taskId)" /><StarFilled
+            ><Star v-if="!row.isFocus" @click="setFocus(row)" /><StarFilled
               :color="'#f7ba2a'"
               :size="14"
               v-if="row.isFocus"
-              @click="setFocus(1, row.taskId)"
+              @click="setFocus(row)"
           /></el-icon>
           <span v-if="item.prop === 'status'" :class="getClassName(row)">{{
             getStatusName(row)
@@ -142,15 +142,6 @@ watch(
   }
 )
 
-const showStar = computed(() => {
-  return function (prop) {
-    if (prop === 'focus') {
-      return true
-    }
-    return false
-  }
-})
-
 // 转换成状态名称
 const getStatusName = computed(() => {
   return function (row) {
@@ -203,14 +194,6 @@ const showFinishBtn = computed(() => {
     if (role === 'admin') {
       return true
     }
-
-    // if (row.leadOrg === userOrg) {
-    //   // 责任部门可以置为完成
-    //   if (row.status === 3) {
-    //     return true
-    //   }
-    //   return false
-    // }
     return false
   }
 })
@@ -304,16 +287,30 @@ const expandAll = () => {
   state.isExpand = true
 }
 
-const setFocus = async (status, taskId) => {
+const setFocus = async (row) => {
+  const { taskId } = row
+  const username = getLocalStore('userInfo').username
+  let focusBy = row.focusBy
+  if (!row.focusBy) {
+    // 该任务没有人关注
+    focusBy = username
+  } else if (row.focusBy.indexOf(username) > -1) {
+    // 已经关注过 取消关注
+    const focusList = focusBy.split(',')
+    focusList.splice(focusList.indexOf(username))
+    focusBy = focusList.join('')
+  } else {
+    // 增加关注
+    focusBy = `${focusBy},${username}`
+  }
   try {
     await setTaskFocusReq({
-      isFocus: status === 0 ? 1 : 0,
-      taskId
+      taskId,
+      focusBy
     })
-    status === 0 ? toast('关注成功') : toast('取消关注')
-    emits('updateFocus', { status, taskId })
+    focusBy.indexOf(username) > -1 ? toast('关注成功') : toast('取消关注')
+    emits('updateFocus', { taskId, isFocus: focusBy.indexOf(username) > -1 ? 1 : 0 })
   } catch (e) {}
-  // emits('refreshList')
 }
 </script>
 <style>

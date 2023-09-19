@@ -122,3 +122,9 @@ AFTER `delayReason`;
 ALTER TABLE `task_supervise_schema`.`task_list`
 ADD COLUMN `isFocus` INT NULL
 AFTER `statusWeight`;
+ALTER TABLE `task_supervise_schema`.`task_list`
+ADD COLUMN `focusBy` VARCHAR(300) NULL
+AFTER `isFocus`;
+ALTER TABLE `task_supervise_schema`.`task_list`
+ADD COLUMN `focusBy` VARCHAR(45) NULL
+AFTER `statusWeight`;

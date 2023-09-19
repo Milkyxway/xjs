@@ -160,3 +160,16 @@ export const setTaskFocusReq = (data) => {
     data
   })
 }
+
+/**
+ * 关注的任务列表
+ * @param {*} data
+ * @returns
+ */
+export const getFocusListReq = (data) => {
+  return createRequest()({
+    url: '/api/task/focuslist',
+    method: 'post',
+    data
+  })
+}

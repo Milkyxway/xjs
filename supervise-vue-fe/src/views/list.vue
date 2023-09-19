@@ -15,11 +15,11 @@
       </el-tab-pane>
       <el-tab-pane label="已关注" name="focus" v-if="['leader', 'sub-leader'].includes(role)">
         <TableCommon
-          :table-data="state.tableData"
+          :table-data="state.tableFocus"
           :table-columns="state.tableColumns"
           @updateTask="updateTask"
           @refreshList="refreshList"
-          :total="state.total"
+          :total="state.totalFocus"
           @changePage="changePage"
           @updateFocus="updateFocus"
         />
@@ -68,7 +68,13 @@ import { useRouter } from 'vue-router'
 import QueryHeader from '../components/QueryHeader.vue'
 import TaskModal from '../components/TaskModal.vue'
 import TableCommon from '../components/TableCommon.vue'
-import { getTaskListReq, createTaskReq, updateTaskReq, myTaskReq } from '../api/list'
+import {
+  getTaskListReq,
+  createTaskReq,
+  updateTaskReq,
+  myTaskReq,
+  getFocusListReq
+} from '../api/list'
 import { toast } from '../util/toast'
 import { getLocalStore } from '../util/localStorage'
 import { dayjs } from 'element-plus'
@@ -76,6 +82,7 @@ import { statusWeight } from '../constant/index'
 
 const userInfo = ref(getLocalStore('userInfo'))
 const role = ref(getLocalStore('userInfo').role)
+const username = ref(getLocalStore('userInfo').username)
 const state = reactive({
   chooseTab: 'mine',
   modalType: '',
@@ -171,6 +178,8 @@ const state = reactive({
   tableData: [],
   total: 0,
   modalVisible: false,
+  tableFocus: [],
+  totalFocus: 0,
   leaderTabs: [
     {
       label: '专项调研',
@@ -257,35 +266,45 @@ const insertIdIntoArr = (data) => {
       })
       return {
         ...i,
-        id: i.taskId
+        id: i.taskId,
+        isFocus: i.focusBy?.indexOf(username.value) > -1 ? 1 : 0
       }
     }
-    return i
+    return {
+      ...i,
+      isFocus: i.focusBy?.indexOf(username.value) > -1 ? 1 : 0
+    }
   })
   return result
 }
 
 const init = () => {
-  getSuperviseList()
+  // getSuperviseList()
   switch (role.value) {
-    case 'section':
+    case 'section': // 部门
       getRelatedMeTask()
       sectionViewTableColumn()
       // 部门权限看不见问题提出部门
       break
-    case 'leader':
+    case 'leader': // zhu
       state.chooseTab = 'all'
       leaderViewTableColumn()
+      getSuperviseList()
+      // todo
       break
-    case 'sub-leader':
+    case 'sub-leader': // 分管领导
       leaderViewTableColumn()
+      getRelatedMeTask()
       break
-    case 'employee':
+    case 'employee': // 员工
       state.chooseTab = 'all'
       employeeViewTableColumn()
+      getSuperviseList()
       break
-    case 'admin':
+    case 'admin': // 管理员
       state.chooseTab = 'all'
+      adminViewTableColumn()
+      getSuperviseList()
       break
     default:
       break
@@ -306,7 +325,8 @@ watch(
         getSuperviseList()
         break
       case 'focus':
-        state.query
+        getFocusList()
+        break
       case 1:
       case 2:
       case 3:
@@ -320,6 +340,10 @@ watch(
     }
   }
 )
+
+const adminViewTableColumn = () => {
+  state.tableColumns = state.tableColumns.filter((i) => !['focus'].includes(i.prop))
+}
 
 const leaderViewTableColumn = () => {
   state.tableColumns = state.tableColumns.filter(
@@ -401,21 +425,53 @@ const updateTask = (row) => {
   }
 }
 
+const subleaderManageParts = () => {
+  let manageParts = ''
+  switch (username.value) {
+    case 'yanghongyu':
+      manageParts = '7,9,11'
+      break
+    case 'zhaoyuhui':
+      manageParts = '5,10'
+      break
+    case 'wangwei':
+      manageParts = '1,2'
+      break
+    case 'zhaoxiaoguang':
+      manageParts = '4,6,8'
+      break
+    default:
+      break
+  }
+  return manageParts
+}
+
 const getRelatedMeTask = async () => {
   let params = {
     ...state.page,
-    ...state.querys,
-    role: role.value
+    ...state.querys
   }
   if (role.value === 'section') {
     params = {
       ...params,
       orgnizationId: userInfo.value.orgnization
     }
+  } else if (role.value === 'sub-leader') {
+    params = {
+      ...params,
+      role: role.value,
+      manageParts: subleaderManageParts()
+    }
   }
   const result = await myTaskReq(params)
   state.myTable = insertIdIntoArr(result.data.list)
   state.myTableTotal = result.data.total
+}
+
+const getFocusList = async () => {
+  const result = await getFocusListReq({ username: username.value, ...state.page })
+  state.tableFocus = insertIdIntoArr(result.data.list)
+  state.totalFocus = result.data.total
 }
 
 const changePage = (val) => {
@@ -435,27 +491,31 @@ const refreshList = () => {
 }
 
 const updateFocus = (params) => {
-  const { taskId, status } = params
+  const { taskId, isFocus } = params
+  const { chooseTab } = state
   let type = ''
-  switch (state.chooseTab) {
+  switch (chooseTab) {
     case 'mine':
       type = 'myTable'
       break
     case 'all':
       type = 'tableData'
       break
-    case '':
+    case 'focus':
+      getFocusList()
       break
   }
-  state[type] = state[type].map((i) => {
-    if (i.taskId === taskId) {
-      return {
-        ...i,
-        isFocus: status === 0 ? 1 : 0
+  if (['mine', 'all'].includes(chooseTab)) {
+    state[type] = state[type].map((i) => {
+      if (i.taskId === taskId) {
+        return {
+          ...i,
+          isFocus
+        }
       }
-    }
-    return i
-  })
+      return i
+    })
+  }
 }
 
 init()

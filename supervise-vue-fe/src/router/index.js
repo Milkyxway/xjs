@@ -23,12 +23,16 @@ export const routeList = [
             path: '/supervise/list',
             name: '任务列表',
             isSider: true,
-            component: () => import('../views/list.vue')
+            component: () => import('../views/list.vue'),
+            meta: {
+              keepAlive: true
+            }
           },
           {
             path: '/supervise/charts',
             name: '任务报表',
             isSider: true,
+            auth: ['admin', 'section', 'leader', 'sub-leader'],
             component: () => import('../views/charts.vue')
           },
           {

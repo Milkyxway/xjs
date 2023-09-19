@@ -115,6 +115,7 @@ import { getLocalStore } from '../util/localStorage'
 import { orgnizationNameToId, taskSourceNameToId, taskCategoryNameToId } from '../util/orgnization'
 import Upload from './Upload.vue'
 import { batchAddTasksReq } from '../api/list'
+import { toast } from '../util/toast'
 const emit = defineEmits(['handleQuery', 'createTask'])
 const role = getLocalStore('userInfo').role
 let queryForm = reactive({
@@ -157,14 +158,17 @@ const reset = () => {
 const handleChange = async (data) => {
   const dealData = data.map((i) => {
     return {
-      taskContent: i.taskContent,
-      leadOrg: orgnizationNameToId(i.leadOrg),
-      category: taskCategoryNameToId(i.taskCategory),
-      taskSource: taskSourceNameToId(i.taskSource)
+      taskContent: i['任务内容'],
+      sourceDesc: i['来源描述'],
+      leadOrg: orgnizationNameToId(i['牵头部门']),
+      category: taskCategoryNameToId(i['任务类别']),
+      taskSource: taskSourceNameToId(i['任务来源']) || null,
+      ariseOrg: orgnizationNameToId(i['提出部门']) || null
     }
   })
   try {
     await batchAddTasksReq(dealData)
+    toast('批量上传成功！')
     handleQuery()
   } catch (e) {}
 }

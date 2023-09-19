@@ -26,6 +26,12 @@ export const routeList = [
             component: () => import('../views/list.vue')
           },
           {
+            path: '/supervise/charts',
+            name: '任务报表',
+            isSider: true,
+            component: () => import('../views/charts.vue')
+          },
+          {
             path: '/supervise/detail/:taskId',
             name: '任务详情',
             component: () => import('../views/detail.vue')

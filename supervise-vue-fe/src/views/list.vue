@@ -421,7 +421,7 @@ const updateTask = (row) => {
   state.modalVisible = true
   state.formData = {
     ...row,
-    assistOrg: row.assistOrg === '' ? [] : row.assistOrg.split(',').map((i) => Number(i))
+    assistOrg: !row.assistOrg ? [] : row.assistOrg.split(',').map((i) => Number(i))
   }
 }
 

@@ -14,7 +14,7 @@
         :width="getColumnWidth(item)"
       >
         <template #default="{ row }">
-          <el-icon v-if="item.prop === 'focus'"
+          <el-icon v-if="item.prop === 'focus' && row.children"
             ><Star v-if="!row.isFocus" @click="setFocus(row)" /><StarFilled
               :color="'#f7ba2a'"
               :size="14"
@@ -63,7 +63,7 @@
             v-showByAuth="{
               role,
               showCondition: ['admin'],
-              otherCondition: [1, 2].includes(row.status)
+              otherCondition: [1, 2, 3, 5, 7].includes(row.status)
             }"
             >修改</el-button
           >

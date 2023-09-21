@@ -394,7 +394,20 @@ const sectionViewTableColumn = () => {
 }
 // 弹窗里确定按钮触发
 const handleCommit = async (form) => {
-  const { assistOrg, category, taskContent, leadOrg, comment, taskId, ariseOrg } = form
+  const {
+    assistOrg,
+    category,
+    taskContent,
+    leadOrg,
+    comment,
+    taskId,
+    ariseOrg,
+    taskGoal,
+    finishTime,
+    actualFinish,
+    completeDesc,
+    status
+  } = form
   let params = form
   if (!ariseOrg) {
     const { ariseOrg, ...rest } = form
@@ -409,9 +422,13 @@ const handleCommit = async (form) => {
           taskContent,
           leadOrg,
           comment,
-          status: 1,
-          statusWeight: statusWeight[1],
-          taskId
+          status: [1, 2].includes(status) ? 1 : status,
+          statusWeight: [1, 2].includes(status) ? statusWeight[1] : statusWeight[status],
+          taskId,
+          taskGoal,
+          finishTime: finishTime ? dayjs(finishTime).format() : null,
+          actualFinish: actualFinish ? dayjs(actualFinish).format() : null,
+          completeDesc
         })
   state.page = {
     pageNum: 0,

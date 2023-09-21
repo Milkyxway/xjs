@@ -38,7 +38,7 @@ CREATE TABLE `task_base`.`subtask_list` (
   `delayReason` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`subtaskId`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 47 DEFAULT CHARSET = utf8 COLLATE = utf8_general_ci;
-CREATE TABLE `task_base`.`user` (
+CREATE TABLE `bigdata_period`.`user` (
   `username` varchar(16) NOT NULL,
   `password` varchar(32) NOT NULL,
   `userId` int NOT NULL AUTO_INCREMENT,
@@ -47,8 +47,8 @@ CREATE TABLE `task_base`.`user` (
   `usernameCn` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`userId`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 13 DEFAULT CHARSET = utf8 COLLATE = utf8_general_ci;
-INSERT into task_base.user value('admin', 'admin123456', 1, 'admin', 0, '管理员');
-INSERT into task_base.user value(
+INSERT into `bigdata_period`.`user` value('admin', 'admin123456', 1, 'admin', 0, '管理员');
+INSERT into `bigdata_period`.`user` value(
     'zonghe',
     'zonghe123456',
     2,
@@ -56,7 +56,7 @@ INSERT into task_base.user value(
     1,
     '综合管理部'
   );
-INSERT into task_base.user value(
+INSERT into `bigdata_period`.`user` value(
     'dangqun',
     'dangqun123456',
     3,
@@ -64,10 +64,10 @@ INSERT into task_base.user value(
     2,
     '党群工作部'
   );
-INSERT into task_base.user value('renli', 'renli123456', 4, 'section', 3, '人力资源部');
-INSERT into task_base.user value('caiwu', 'caiwu123456', 5, 'section', 4, '财务资产部');
-INSERT into task_base.user value('qyfz', 'qyfz123456', 6, 'section', 5, '企业发展部');
-INSERT into task_base.user value(
+INSERT into `bigdata_period`.`user` value('renli', 'renli123456', 4, 'section', 3, '人力资源部');
+INSERT into `bigdata_period`.`user` value('caiwu', 'caiwu123456', 5, 'section', 4, '财务资产部');
+INSERT into `bigdata_period`.`user` value('qyfz', 'qyfz123456', 6, 'section', 5, '企业发展部');
+INSERT into `bigdata_period`.`user` value(
     'shichang',
     'shichang123456',
     7,
@@ -75,7 +75,7 @@ INSERT into task_base.user value(
     6,
     '市场运营部'
   );
-INSERT into task_base.user value(
+INSERT into `bigdata_period`.`user` value(
     'zhengqi',
     'zhengqi123456',
     8,
@@ -83,7 +83,7 @@ INSERT into task_base.user value(
     7,
     '政企客户部'
   );
-INSERT into task_base.user value(
+INSERT into `bigdata_period`.`user` value(
     'gongke',
     'gongke123456',
     9,
@@ -91,9 +91,9 @@ INSERT into task_base.user value(
     8,
     '公共客户部'
   );
-INSERT into task_base.user value('jszc', 'jszc123456', 10, 'section', 9, '技术支撑部');
-INSERT into task_base.user value('gcjs', 'gcjs123456', 11, 'section', 10, '工程建设部');
-INSERT into task_base.user value('abyw', 'abyw123456', 12, 'section', 11, '安播运维部');
+INSERT into `bigdata_period`.`user` value('jszc', 'jszc123456', 10, 'section', 9, '技术支撑部');
+INSERT into `bigdata_period`.`user` value('gcjs', 'gcjs123456', 11, 'section', 10, '工程建设部');
+INSERT into `bigdata_period`.`user` value('abyw', 'abyw123456', 12, 'section', 11, '安播运维部');
 CREATE TABLE `subtask_list` (
   `parentId` int DEFAULT NULL,
   `subtaskId` int NOT NULL AUTO_INCREMENT,

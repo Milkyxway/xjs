@@ -301,12 +301,17 @@ const handleCommit = () => {
   margin-right: 15px;
 }
 .el-select {
-  width: 300px;
+  width: 400px;
 }
 .el-input {
-  width: 300px;
+  width: 400px;
 }
-
+.el-textarea {
+  width: 400px;
+}
+:deep(.el-date-editor) {
+  width: 400px !important;
+}
 .dialog-footer button:first-child {
   margin-right: 10px;
 }

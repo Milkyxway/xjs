@@ -269,6 +269,12 @@ watch(
     } else {
       state.showForm = false
       state.showInput = true
+      state.formInput.comment = ''
+    }
+    if (val === '暂时无法解决') {
+      state.formInput.comment = `1. 暂时无法解决的原因\n2. 已经做了哪些工作\n3. 后续跟进措施\n`
+      state.showForm = false
+      state.showInput = true
     }
   }
 )
@@ -575,6 +581,12 @@ const submitFn = async () => {
     formInput: { comment }
   } = state
   if (['非问题仅解释', '暂时无法解决'].includes(taskType)) {
+    if (
+      taskType === '暂时无法解决' &&
+      comment == '1. 暂时无法解决的原因\n2. 已经做了哪些工作\n3. 后续跟进措施\n'
+    ) {
+      return toast('请填写暂时无法解决的原因等', 'error')
+    }
     return inputForm.value.validate().then(async (res) => {
       await updateTaskReq({
         taskId,

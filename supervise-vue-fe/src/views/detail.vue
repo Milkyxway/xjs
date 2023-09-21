@@ -190,6 +190,7 @@
 import { reactive, computed, watch, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { dayjs } from 'element-plus'
+import mitt from 'mitt'
 import TaskModal from '../components/TaskModal.vue'
 import ChildTask from '../components/ChildTask.vue'
 import NavBack from '../components/NavBack.vue'
@@ -204,6 +205,7 @@ import { orgnizationListIdToName, orgnizationToName } from '../util/orgnization'
 import { taskCategoryMap, taskStatusMap, statusWeight } from '../constant/index'
 import { getLocalStore } from '../util/localStorage'
 import { toast } from '../util/toast'
+import emitter from '../util/eventbus'
 
 const inputForm = ref()
 const route = useRoute()
@@ -401,6 +403,10 @@ const getSecondEnd = (list) => {
   return arr
 }
 
+const launchRefresh = () => {
+  emitter.emit('refreshList')
+}
+
 const handleItemSubmit = async (data, status) => {
   const { actualFinish, finishTime, completeDesc } = data
   const statusProcess = {
@@ -459,6 +465,7 @@ const handleCommit = async (form) => {
   })
   state.modalVisible = false
   toast('提交成功！')
+  launchRefresh()
   router.replace('/supervise/list')
 }
 
@@ -491,6 +498,7 @@ const singleTaskSubmit = async () => {
   }
   await updateTaskReq(getParamsByStatus(status))
   toast('提交成功！')
+  launchRefresh()
   router.replace('/supervise/list')
 }
 
@@ -556,6 +564,7 @@ const subtaskSubmit = async () => {
   })
   await addSubTaskReq({ list, taskId })
   toast('提交成功！')
+  launchRefresh()
   router.replace('/supervise/list')
 }
 
@@ -575,6 +584,7 @@ const submitFn = async () => {
         statusWeight: statusWeight[taskType === '非问题仅解释' ? 6 : 3]
       })
       toast('提交成功！')
+      launchRefresh()
       router.replace('/supervise/list')
     })
   }

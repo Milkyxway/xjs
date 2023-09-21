@@ -79,6 +79,7 @@ import { toast } from '../util/toast'
 import { getLocalStore } from '../util/localStorage'
 import { dayjs } from 'element-plus'
 import { statusWeight } from '../constant/index'
+import emitter from '../util/eventbus'
 
 const userInfo = ref(getLocalStore('userInfo'))
 const role = ref(getLocalStore('userInfo').role)
@@ -203,6 +204,9 @@ const state = reactive({
     }
   ]
 })
+emitter.on('refreshList', (e) => {
+  getListByChooseTab(state.chooseTab)
+})
 
 const getSuperviseList = async () => {
   state.tableData = []
@@ -315,31 +319,35 @@ const init = () => {
 watch(
   () => state.chooseTab,
   (val) => {
-    state.page.pageNum = 0
-    state.querys = {}
-    switch (val) {
-      case 'mine':
-        getRelatedMeTask()
-        break
-      case 'all':
-        getSuperviseList()
-        break
-      case 'focus':
-        getFocusList()
-        break
-      case 1:
-      case 2:
-      case 3:
-      case 4:
-      case 5:
-        state.querys.taskSource = val
-        getSuperviseList()
-        break
-      default:
-        break
-    }
+    getListByChooseTab(val)
   }
 )
+
+const getListByChooseTab = (tab) => {
+  state.page.pageNum = 0
+  state.querys = {}
+  switch (tab) {
+    case 'mine':
+      getRelatedMeTask()
+      break
+    case 'all':
+      getSuperviseList()
+      break
+    case 'focus':
+      getFocusList()
+      break
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+      state.querys.taskSource = tab
+      getSuperviseList()
+      break
+    default:
+      break
+  }
+}
 
 const adminViewTableColumn = () => {
   state.tableColumns = state.tableColumns.filter((i) => !['focus'].includes(i.prop))

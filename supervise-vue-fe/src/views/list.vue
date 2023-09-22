@@ -160,6 +160,10 @@ const state = reactive({
       prop: 'status'
     },
     {
+      columnName: '领导批注',
+      prop: 'leadComment'
+    },
+    {
       columnName: '反馈类型',
       prop: 'resolveType'
     },

@@ -173,3 +173,16 @@ export const getFocusListReq = (data) => {
     data
   })
 }
+
+/**
+ * 增加领导批注
+ * @param {*} data
+ * @returns
+ */
+export const addLeadCommentReq = (data) => {
+  return createRequest()({
+    url: '/api/task/addleadcomment',
+    method: 'post',
+    data
+  })
+}

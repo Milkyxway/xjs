@@ -128,3 +128,14 @@ AFTER `isFocus`;
 ALTER TABLE `task_supervise_schema`.`task_list`
 ADD COLUMN `focusBy` VARCHAR(45) NULL
 AFTER `statusWeight`;
+ALTER TABLE `task_supervise_schema`.`task_list`
+ADD COLUMN `leadComment` VARCHAR(700) NULL
+AFTER `focusBy`;
+CREATE TABLE `leadComment_list` (
+  `commentId` int NOT NULL DEFAULT '0',
+  `comment` varchar(300) DEFAULT NULL,
+  `username` varchar(45) DEFAULT NULL,
+  `createTime` datetime DEFAULT NULL,
+  `taskId` int DEFAULT NULL,
+  PRIMARY KEY (`commentId`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;

@@ -102,6 +102,9 @@
       <el-button @click="createTask" type="danger" v-showByAuth="{ role, showCondition: ['admin'] }"
         >新建任务</el-button
       >
+      <div class="upload-wrap">
+        <Upload :btn-txt="'批量上传'" @handleChange="handleChange" />
+      </div>
     </div>
   </el-card>
 </template>
@@ -109,6 +112,10 @@
 import { ref, reactive, computed } from 'vue'
 import { taskStatusList, taskCategory, orgnizationTree, taskOrigin } from '../constant'
 import { getLocalStore } from '../util/localStorage'
+import { orgnizationNameToId, taskSourceNameToId, taskCategoryNameToId } from '../util/orgnization'
+import Upload from './Upload.vue'
+import { batchAddTasksReq } from '../api/list'
+import { toast } from '../util/toast'
 const emit = defineEmits(['handleQuery', 'createTask'])
 const role = getLocalStore('userInfo').role
 let queryForm = reactive({
@@ -147,6 +154,23 @@ const reset = () => {
     queryForm[i] = null
   })
   handleQuery()
+}
+const handleChange = async (data) => {
+  const dealData = data.map((i) => {
+    return {
+      taskContent: i['任务内容'],
+      sourceDesc: i['来源描述'],
+      leadOrg: orgnizationNameToId(i['牵头部门']),
+      category: taskCategoryNameToId(i['任务类别']),
+      taskSource: taskSourceNameToId(i['任务来源']) || null,
+      ariseOrg: orgnizationNameToId(i['提出部门']) || null
+    }
+  })
+  try {
+    await batchAddTasksReq(dealData)
+    toast('批量上传成功！')
+    handleQuery()
+  } catch (e) {}
 }
 </script>
 <style scoped>
@@ -187,6 +211,9 @@ const reset = () => {
   justify-content: flex-end;
   align-items: center;
   padding: 15px 0 0 0;
+}
+.upload-wrap {
+  margin: 0 0 0 15px;
 }
 .card-admin {
   border: none;

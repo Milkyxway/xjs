@@ -22,6 +22,9 @@
       >
         <el-input v-model="state.formData.password" type="password"></el-input>
       </el-form-item>
+      <el-form-item :label-width="formLabelWidth" label="用户名中文">
+        <el-input v-model="state.formData.usernameCn"></el-input>
+      </el-form-item>
       <el-form-item label="角色" prop="role" :label-width="formLabelWidth">
         <el-radio-group v-model="state.formData.role">
           <el-radio
@@ -45,7 +48,8 @@ const state = reactive({
   formData: {
     username: '',
     password: '',
-    role: '部门'
+    role: '部门',
+    usernameCn: ''
   }
 })
 const formRef = ref()
@@ -58,6 +62,10 @@ const roleList = [
   {
     label: '领导',
     value: 'leader'
+  },
+  {
+    label: '分管领导',
+    value: 'sub-leader'
   },
   {
     label: '部门',

@@ -118,6 +118,45 @@
         >
       </el-form-item>
       <el-form-item
+        label="任务目标"
+        :label-width="formLabelWidth"
+        prop="taskGoal"
+        v-if="form.status >= 3"
+      >
+        <el-input v-model="form.taskGoal" clearable></el-input>
+      </el-form-item>
+      <el-form-item
+        label="计划完成时间"
+        :label-width="formLabelWidth"
+        prop="finishTime"
+        v-if="form.status >= 3"
+      >
+        <el-date-picker v-model="form.finishTime" clearable></el-date-picker>
+      </el-form-item>
+      <el-form-item
+        label="实际完成时间"
+        :label-width="formLabelWidth"
+        prop="actualFinish"
+        v-if="form.status >= 3"
+      >
+        <el-date-picker v-model="form.actualFinish" clearable></el-date-picker>
+      </el-form-item>
+      <el-form-item
+        label="实际完成情况"
+        :label-width="formLabelWidth"
+        prop="completeDesc"
+        v-if="form.status >= 3"
+      >
+        <el-input
+          :autosize="inputProps.autoSize"
+          :type="inputProps.type"
+          :autocomplete="inputProps.autocomplete"
+          :placeholder="`${inputProps.placeHolder}实际完成情况`"
+          v-model="form.completeDesc"
+          clearable
+        />
+      </el-form-item>
+      <el-form-item
         label="备注"
         :label-width="formLabelWidth"
         prop="comment"
@@ -262,10 +301,16 @@ const handleCommit = () => {
   margin-right: 15px;
 }
 .el-select {
-  width: 300px;
+  width: 400px;
 }
 .el-input {
-  width: 300px;
+  width: 400px;
+}
+.el-textarea {
+  width: 400px;
+}
+:deep(.el-date-editor) {
+  width: 400px !important;
 }
 .dialog-footer button:first-child {
   margin-right: 10px;

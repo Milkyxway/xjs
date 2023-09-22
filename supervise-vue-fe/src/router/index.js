@@ -3,6 +3,7 @@ export const routeList = [
   {
     path: '/login',
     name: 'login',
+    cnName: '登录',
     alias: '/',
     component: () => import('../views/login.vue')
   },
@@ -21,13 +22,26 @@ export const routeList = [
         children: [
           {
             path: '/supervise/list',
-            name: '任务列表',
+            name: 'list',
+            cnName: '任务列表',
             isSider: true,
-            component: () => import('../views/list.vue')
+            component: () => import('../views/list.vue'),
+            meta: {
+              keepAlive: true
+            }
+          },
+          {
+            path: '/supervise/charts',
+            name: 'charts',
+            cnName: '任务报表',
+            isSider: true,
+            auth: ['admin', 'section', 'leader', 'sub-leader'],
+            component: () => import('../views/charts.vue')
           },
           {
             path: '/supervise/detail/:taskId',
-            name: '任务详情',
+            name: 'detail',
+            cnName: '任务详情',
             component: () => import('../views/detail.vue')
           }
         ]
@@ -53,13 +67,15 @@ export const routeList = [
         children: [
           {
             path: '/personal/password',
-            name: '修改密码',
+            name: 'password',
+            cnName: '修改密码',
             isSider: true,
             component: () => import('../views/password.vue')
           },
           {
             path: '/personal/createaccount',
-            name: '创建账号',
+            name: 'createaccount',
+            cnName: '创建账号',
             isSider: true,
             auth: ['admin'],
             component: () => import('../views/createaccount.vue')

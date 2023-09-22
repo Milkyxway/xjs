@@ -134,3 +134,55 @@ export const appealTaskReq = (data) => {
     data
   })
 }
+
+/**
+ * 批量导入任务
+ * @param {*} data
+ * @returns
+ */
+export const batchAddTasksReq = (data) => {
+  return createRequest()({
+    url: '/api/task/batchadd',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 设置任务关注
+ * @param {*} data
+ * @returns
+ */
+export const setTaskFocusReq = (data) => {
+  return createRequest()({
+    url: '/api/task/focus',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 关注的任务列表
+ * @param {*} data
+ * @returns
+ */
+export const getFocusListReq = (data) => {
+  return createRequest()({
+    url: '/api/task/focuslist',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 增加领导批注
+ * @param {*} data
+ * @returns
+ */
+export const addLeadCommentReq = (data) => {
+  return createRequest()({
+    url: '/api/task/addleadcomment',
+    method: 'post',
+    data
+  })
+}

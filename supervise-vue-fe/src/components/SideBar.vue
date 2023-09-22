@@ -20,7 +20,7 @@
           :index="child.path"
           v-if="showMenuItem(child)"
           class="menu_item"
-          >{{ child.name }}</el-menu-item
+          >{{ child.cnName }}</el-menu-item
         ></el-menu-item-group
       >
     </el-sub-menu>

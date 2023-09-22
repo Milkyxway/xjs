@@ -14,9 +14,17 @@
         :width="getColumnWidth(item)"
       >
         <template #default="{ row }">
+          <el-icon v-if="item.prop === 'focus' && row.children"
+            ><Star v-if="!row.isFocus" @click="setFocus(row)" /><StarFilled
+              :color="'#f7ba2a'"
+              :size="14"
+              v-if="row.isFocus"
+              @click="setFocus(row)"
+          /></el-icon>
           <span v-if="item.prop === 'status'" :class="getClassName(row)">{{
             getStatusName(row)
           }}</span>
+          <span v-if="item.prop === 'leadComment'" class="lead-comment">{{ row.leadComment }}</span>
           <span v-if="item.prop === 'category'">{{ getCategoryName(row) }}</span>
           <span v-if="['leadOrg', 'assistOrg', 'ariseOrg'].includes(item.prop)">{{
             getOrgName(row, item.prop)
@@ -44,7 +52,7 @@
             @click="checkTask(row)"
             v-showByAuth="{
               role,
-              showCondition: ['admin', 'section', 'leader', 'employee']
+              showCondition: ['admin', 'section', 'leader', 'employee', 'sub-leader']
             }"
             >查看</el-button
           >
@@ -56,7 +64,7 @@
             v-showByAuth="{
               role,
               showCondition: ['admin'],
-              otherCondition: [1, 2].includes(row.status)
+              otherCondition: [1, 2, 3, 5, 7].includes(row.status)
             }"
             >修改</el-button
           >
@@ -76,6 +84,17 @@
             v-if="showFinishBtn(row)"
             >置为完成</el-button
           >
+          <el-button
+            link
+            type="danger"
+            size="small"
+            v-showByAuth="{
+              role,
+              showCondition: ['leader', 'sub-leader']
+            }"
+            @click="showLeadCommentModal(row.taskId)"
+            >批注</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -87,18 +106,45 @@
       layout="total,sizes, prev, pager, next, jumper"
       :total="props.total"
     />
+
+    <el-dialog
+      :show-close="false"
+      :close-on-press-escape="false"
+      v-model="state.leadCommentModal"
+      title="增加批注"
+    >
+      <el-input
+        v-model="state.leadComment"
+        type="textarea"
+        rows="3"
+        placeholder="请输入批注"
+      ></el-input>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="setLeadCommentModal(false)">取消</el-button>
+          <el-button type="primary" @click="addLeadComment"> 确定 </el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 <script setup>
 import { storeToRefs } from 'pinia'
 import { computed, reactive, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { deleteTaskReq, taskSetFinishReq, deleteSubTaskReq } from '../api/list'
+import {
+  deleteTaskReq,
+  taskSetFinishReq,
+  deleteSubTaskReq,
+  setTaskFocusReq,
+  addLeadCommentReq
+} from '../api/list'
 import { taskStatusMap, taskCategoryMap, orgnizationTree, taskSourceMap } from '../constant/index'
 import { getLocalStore } from '../util/localStorage'
 import { userLoginStore } from '../stores/login'
 import { orgnizationListIdToName, orgnizationToName } from '../util/orgnization'
 import { dayjs } from 'element-plus'
+import { toast } from '../util/toast'
 const authStore = userLoginStore()
 const { userInfo } = storeToRefs(authStore)
 const router = useRouter()
@@ -116,15 +162,19 @@ const props = defineProps({
     type: Number
   }
 })
-const emits = defineEmits(['updateTask', 'refreshList', 'changePage'])
+const emits = defineEmits(['updateTask', 'refreshList', 'changePage', 'updateFocus'])
 const role = getLocalStore('userInfo').role
+const username = getLocalStore('userInfo').username
 const userOrg = getLocalStore('userInfo').orgnization
 const state = reactive({
   page: {
     pageNum: 1,
     pageSize: 10
   },
-  isExpand: false
+  isExpand: false,
+  leadCommentModal: false,
+  selectTaskId: 0,
+  leadComment: ''
 })
 
 watch(
@@ -186,14 +236,6 @@ const showFinishBtn = computed(() => {
     if (role === 'admin') {
       return true
     }
-
-    // if (row.leadOrg === userOrg) {
-    //   // 责任部门可以置为完成
-    //   if (row.status === 3) {
-    //     return true
-    //   }
-    //   return false
-    // }
     return false
   }
 })
@@ -264,7 +306,33 @@ const deleteTask = async (row) => {
     }
   })
 }
+const showLeadCommentModal = (taskId) => {
+  setLeadCommentModal(true)
+  state.selectTaskId = taskId
+}
+const setLeadCommentModal = (show) => {
+  state.leadCommentModal = show
+}
 
+const addLeadComment = async () => {
+  const { selectTaskId, leadComment } = state
+  const usernameCn = getLocalStore('userInfo').usernameCn
+  try {
+    await addLeadCommentReq({
+      taskId: selectTaskId,
+      username: usernameCn,
+      comment: leadComment
+    })
+    state.leadComment = ''
+    state.selectTaskId = 0
+    setLeadCommentModal(false)
+    emits('refreshList')
+  } catch (e) {
+    state.leadComment = ''
+    state.selectTaskId = 0
+    setLeadCommentModal(false)
+  }
+}
 // 置为完成
 const setFinish = async (item) => {
   ElMessageBox.confirm('确定要将这项专项任务置为完成吗?', '警告', {
@@ -285,6 +353,31 @@ const checkTask = (row) => {
 }
 const expandAll = () => {
   state.isExpand = true
+}
+
+const setFocus = async (row) => {
+  const { taskId } = row
+  let focusBy = row.focusBy
+  if (!row.focusBy) {
+    // 该任务没有人关注
+    focusBy = username
+  } else if (row.focusBy.indexOf(username) > -1) {
+    // 已经关注过 取消关注
+    const focusList = focusBy.split(',')
+    focusList.splice(focusList.indexOf(username))
+    focusBy = focusList.join('')
+  } else {
+    // 增加关注
+    focusBy = `${focusBy},${username}`
+  }
+  try {
+    await setTaskFocusReq({
+      taskId,
+      focusBy
+    })
+    focusBy.indexOf(username) > -1 ? toast('关注成功') : toast('取消关注')
+    emits('updateFocus', { taskId, isFocus: focusBy.indexOf(username) > -1 ? 1 : 0 })
+  } catch (e) {}
 }
 </script>
 <style>
@@ -310,6 +403,10 @@ const expandAll = () => {
 .status-delay-process {
   color: #e6a23c;
   font-weight: bold;
+}
+.lead-comment {
+  font-weight: bold;
+  color: #f56c6c;
 }
 .task-content {
   /* width: 100px; */

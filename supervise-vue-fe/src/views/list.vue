@@ -2,7 +2,7 @@
   <QueryHeader type="add" @handleQuery="handleQuery" @createTask="createTask" />
   <div>
     <el-tabs v-model="state.chooseTab">
-      <el-tab-pane label="我的" name="mine" v-if="role === 'section'">
+      <el-tab-pane label="我的" name="mine" v-if="['section', 'sub-leader'].includes(role)">
         <TableCommon
           :table-data="state.myTable"
           :table-columns="state.tableColumns"
@@ -10,6 +10,18 @@
           @refreshList="refreshList"
           :total="state.myTableTotal"
           @changePage="changePage"
+          @updateFocus="updateFocus"
+        />
+      </el-tab-pane>
+      <el-tab-pane label="已关注" name="focus" v-if="['leader', 'sub-leader'].includes(role)">
+        <TableCommon
+          :table-data="state.tableFocus"
+          :table-columns="state.tableColumns"
+          @updateTask="updateTask"
+          @refreshList="refreshList"
+          :total="state.totalFocus"
+          @changePage="changePage"
+          @updateFocus="updateFocus"
         />
       </el-tab-pane>
       <el-tab-pane label="所有" name="all">
@@ -20,6 +32,7 @@
           @refreshList="refreshList"
           :total="state.total"
           @changePage="changePage"
+          @updateFocus="updateFocus"
         />
       </el-tab-pane>
       <el-tab-pane
@@ -55,14 +68,22 @@ import { useRouter } from 'vue-router'
 import QueryHeader from '../components/QueryHeader.vue'
 import TaskModal from '../components/TaskModal.vue'
 import TableCommon from '../components/TableCommon.vue'
-import { getTaskListReq, createTaskReq, updateTaskReq, myTaskReq } from '../api/list'
+import {
+  getTaskListReq,
+  createTaskReq,
+  updateTaskReq,
+  myTaskReq,
+  getFocusListReq
+} from '../api/list'
 import { toast } from '../util/toast'
 import { getLocalStore } from '../util/localStorage'
 import { dayjs } from 'element-plus'
 import { statusWeight } from '../constant/index'
+import emitter from '../util/eventbus'
 
 const userInfo = ref(getLocalStore('userInfo'))
 const role = ref(getLocalStore('userInfo').role)
+const username = ref(getLocalStore('userInfo').username)
 const state = reactive({
   chooseTab: 'mine',
   modalType: '',
@@ -86,6 +107,10 @@ const state = reactive({
     taskSource: null
   },
   tableColumns: [
+    {
+      columnName: '',
+      prop: 'focus'
+    },
     {
       columnName: '任务来源',
       prop: 'taskSource'
@@ -135,6 +160,10 @@ const state = reactive({
       prop: 'status'
     },
     {
+      columnName: '领导批注',
+      prop: 'leadComment'
+    },
+    {
       columnName: '反馈类型',
       prop: 'resolveType'
     },
@@ -154,6 +183,8 @@ const state = reactive({
   tableData: [],
   total: 0,
   modalVisible: false,
+  tableFocus: [],
+  totalFocus: 0,
   leaderTabs: [
     {
       label: '专项调研',
@@ -176,6 +207,9 @@ const state = reactive({
       name: 5
     }
   ]
+})
+emitter.on('refreshList', (e) => {
+  getListByChooseTab(state.chooseTab)
 })
 
 const getSuperviseList = async () => {
@@ -240,32 +274,45 @@ const insertIdIntoArr = (data) => {
       })
       return {
         ...i,
-        id: i.taskId
+        id: i.taskId,
+        isFocus: i.focusBy?.indexOf(username.value) > -1 ? 1 : 0
       }
     }
-    return i
+    return {
+      ...i,
+      isFocus: i.focusBy?.indexOf(username.value) > -1 ? 1 : 0
+    }
   })
   return result
 }
 
 const init = () => {
-  getSuperviseList()
+  // getSuperviseList()
   switch (role.value) {
-    case 'section':
+    case 'section': // 部门
       getRelatedMeTask()
       sectionViewTableColumn()
       // 部门权限看不见问题提出部门
       break
-    case 'leader':
+    case 'leader': // zhu
       state.chooseTab = 'all'
       leaderViewTableColumn()
+      getSuperviseList()
+      // todo
       break
-    case 'employee':
+    case 'sub-leader': // 分管领导
+      leaderViewTableColumn()
+      getRelatedMeTask()
+      break
+    case 'employee': // 员工
       state.chooseTab = 'all'
       employeeViewTableColumn()
+      getSuperviseList()
       break
-    case 'admin':
+    case 'admin': // 管理员
       state.chooseTab = 'all'
+      adminViewTableColumn()
+      getSuperviseList()
       break
     default:
       break
@@ -276,28 +323,39 @@ const init = () => {
 watch(
   () => state.chooseTab,
   (val) => {
-    state.page.pageNum = 0
-    state.querys = {}
-    switch (val) {
-      case 'mine':
-        getRelatedMeTask()
-        break
-      case 'all':
-        getSuperviseList()
-        break
-      case 1:
-      case 2:
-      case 3:
-      case 4:
-      case 5:
-        state.querys.taskSource = val
-        getSuperviseList()
-        break
-      default:
-        break
-    }
+    getListByChooseTab(val)
   }
 )
+
+const getListByChooseTab = (tab) => {
+  state.page.pageNum = 0
+  state.querys = {}
+  switch (tab) {
+    case 'mine':
+      getRelatedMeTask()
+      break
+    case 'all':
+      getSuperviseList()
+      break
+    case 'focus':
+      getFocusList()
+      break
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+      state.querys.taskSource = tab
+      getSuperviseList()
+      break
+    default:
+      break
+  }
+}
+
+const adminViewTableColumn = () => {
+  state.tableColumns = state.tableColumns.filter((i) => !['focus'].includes(i.prop))
+}
 
 const leaderViewTableColumn = () => {
   state.tableColumns = state.tableColumns.filter(
@@ -327,19 +385,33 @@ const employeeViewTableColumn = () => {
         'updateTime',
         'createTime',
         'delayReason',
-        'resolveType'
+        'resolveType',
+        'focus'
       ].includes(i.prop)
   )
 }
 
 const sectionViewTableColumn = () => {
   state.tableColumns = state.tableColumns.filter(
-    (i) => !['sourceDesc', 'ariseOrg'].includes(i.prop)
+    (i) => !['sourceDesc', 'ariseOrg', 'focus'].includes(i.prop)
   )
 }
 // 弹窗里确定按钮触发
 const handleCommit = async (form) => {
-  const { assistOrg, category, taskContent, leadOrg, comment, taskId, ariseOrg } = form
+  const {
+    assistOrg,
+    category,
+    taskContent,
+    leadOrg,
+    comment,
+    taskId,
+    ariseOrg,
+    taskGoal,
+    finishTime,
+    actualFinish,
+    completeDesc,
+    status
+  } = form
   let params = form
   if (!ariseOrg) {
     const { ariseOrg, ...rest } = form
@@ -354,9 +426,13 @@ const handleCommit = async (form) => {
           taskContent,
           leadOrg,
           comment,
-          status: 1,
-          statusWeight: statusWeight[1],
-          taskId
+          status: [1, 2].includes(status) ? 1 : status,
+          statusWeight: [1, 2].includes(status) ? statusWeight[1] : statusWeight[status],
+          taskId,
+          taskGoal,
+          finishTime: finishTime ? dayjs(finishTime).format() : null,
+          actualFinish: actualFinish ? dayjs(actualFinish).format() : null,
+          completeDesc
         })
   state.page = {
     pageNum: 0,
@@ -374,18 +450,57 @@ const updateTask = (row) => {
   state.modalVisible = true
   state.formData = {
     ...row,
-    assistOrg: row.assistOrg === '' ? [] : row.assistOrg.split(',').map((i) => Number(i))
+    assistOrg: !row.assistOrg ? [] : row.assistOrg.split(',').map((i) => Number(i))
   }
 }
 
+const subleaderManageParts = () => {
+  let manageParts = ''
+  switch (username.value) {
+    case 'yanghongyu':
+      manageParts = '7,9,11'
+      break
+    case 'zhaoyuhui':
+      manageParts = '5,10'
+      break
+    case 'wangwei':
+      manageParts = '1,2'
+      break
+    case 'zhaoxiaoguang':
+      manageParts = '4,6,8'
+      break
+    default:
+      break
+  }
+  return manageParts
+}
+
 const getRelatedMeTask = async () => {
-  const result = await myTaskReq({
+  let params = {
     ...state.page,
-    ...state.querys,
-    orgnizationId: userInfo.value.orgnization
-  })
+    ...state.querys
+  }
+  if (role.value === 'section') {
+    params = {
+      ...params,
+      orgnizationId: userInfo.value.orgnization
+    }
+  } else if (role.value === 'sub-leader') {
+    params = {
+      ...params,
+      role: role.value,
+      manageParts: subleaderManageParts()
+    }
+  }
+  const result = await myTaskReq(params)
   state.myTable = insertIdIntoArr(result.data.list)
   state.myTableTotal = result.data.total
+}
+
+const getFocusList = async () => {
+  const result = await getFocusListReq({ username: username.value, ...state.page })
+  state.tableFocus = insertIdIntoArr(result.data.list)
+  state.totalFocus = result.data.total
 }
 
 const changePage = (val) => {
@@ -402,6 +517,34 @@ const refreshList = () => {
   toast()
   getSuperviseList()
   role.value !== 'admin' && getRelatedMeTask()
+}
+
+const updateFocus = (params) => {
+  const { taskId, isFocus } = params
+  const { chooseTab } = state
+  let type = ''
+  switch (chooseTab) {
+    case 'mine':
+      type = 'myTable'
+      break
+    case 'all':
+      type = 'tableData'
+      break
+    case 'focus':
+      getFocusList()
+      break
+  }
+  if (['mine', 'all'].includes(chooseTab)) {
+    state[type] = state[type].map((i) => {
+      if (i.taskId === taskId) {
+        return {
+          ...i,
+          isFocus
+        }
+      }
+      return i
+    })
+  }
 }
 
 init()

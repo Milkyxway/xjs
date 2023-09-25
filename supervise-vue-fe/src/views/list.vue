@@ -108,7 +108,7 @@ const state = reactive({
   },
   tableColumns: [
     {
-      columnName: '',
+      columnName: '关注',
       prop: 'focus'
     },
     {
@@ -386,7 +386,8 @@ const employeeViewTableColumn = () => {
         'createTime',
         'delayReason',
         'resolveType',
-        'focus'
+        'focus',
+        'leaderComment'
       ].includes(i.prop)
   )
 }

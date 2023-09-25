@@ -102,7 +102,7 @@
       <el-button @click="createTask" type="danger" v-showByAuth="{ role, showCondition: ['admin'] }"
         >新建任务</el-button
       >
-      <div class="upload-wrap">
+      <div class="upload-wrap" v-showByAuth="{ role, showCondition: ['admin'] }">
         <Upload :btn-txt="'批量上传'" @handleChange="handleChange" />
       </div>
     </div>

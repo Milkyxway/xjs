@@ -37,7 +37,7 @@
       </el-tab-pane>
       <el-tab-pane
         v-for="(item, index) in state.leaderTabs"
-        v-if="['leader'].includes(role)"
+        v-if="['leader', 'sub-leader'].includes(role)"
         :label="item.label"
         :name="item.name"
         v-bind:key="index"

@@ -64,7 +64,7 @@
             v-showByAuth="{
               role,
               showCondition: ['admin'],
-              otherCondition: [1, 2, 3, 5, 7].includes(row.status)
+              otherCondition: [1, 2, 3, 5, 7, 6].includes(row.status)
             }"
             >修改</el-button
           >
@@ -92,7 +92,7 @@
               role,
               showCondition: ['leader', 'sub-leader']
             }"
-            @click="showLeadCommentModal(row.taskId)"
+            @click="showLeadCommentModal(row)"
             >批注</el-button
           >
         </template>
@@ -111,7 +111,7 @@
       :show-close="false"
       :close-on-press-escape="false"
       v-model="state.leadCommentModal"
-      title="增加批注"
+      :title="getDialogTitle"
     >
       <el-input
         v-model="state.leadComment"
@@ -137,7 +137,8 @@ import {
   taskSetFinishReq,
   deleteSubTaskReq,
   setTaskFocusReq,
-  addLeadCommentReq
+  addLeadCommentReq,
+  updateLeadCommentReq
 } from '../api/list'
 import { taskStatusMap, taskCategoryMap, orgnizationTree, taskSourceMap } from '../constant/index'
 import { getLocalStore } from '../util/localStorage'
@@ -165,6 +166,7 @@ const props = defineProps({
 const emits = defineEmits(['updateTask', 'refreshList', 'changePage', 'updateFocus'])
 const role = getLocalStore('userInfo').role
 const username = getLocalStore('userInfo').username
+const usernameCn = getLocalStore('userInfo').usernameCn
 const userOrg = getLocalStore('userInfo').orgnization
 const state = reactive({
   page: {
@@ -173,7 +175,7 @@ const state = reactive({
   },
   isExpand: false,
   leadCommentModal: false,
-  selectTaskId: 0,
+  selectTask: { taskId: 0, leadComment: '' },
   leadComment: ''
 })
 
@@ -183,6 +185,10 @@ watch(
     emits('changePage', { pageNum: val[0], pageSize: val[1] })
   }
 )
+
+const getDialogTitle = computed(() => {
+  return state.selectTask.leadComment.indexOf(usernameCn) > -1 ? '修改批注' : '新增批注'
+})
 
 // 转换成状态名称
 const getStatusName = computed(() => {
@@ -306,25 +312,36 @@ const deleteTask = async (row) => {
     }
   })
 }
-const showLeadCommentModal = (taskId) => {
+const showLeadCommentModal = (row) => {
   setLeadCommentModal(true)
-  state.selectTaskId = taskId
+  state.selectTask = row
+  if (getDialogTitle.value === '修改批注') {
+    state.leadComment = row.leadComment
+      .split('；')
+      .filter((i) => i.indexOf(usernameCn) > -1)[0]
+      .split(':')[1]
+  }
 }
 const setLeadCommentModal = (show) => {
   state.leadCommentModal = show
 }
 
 const addLeadComment = async () => {
-  const { selectTaskId, leadComment } = state
-  const usernameCn = getLocalStore('userInfo').usernameCn
+  const {
+    selectTask: { taskId },
+    leadComment
+  } = state
+  const params = {
+    taskId,
+    username: usernameCn,
+    comment: leadComment
+  }
   try {
-    await addLeadCommentReq({
-      taskId: selectTaskId,
-      username: usernameCn,
-      comment: leadComment
-    })
+    getDialogTitle.value === '新增批注'
+      ? await addLeadCommentReq(params)
+      : await updateLeadCommentReq(params)
     state.leadComment = ''
-    state.selectTaskId = 0
+    state.selectTask.taskId = 0
     setLeadCommentModal(false)
     emits('refreshList')
   } catch (e) {

@@ -186,3 +186,16 @@ export const addLeadCommentReq = (data) => {
     data
   })
 }
+
+/**
+ *  修改领导批注
+ * @param {*} data
+ * @returns
+ */
+export const updateLeadCommentReq = (data) => {
+  return createRequest()({
+    url: '/api/task/updateleadcomment',
+    method: 'post',
+    data
+  })
+}

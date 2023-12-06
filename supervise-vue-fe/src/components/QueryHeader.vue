@@ -105,18 +105,22 @@
       <div class="upload-wrap" v-showByAuth="{ role, showCondition: ['admin'] }">
         <Upload :btn-txt="'批量上传'" @handleChange="handleChange" />
       </div>
+      <div class="upload-wrap" v-showByAuth="{ role, showCondition: ['admin'] }">
+        <el-button plain @click="exportAsExcel">导出</el-button>
+      </div>
     </div>
   </el-card>
 </template>
 <script setup>
 import { ref, reactive, computed } from 'vue'
+
 import { taskStatusList, taskCategory, orgnizationTree, taskOrigin } from '../constant'
 import { getLocalStore } from '../util/localStorage'
 import { orgnizationNameToId, taskSourceNameToId, taskCategoryNameToId } from '../util/orgnization'
 import Upload from './Upload.vue'
 import { batchAddTasksReq } from '../api/list'
 import { toast } from '../util/toast'
-const emit = defineEmits(['handleQuery', 'createTask'])
+const emit = defineEmits(['handleQuery', 'createTask', 'exportAsExcel'])
 const role = getLocalStore('userInfo').role
 let queryForm = reactive({
   category: null,
@@ -171,6 +175,10 @@ const handleChange = async (data) => {
     toast('批量上传成功！')
     handleQuery()
   } catch (e) {}
+}
+
+const exportAsExcel = () => {
+  emit('exportAsExcel', queryForm)
 }
 </script>
 <style scoped>

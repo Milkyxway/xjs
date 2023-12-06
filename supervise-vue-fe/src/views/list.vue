@@ -1,5 +1,10 @@
 <template>
-  <QueryHeader type="add" @handleQuery="handleQuery" @createTask="createTask" />
+  <QueryHeader
+    type="add"
+    @handleQuery="handleQuery"
+    @createTask="createTask"
+    @exportAsExcel="exportAsExcel"
+  />
   <div>
     <el-tabs v-model="state.chooseTab">
       <el-tab-pane label="我的" name="mine" v-if="['section', 'sub-leader'].includes(role)">
@@ -64,7 +69,7 @@
 
 <script setup>
 import { reactive, watch, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import * as xlsx from 'xlsx'
 import QueryHeader from '../components/QueryHeader.vue'
 import TaskModal from '../components/TaskModal.vue'
 import TableCommon from '../components/TableCommon.vue'
@@ -73,7 +78,8 @@ import {
   createTaskReq,
   updateTaskReq,
   myTaskReq,
-  getFocusListReq
+  getFocusListReq,
+  exportDataAsExcelReq
 } from '../api/list'
 import { toast } from '../util/toast'
 import { getLocalStore } from '../util/localStorage'
@@ -224,6 +230,17 @@ const getSuperviseList = async () => {
   state.total = result.data.total
 }
 
+const exportAsExcel = async (query) => {
+  await formatQuery(query)
+  const result = await exportDataAsExcelReq({
+    ...state.querys
+  })
+  const wb = xlsx.utils.book_new()
+  const sheet = xlsx.utils.json_to_sheet(result.data.list)
+  xlsx.utils.book_append_sheet(wb, sheet)
+  xlsx.writeFile(wb, '导出结果.xlsx')
+}
+
 const handleQueryAll = (param) => (param === 0 ? null : param)
 const getRangeDateParam = (range) => {
   if (range) {
@@ -235,19 +252,30 @@ const getRangeDateParam = (range) => {
   return null
 }
 
-const handleQuery = (query) => {
-  Object.keys(query).map((i) => {
-    if (query[i] === '') {
-      query[i] = null
+const formatQuery = (query) => {
+  return new Promise((resolve, reject) => {
+    try {
+      Object.keys(query).map((i) => {
+        if (query[i] === '') {
+          query[i] = null
+        }
+      })
+      state.querys = {
+        ...query,
+        taskSource: handleQueryAll(query.taskSource),
+        status: handleQueryAll(query.status), // 全部 给后端传null
+        category: handleQueryAll(query.category),
+        createTime: getRangeDateParam(query.createTime)
+      }
+      resolve()
+    } catch (e) {
+      reject(e)
     }
   })
-  state.querys = {
-    ...query,
-    taskSource: handleQueryAll(query.taskSource),
-    status: handleQueryAll(query.status), // 全部 给后端传null
-    category: handleQueryAll(query.category),
-    createTime: getRangeDateParam(query.createTime)
-  }
+}
+
+const handleQuery = async (query) => {
+  await formatQuery(query)
   state.page.pageNum = 0
   state.page.pageSize = 10
   state.chooseTab === 'mine' ? getRelatedMeTask() : getSuperviseList()

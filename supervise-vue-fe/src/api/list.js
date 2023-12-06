@@ -199,3 +199,16 @@ export const updateLeadCommentReq = (data) => {
     data
   })
 }
+
+/**
+ * 导出excel
+ * @param {*} data
+ * @returns
+ */
+export const exportDataAsExcelReq = (data) => {
+  return createRequest()({
+    url: '/api/task/export',
+    method: 'post',
+    data
+  })
+}

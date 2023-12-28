@@ -63,8 +63,7 @@
             @click="updateTask(row)"
             v-showByAuth="{
               role,
-              showCondition: ['admin'],
-              otherCondition: [1, 2, 3, 5, 7, 6].includes(row.status)
+              showCondition: ['admin']
             }"
             >修改</el-button
           >

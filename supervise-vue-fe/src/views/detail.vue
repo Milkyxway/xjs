@@ -442,6 +442,7 @@ const handleItemSubmit = async (data, status) => {
     statusWeight: statusWeight[statusProcess[status]]
   })
   toast()
+  launchRefresh()
   router.replace('/supervise/list')
 }
 const taskAppeal = () => {

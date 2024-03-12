@@ -439,6 +439,7 @@ const handleCommit = async (form) => {
     finishTime,
     actualFinish,
     completeDesc,
+    taskSource,
     status
   } = form
   let params = form
@@ -461,7 +462,8 @@ const handleCommit = async (form) => {
           taskGoal,
           finishTime: finishTime ? dayjs(finishTime).format() : null,
           actualFinish: actualFinish ? dayjs(actualFinish).format() : null,
-          completeDesc
+          completeDesc,
+          taskSource
         })
   state.page = {
     pageNum: 0,

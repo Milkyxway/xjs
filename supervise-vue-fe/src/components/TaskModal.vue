@@ -40,7 +40,7 @@
       <el-form-item
         label="任务来源"
         :label-width="formLabelWidth"
-        prop="taskContent"
+        prop="taskSource"
         :rules="rules('请选择任务来源')"
       >
         <el-select

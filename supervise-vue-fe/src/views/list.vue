@@ -489,16 +489,19 @@ const subleaderManageParts = () => {
   let manageParts = ''
   switch (username.value) {
     case 'yanghongyu':
-      manageParts = '7,9,11'
+      manageParts = '9,11'
       break
     case 'zhaoyuhui':
-      manageParts = '5,10'
+      manageParts = ''
       break
     case 'wangwei':
       manageParts = '1,2'
       break
     case 'zhaoxiaoguang':
-      manageParts = '4,6,8'
+      manageParts = '7,6,8'
+      break
+    case 'zhufeng':
+      manageParts = '5,10,3,4'
       break
     default:
       break

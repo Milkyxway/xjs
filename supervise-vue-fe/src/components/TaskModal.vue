@@ -118,6 +118,28 @@
         >
       </el-form-item>
       <el-form-item
+        label="任务状态"
+        :label-width="formLabelWidth"
+        prop="status"
+        :rules="rules('请选择任务状态')"
+        v-if="modalType !== 'add'"
+      >
+        <el-select
+          v-model="form.status"
+          placeholder="请选择任务状态"
+          clearable
+          :disabled="disableCondition"
+        >
+          <el-option
+            v-for="item in taskStatus"
+            v-bind:key="item.key"
+            :value="item.value"
+            :label="item.label"
+            >{{ item.label }}</el-option
+          >
+        </el-select>
+      </el-form-item>
+      <el-form-item
         label="任务目标"
         :label-width="formLabelWidth"
         prop="taskGoal"

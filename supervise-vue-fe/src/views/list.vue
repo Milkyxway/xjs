@@ -459,10 +459,10 @@ const handleCommit = async (form) => {
           status: [1, 2].includes(status) ? 1 : status,
           statusWeight: [1, 2].includes(status) ? statusWeight[1] : statusWeight[status],
           taskId,
-          taskGoal,
-          finishTime: finishTime ? dayjs(finishTime).format() : null,
-          actualFinish: actualFinish ? dayjs(actualFinish).format() : null,
-          completeDesc,
+          taskGoal: status === 1 ? null : taskGoal, // 调整成待确认 用户手动填写的全部清空
+          finishTime: status === 1 ? null : finishTime ? dayjs(finishTime).format() : null,
+          actualFinish: status === 1 ? null : actualFinish ? dayjs(actualFinish).format() : null,
+          completeDesc: status === 1 ? null : completeDesc,
           taskSource
         })
   state.page = {

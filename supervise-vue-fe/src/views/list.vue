@@ -79,7 +79,8 @@ import {
   updateTaskReq,
   myTaskReq,
   getFocusListReq,
-  exportDataAsExcelReq
+  exportDataAsExcelReq,
+  deleteSubTaskReq
 } from '../api/list'
 import { toast } from '../util/toast'
 import { getLocalStore } from '../util/localStorage'
@@ -465,6 +466,9 @@ const handleCommit = async (form) => {
           completeDesc: status === 1 ? null : completeDesc,
           taskSource
         })
+
+  state.modalType === 'update' && [1, 2].includes(status) && deleteSubTaskReq({ parentId: taskId })
+
   state.page = {
     pageNum: 0,
     pageSize: 10

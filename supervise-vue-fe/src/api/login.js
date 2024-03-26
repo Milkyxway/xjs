@@ -51,3 +51,16 @@ export const createAccountReq = (data) => {
     data
   })
 }
+
+/**
+ * 获取短信验证码
+ * @param {*} data
+ * @returns
+ */
+export const getSmsCodeReq = (data) => {
+  return createRequest()({
+    url: '/api/getsms',
+    method: 'post',
+    data
+  })
+}

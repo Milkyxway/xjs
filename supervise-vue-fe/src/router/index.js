@@ -7,7 +7,13 @@ export const routeList = [
     alias: '/',
     component: () => import('../views/login.vue')
   },
-
+  // {
+  //   path: '/loginwifi',
+  //   name: 'loginwifi',
+  //   cnName: '登录',
+  //   alias: '/',
+  //   component: () => import('../views/loginwifi.vue')
+  // },
   {
     path: '/home',
     name: 'home',

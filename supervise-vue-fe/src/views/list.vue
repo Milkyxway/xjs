@@ -467,7 +467,7 @@ const handleCommit = async (form) => {
           taskSource
         })
 
-  state.modalType === 'update' && [1, 2].includes(status) && deleteSubTaskReq({ parentId: taskId })
+  state.modalType === 'update' && [1, 2].includes(status) && deleteSubTaskReq({ parentId: taskId }) // 从别的状态改成待确认会清空所有的子任务
 
   state.page = {
     pageNum: 0,

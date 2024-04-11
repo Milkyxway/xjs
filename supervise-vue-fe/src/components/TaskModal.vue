@@ -11,6 +11,7 @@
         :label-width="formLabelWidth"
         prop="category"
         :rules="rules('请选择任务类别')"
+        v-if="!isSubtask"
       >
         <el-select v-model="form.category" placeholder="请选择任务类别" :disabled="disableCondition"
           ><el-option
@@ -27,6 +28,7 @@
         :label-width="formLabelWidth"
         prop="taskContent"
         :rules="rules('请输入任务内容')"
+        v-if="!isSubtask"
       >
         <el-input
           :autosize="inputProps.autoSize"
@@ -42,6 +44,7 @@
         :label-width="formLabelWidth"
         prop="taskSource"
         :rules="rules('请选择任务来源')"
+        v-if="!isSubtask"
       >
         <el-select
           v-model="form.taskSource"
@@ -58,7 +61,12 @@
           >
         </el-select>
       </el-form-item>
-      <el-form-item label="来源描述" :label-width="formLabelWidth" prop="sourceDesc">
+      <el-form-item
+        label="来源描述"
+        :label-width="formLabelWidth"
+        prop="sourceDesc"
+        v-if="!isSubtask"
+      >
         <el-input
           clearable
           :disabled="disableCondition"
@@ -66,7 +74,12 @@
           v-model="form.sourceDesc"
         ></el-input>
       </el-form-item>
-      <el-form-item label="提出部门" :label-width="formLabelWidth" prop="ariseOrg">
+      <el-form-item
+        label="提出部门"
+        :label-width="formLabelWidth"
+        prop="ariseOrg"
+        v-if="!isSubtask"
+      >
         <el-select
           v-model="form.ariseOrg"
           placeholder="请选择提出部门"
@@ -86,6 +99,7 @@
         :label-width="formLabelWidth"
         prop="leadOrg"
         :rules="rules('请选择责任部门')"
+        v-if="!isSubtask"
       >
         <el-select
           v-model="form.leadOrg"
@@ -101,7 +115,12 @@
           ></el-select
         >
       </el-form-item>
-      <el-form-item label="协办部门" :label-width="formLabelWidth" prop="assistOrg">
+      <el-form-item
+        label="协办部门"
+        :label-width="formLabelWidth"
+        prop="assistOrg"
+        v-if="!isSubtask"
+      >
         <el-select
           v-model="form.assistOrg"
           placeholder="请选择协办部门"
@@ -239,6 +258,10 @@ const rules = computed(() => {
     ]
   }
 })
+
+const isSubtask = computed(() => {
+  return props.formData.parentId
+})
 const formLabelWidth = '140px'
 
 let form = reactive({
@@ -310,7 +333,8 @@ const handleCommit = () => {
     .then((res) => {
       emit('handleCommit', {
         ...form,
-        assistOrg: form.assistOrg ? form.assistOrg.join(',') : ''
+        assistOrg: form.assistOrg ? form.assistOrg.join(',') : '',
+        isSubtask: isSubtask.value
       })
     })
     .catch((err) => {

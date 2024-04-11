@@ -297,19 +297,23 @@ const updateTask = (row) => {
 }
 const deleteTask = async (row) => {
   const { taskId } = row
-  ElMessageBox.confirm('确定要删除这项专项任务吗?', '警告', {
-    type: 'warning',
-    confirmButtonText: '确认',
-    cancelButtonText: '取消',
-    callback: async (action) => {
-      if (action === 'confirm') {
-        row.parentId
-          ? await deleteSubTaskReq({ subtaskId: row.subtaskId })
-          : await deleteTaskReq({ taskId })
-        emits('refreshList')
+  ElMessageBox.confirm(
+    row.parentId ? '确定要删除这子任务吗?' : '确定要删除这项专项任务吗?',
+    '警告',
+    {
+      type: 'warning',
+      confirmButtonText: '确认',
+      cancelButtonText: '取消',
+      callback: async (action) => {
+        if (action === 'confirm') {
+          row.parentId
+            ? await deleteSubTaskReq({ subtaskId: row.subtaskId })
+            : await deleteTaskReq({ taskId })
+          emits('refreshList')
+        }
       }
     }
-  })
+  )
 }
 const showLeadCommentModal = (row) => {
   setLeadCommentModal(true)

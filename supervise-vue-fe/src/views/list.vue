@@ -80,7 +80,8 @@ import {
   myTaskReq,
   getFocusListReq,
   exportDataAsExcelReq,
-  deleteSubTaskReq
+  deleteSubTaskReq,
+  updateSubtaskReq
 } from '../api/list'
 import { toast } from '../util/toast'
 import { getLocalStore } from '../util/localStorage'
@@ -218,6 +219,8 @@ const state = reactive({
 emitter.on('refreshList', (e) => {
   getListByChooseTab(state.chooseTab)
 })
+
+console.log(dayjs('2023-12-31T00:00:00.000Z').format())
 
 const getSuperviseList = async () => {
   state.tableData = []
@@ -451,7 +454,19 @@ const handleCommit = async (form) => {
   const result =
     state.modalType === 'add'
       ? await createTaskReq({ ...params, statusWeight: statusWeight[1] })
+      : form.isSubtask
+      ? await updateSubtaskReq({
+          // 子任务修改
+          status: [1, 2].includes(status) ? 1 : status,
+          statusWeight: [1, 2].includes(status) ? statusWeight[1] : statusWeight[status],
+          subtaskId: form.subtaskId,
+          taskGoal: status === 1 ? null : taskGoal, // 调整成待确认 用户手动填写的全部清空
+          finishTime: status === 1 ? null : finishTime ? dayjs(finishTime).format() : null,
+          actualFinish: status === 1 ? null : actualFinish ? dayjs(actualFinish).format() : null,
+          completeDesc: status === 1 ? null : completeDesc
+        })
       : await updateTaskReq({
+          // 父级任务修改
           assistOrg,
           category,
           taskContent,
@@ -467,7 +482,10 @@ const handleCommit = async (form) => {
           taskSource
         })
 
-  state.modalType === 'update' && [1, 2].includes(status) && deleteSubTaskReq({ parentId: taskId }) // 从别的状态改成待确认会清空所有的子任务
+  // state.modalType === 'update' &&
+  //   !form.isSubtask &&
+  //   [1, 2].includes(status) &&
+  //   deleteSubTaskReq({ parentId: taskId }) // 从别的状态改成待确认会清空所有的子任务
 
   state.page = {
     pageNum: 0,

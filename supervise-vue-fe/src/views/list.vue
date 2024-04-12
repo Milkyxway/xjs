@@ -481,7 +481,8 @@ const handleCommit = async (form) => {
           actualFinish: status === 1 ? null : actualFinish ? dayjs(actualFinish).format() : null,
           completeDesc: status === 1 ? null : completeDesc,
           taskSource,
-          sourceDesc
+          sourceDesc,
+          ariseOrg: form.ariseOrg
         })
 
   // state.modalType === 'update' &&

@@ -150,7 +150,7 @@ const orgnizationTree = [
   },
   {
     value: 6,
-    label: '市场运营部'
+    label: '新媒体运营部'
   },
   {
     value: 7,
@@ -158,7 +158,7 @@ const orgnizationTree = [
   },
   {
     value: 8,
-    label: '公众客户部'
+    label: '大众事业部'
   },
   {
     value: 9,
@@ -171,6 +171,10 @@ const orgnizationTree = [
   {
     value: 11,
     label: '安播运维部'
+  },
+  {
+    value: 12,
+    label: '客户服务部'
   }
   // {
   //   value: 12,

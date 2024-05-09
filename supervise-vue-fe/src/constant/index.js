@@ -170,7 +170,7 @@ const orgnizationTree = [
   },
   {
     value: 11,
-    label: '安播运维部'
+    label: '安播中心'
   },
   {
     value: 12,
@@ -391,6 +391,28 @@ const periodTypeMap = {
   3: '月报',
   4: '年报'
 }
+const roleList = [
+  {
+    label: '管理员',
+    value: 'admin'
+  },
+  {
+    label: '领导',
+    value: 'leader'
+  },
+  {
+    label: '部门',
+    value: 'section'
+  },
+  {
+    label: '员工',
+    value: 'employee'
+  },
+  {
+    label: '开发者',
+    value: 'developer'
+  }
+]
 
 export {
   taskStatusMap,
@@ -403,5 +425,6 @@ export {
   taskSourceMap,
   statusWeight,
   periodTypeMap,
-  periodType
+  periodType,
+  roleList
 }

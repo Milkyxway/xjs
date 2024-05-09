@@ -85,6 +85,14 @@ export const routeList = [
             isSider: true,
             auth: ['admin'],
             component: () => import('../views/createaccount.vue')
+          },
+          {
+            path: '/personal/manageuser',
+            name: 'manageuser',
+            cnName: '用户管理',
+            isSider: true,
+            auth: ['admin'],
+            component: () => import('../views/manageuser.vue')
           }
         ]
       }

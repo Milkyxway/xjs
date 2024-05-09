@@ -523,10 +523,10 @@ const subleaderManageParts = () => {
       manageParts = '1,2'
       break
     case 'zhaoxiaoguang':
-      manageParts = '7,6,8'
+      manageParts = '7,6,8,12'
       break
     case 'zhufeng':
-      manageParts = '5,10,3,4'
+      manageParts = '5,10,4,3'
       break
     default:
       break

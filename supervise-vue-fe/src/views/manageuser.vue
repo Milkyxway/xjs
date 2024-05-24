@@ -10,7 +10,7 @@
     :close-on-press-escape="false"
     :close-on-click-modal="false"
     v-model="state.showdialog"
-    title="输入脚本"
+    title="修改用户"
     :destroy-on-close="true"
   >
     <el-form>

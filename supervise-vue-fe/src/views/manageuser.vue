@@ -135,7 +135,7 @@ const updateUser = async () => {
 
 const handleQuery = async (query) => {
   state.userList = []
-  const result = await getUsersReq({ ...query })
+  const result = await getUsersReq({ ...query, region: region.value })
   state.userList = result.data.list.map((i) => {
     return {
       ...i,

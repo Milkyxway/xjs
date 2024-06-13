@@ -246,7 +246,7 @@ const props = defineProps({
     type: Object
   }
 })
-const region = ref(getLocalStore('userInfo'))
+const region = ref(getLocalStore('userInfo').region)
 const emit = defineEmits(['handleCancel', 'handleCommit'])
 
 const rules = computed(() => {

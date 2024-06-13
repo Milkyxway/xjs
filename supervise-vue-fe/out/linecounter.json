@@ -1,0 +1,753 @@
+{
+    "extension": "linecounter",
+    "version": "0.2.7",
+    "workspace": "c:\\Users\\xjsww\\Desktop\\workspace\\xjs\\supervise-vue-fe",
+    "linecount": [
+        {
+            "version": "0.2.7",
+            "counttime": "2024-06-13 14:27:42",
+            "filesum": 112,
+            "codesum": 12919,
+            "commentsum": 508,
+            "blanksum": 345,
+            "statistics": {
+                ".js": {
+                    "code": 1006,
+                    "comment": 376,
+                    "blank": 75
+                },
+                ".html": {
+                    "code": 27,
+                    "comment": 0,
+                    "blank": 1
+                },
+                ".md": {
+                    "code": 26,
+                    "comment": 4,
+                    "blank": 15
+                },
+                ".json": {
+                    "code": 6633,
+                    "comment": 0,
+                    "blank": 2
+                },
+                ".sql": {
+                    "code": 1028,
+                    "comment": 0,
+                    "blank": 79
+                },
+                ".css": {
+                    "code": 95,
+                    "comment": 8,
+                    "blank": 19
+                },
+                ".vue": {
+                    "code": 4067,
+                    "comment": 109,
+                    "blank": 149
+                },
+                ".scss": {
+                    "code": 7,
+                    "comment": 1,
+                    "blank": 0
+                },
+                ".svg": {
+                    "code": 1,
+                    "comment": 0,
+                    "blank": 0
+                },
+                "": {
+                    "code": 18,
+                    "comment": 9,
+                    "blank": 3
+                },
+                ".cjs": {
+                    "code": 11,
+                    "comment": 1,
+                    "blank": 2
+                }
+            },
+            "filelist": [
+                {
+                    "blank": 2,
+                    "code": 11,
+                    "comment": 1,
+                    "filename": ".eslintrc.cjs"
+                },
+                {
+                    "blank": 3,
+                    "code": 18,
+                    "comment": 9,
+                    "filename": ".gitignore"
+                },
+                {
+                    "blank": 0,
+                    "code": 8,
+                    "comment": 0,
+                    "filename": ".prettierrc.json"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "dist\\assets\\_plugin-vue_export-helper-c27b6911.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "dist\\assets\\card-a9c58e68.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "dist\\assets\\card-bd0d6c89.css"
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 13,
+                    "filename": "dist\\assets\\charts-30d87914.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "dist\\assets\\charts-5bd8949f.css"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "dist\\assets\\createaccount-eeaf2c46.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "dist\\assets\\detail-2c76a825.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "dist\\assets\\detail-d08e5580.css"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "dist\\assets\\eventbus-5219a743.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "dist\\assets\\eventbus-f6e5bf6b.css"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "dist\\assets\\home-3d636cf3.css"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "dist\\assets\\home-4f8af4a8.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 5,
+                    "comment": 2,
+                    "filename": "dist\\assets\\index-02998bc0.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "dist\\assets\\index-4d888bc3.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "dist\\assets\\index-82852681.css"
+                },
+                {
+                    "blank": 0,
+                    "code": 4,
+                    "comment": 1,
+                    "filename": "dist\\assets\\index-d24dbf10.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "dist\\assets\\index-d8302c55.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 12,
+                    "comment": 9,
+                    "filename": "dist\\assets\\input-1e656645.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "dist\\assets\\input-d3b6a7ce.css"
+                },
+                {
+                    "blank": 0,
+                    "code": 42,
+                    "comment": 4,
+                    "filename": "dist\\assets\\list-7887bb50.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "dist\\assets\\list-896b4444.css"
+                },
+                {
+                    "blank": 0,
+                    "code": 9,
+                    "comment": 0,
+                    "filename": "dist\\assets\\localStorage-7a1e2e0f.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "dist\\assets\\login-6af52a1c.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "dist\\assets\\login-82b6fecb.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "dist\\assets\\login-c516d6f5.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "dist\\assets\\login-e19d2aa1.css"
+                },
+                {
+                    "filename": "dist\\assets\\loginbg-311b374d.png",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "dist\\assets\\logo-d6e7faa3.png",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "dist\\assets\\manageuser-4a4cf9ad.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "dist\\assets\\manageuser-61b9a1ae.css"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "dist\\assets\\orgnization-fb863525.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "dist\\assets\\overlay-1e339483.css"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "dist\\assets\\overlay-a4685122.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "dist\\assets\\password-5d8d5fbf.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "dist\\assets\\PersonalHome-24a4b6c9.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "dist\\assets\\radio-1ab1aeab.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "dist\\assets\\radio-6d0594e5.css"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "dist\\assets\\SuperviseHome-b75c16cf.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 3,
+                    "comment": 19,
+                    "filename": "dist\\assets\\table-column-92342939.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "dist\\assets\\table-column-c710fa2b.css"
+                },
+                {
+                    "filename": "dist\\favicon.ico",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 1,
+                    "code": 14,
+                    "comment": 0,
+                    "filename": "dist\\index.html"
+                },
+                {
+                    "blank": 0,
+                    "code": 13,
+                    "comment": 0,
+                    "filename": "index.html"
+                },
+                {
+                    "blank": 2,
+                    "code": 6574,
+                    "comment": 0,
+                    "filename": "package-lock.json"
+                },
+                {
+                    "blank": 0,
+                    "code": 51,
+                    "comment": 0,
+                    "filename": "package.json"
+                },
+                {
+                    "blank": 0,
+                    "code": 21,
+                    "comment": 15,
+                    "filename": "postcss.config.js"
+                },
+                {
+                    "filename": "public\\favicon.ico",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 15,
+                    "code": 26,
+                    "comment": 4,
+                    "filename": "README.md"
+                },
+                {
+                    "blank": 3,
+                    "code": 22,
+                    "comment": 0,
+                    "filename": "src\\api\\charts.js"
+                },
+                {
+                    "blank": 17,
+                    "code": 120,
+                    "comment": 77,
+                    "filename": "src\\api\\list.js"
+                },
+                {
+                    "blank": 7,
+                    "code": 57,
+                    "comment": 40,
+                    "filename": "src\\api\\login.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 8,
+                    "comment": 1,
+                    "filename": "src\\api\\report.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 11,
+                    "comment": 1,
+                    "filename": "src\\App.vue"
+                },
+                {
+                    "blank": 13,
+                    "code": 58,
+                    "comment": 2,
+                    "filename": "src\\assets\\base.css"
+                },
+                {
+                    "filename": "src\\assets\\bg.jpg",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "src\\assets\\loginbg.png",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "src\\assets\\logo.png",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "src\\assets\\logo.svg"
+                },
+                {
+                    "blank": 6,
+                    "code": 24,
+                    "comment": 6,
+                    "filename": "src\\assets\\main.css"
+                },
+                {
+                    "blank": 2,
+                    "code": 9,
+                    "comment": 0,
+                    "filename": "src\\components\\__tests__\\HelloWorld.spec.js"
+                },
+                {
+                    "blank": 4,
+                    "code": 78,
+                    "comment": 6,
+                    "filename": "src\\components\\BarCharts.vue"
+                },
+                {
+                    "blank": 3,
+                    "code": 89,
+                    "comment": 0,
+                    "filename": "src\\components\\ChildTask.vue"
+                },
+                {
+                    "blank": 4,
+                    "code": 61,
+                    "comment": 1,
+                    "filename": "src\\components\\GaugeChart.vue"
+                },
+                {
+                    "blank": 0,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "src\\components\\icons\\IconCommunity.vue"
+                },
+                {
+                    "blank": 0,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "src\\components\\icons\\IconDocumentation.vue"
+                },
+                {
+                    "blank": 0,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "src\\components\\icons\\IconEcosystem.vue"
+                },
+                {
+                    "blank": 0,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "src\\components\\icons\\IconSupport.vue"
+                },
+                {
+                    "blank": 0,
+                    "code": 19,
+                    "comment": 1,
+                    "filename": "src\\components\\icons\\IconTooling.vue"
+                },
+                {
+                    "blank": 0,
+                    "code": 22,
+                    "comment": 0,
+                    "filename": "src\\components\\NavBack.vue"
+                },
+                {
+                    "blank": 4,
+                    "code": 65,
+                    "comment": 1,
+                    "filename": "src\\components\\PieCharts.vue"
+                },
+                {
+                    "blank": 4,
+                    "code": 245,
+                    "comment": 6,
+                    "filename": "src\\components\\QueryHeader.vue"
+                },
+                {
+                    "blank": 3,
+                    "code": 97,
+                    "comment": 6,
+                    "filename": "src\\components\\QueryReport.vue"
+                },
+                {
+                    "blank": 3,
+                    "code": 94,
+                    "comment": 6,
+                    "filename": "src\\components\\QueryUser.vue"
+                },
+                {
+                    "blank": 0,
+                    "code": 41,
+                    "comment": 2,
+                    "filename": "src\\components\\SelectCommon.vue"
+                },
+                {
+                    "blank": 1,
+                    "code": 96,
+                    "comment": 7,
+                    "filename": "src\\components\\SideBar.vue"
+                },
+                {
+                    "blank": 1,
+                    "code": 143,
+                    "comment": 4,
+                    "filename": "src\\components\\Table.vue"
+                },
+                {
+                    "blank": 15,
+                    "code": 435,
+                    "comment": 10,
+                    "filename": "src\\components\\TableCommon.vue"
+                },
+                {
+                    "blank": 7,
+                    "code": 358,
+                    "comment": 1,
+                    "filename": "src\\components\\TaskModal.vue"
+                },
+                {
+                    "blank": 2,
+                    "code": 38,
+                    "comment": 0,
+                    "filename": "src\\components\\Upload.vue"
+                },
+                {
+                    "blank": 0,
+                    "code": 8,
+                    "comment": 0,
+                    "filename": "src\\components\\WhiteSpace.vue"
+                },
+                {
+                    "blank": 10,
+                    "code": 314,
+                    "comment": 146,
+                    "filename": "src\\constant\\index.js"
+                },
+                {
+                    "blank": 31,
+                    "code": 182,
+                    "comment": 0,
+                    "filename": "src\\create.sql"
+                },
+                {
+                    "blank": 0,
+                    "code": 488,
+                    "comment": 0,
+                    "filename": "src\\insert into tmp_0823_shuzi values(1, '85.sql"
+                },
+                {
+                    "blank": 48,
+                    "code": 358,
+                    "comment": 0,
+                    "filename": "src\\insertTask.sql"
+                },
+                {
+                    "blank": 4,
+                    "code": 21,
+                    "comment": 4,
+                    "filename": "src\\main.js"
+                },
+                {
+                    "blank": 9,
+                    "code": 71,
+                    "comment": 13,
+                    "filename": "src\\request\\index.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 85,
+                    "comment": 21,
+                    "filename": "src\\router\\index.js"
+                },
+                {
+                    "blank": 2,
+                    "code": 10,
+                    "comment": 0,
+                    "filename": "src\\stores\\counter.js"
+                },
+                {
+                    "blank": 5,
+                    "code": 35,
+                    "comment": 1,
+                    "filename": "src\\stores\\login.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 7,
+                    "comment": 1,
+                    "filename": "src\\styles\\element\\index.scss"
+                },
+                {
+                    "blank": 2,
+                    "code": 3,
+                    "comment": 0,
+                    "filename": "src\\util\\eventbus.js"
+                },
+                {
+                    "blank": 2,
+                    "code": 9,
+                    "comment": 0,
+                    "filename": "src\\util\\localStorage.js"
+                },
+                {
+                    "blank": 5,
+                    "code": 31,
+                    "comment": 5,
+                    "filename": "src\\util\\orgnization.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 9,
+                    "comment": 3,
+                    "filename": "src\\util\\rem.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 21,
+                    "comment": 0,
+                    "filename": "src\\util\\toast.js"
+                },
+                {
+                    "blank": 2,
+                    "code": 72,
+                    "comment": 0,
+                    "filename": "src\\views\\charts.vue"
+                },
+                {
+                    "blank": 0,
+                    "code": 91,
+                    "comment": 0,
+                    "filename": "src\\views\\createaccount.vue"
+                },
+                {
+                    "blank": 27,
+                    "code": 657,
+                    "comment": 13,
+                    "filename": "src\\views\\detail.vue"
+                },
+                {
+                    "blank": 17,
+                    "code": 147,
+                    "comment": 4,
+                    "filename": "src\\views\\home.vue"
+                },
+                {
+                    "blank": 30,
+                    "code": 565,
+                    "comment": 23,
+                    "filename": "src\\views\\list.vue"
+                },
+                {
+                    "blank": 4,
+                    "code": 123,
+                    "comment": 7,
+                    "filename": "src\\views\\login.vue"
+                },
+                {
+                    "blank": 4,
+                    "code": 147,
+                    "comment": 8,
+                    "filename": "src\\views\\loginwifi.vue"
+                },
+                {
+                    "blank": 4,
+                    "code": 137,
+                    "comment": 0,
+                    "filename": "src\\views\\manageuser.vue"
+                },
+                {
+                    "blank": 0,
+                    "code": 67,
+                    "comment": 0,
+                    "filename": "src\\views\\password.vue"
+                },
+                {
+                    "blank": 0,
+                    "code": 3,
+                    "comment": 0,
+                    "filename": "src\\views\\PersonalHome.vue"
+                },
+                {
+                    "blank": 9,
+                    "code": 125,
+                    "comment": 2,
+                    "filename": "src\\views\\reportlist.vue"
+                },
+                {
+                    "blank": 0,
+                    "code": 5,
+                    "comment": 0,
+                    "filename": "src\\views\\SuperviseHome.vue"
+                },
+                {
+                    "blank": 3,
+                    "code": 42,
+                    "comment": 2,
+                    "filename": "vite.config.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 17,
+                    "comment": 0,
+                    "filename": "vitest.config.js"
+                }
+            ]
+        }
+    ]
+}

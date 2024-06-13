@@ -454,7 +454,7 @@ const handleCommit = async (form) => {
   }
   const result =
     state.modalType === 'add'
-      ? await createTaskReq({ ...params, statusWeight: statusWeight[1] })
+      ? await createTaskReq({ ...params, statusWeight: statusWeight[1], taskRegion: region.value })
       : form.isSubtask
       ? await updateSubtaskReq({
           // 子任务修改

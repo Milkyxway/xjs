@@ -114,14 +114,20 @@
 <script setup>
 import { ref, reactive, computed } from 'vue'
 
-import { taskStatusList, taskCategory, orgnizationTree, taskOrigin } from '../constant'
+import { taskStatusList, taskCategory, taskOrigin } from '../constant'
 import { getLocalStore } from '../util/localStorage'
-import { orgnizationNameToId, taskSourceNameToId, taskCategoryNameToId } from '../util/orgnization'
+import {
+  orgnizationNameToId,
+  taskSourceNameToId,
+  taskCategoryNameToId,
+  getOrgnizationListByRegion
+} from '../util/orgnization'
 import Upload from './Upload.vue'
 import { batchAddTasksReq } from '../api/list'
 import { toast } from '../util/toast'
 const emit = defineEmits(['handleQuery', 'createTask', 'exportAsExcel'])
 const role = getLocalStore('userInfo').role
+const region = getLocalStore('userInfo').region
 let queryForm = reactive({
   category: null,
   status: null,
@@ -134,8 +140,9 @@ let queryForm = reactive({
 })
 const statusList = ref(taskStatusList)
 const taskCategoryList = ref(taskCategory)
-const orgnizationList = ref(orgnizationTree)
+const orgnizationList = ref(getOrgnizationListByRegion(region))
 const taskOriginRef = ref(taskOrigin)
+
 const styleByRole = computed(() => {
   return ['admin', 'leader'].includes(role)
     ? {

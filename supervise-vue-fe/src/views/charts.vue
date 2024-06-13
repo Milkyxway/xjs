@@ -24,7 +24,7 @@
   </el-row>
 </template>
 <script setup>
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import PieCharts from '../components/PieCharts.vue'
 import BarCharts from '../components/BarCharts.vue'
 import GaugeChart from '../components/GaugeChart.vue'
@@ -37,6 +37,8 @@ import {
   orgnizationTree
 } from '../constant/index'
 import { orgnizationToName } from '../util/orgnization'
+import { getLocalStore } from '../util/localStorage'
+const region = ref(getLocalStore('userInfo').region)
 const state = reactive({
   categoryPieData: [],
   statusPieData: [],
@@ -55,10 +57,10 @@ const formatData = (data, map) => {
 }
 
 const getPieChart = async () => {
-  const categoryPieData = await getPieChartReq({ type: 'category' })
-  const statusPieData = await getPieChartReq({ type: 'status' })
-  const sectionTask = await getSectionTaskSortReq()
-  const finishProcess = await getFinishProcessReq({ status: 4 })
+  const categoryPieData = await getPieChartReq({ type: 'category', region: region.value })
+  const statusPieData = await getPieChartReq({ type: 'status', region: region.value })
+  const sectionTask = await getSectionTaskSortReq({ region: region.value })
+  const finishProcess = await getFinishProcessReq({ status: 4, region: region.value })
   state.categoryPieData = formatData(categoryPieData.data, taskCategoryMap)
   state.statusPieData = formatData(statusPieData.data, taskStatusMap)
   state.sectionTask = sectionTask.data.map((i) => i.value)

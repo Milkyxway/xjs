@@ -230,6 +230,8 @@ import {
   appealCategory,
   taskOrigin
 } from '../constant/index'
+import { getLocalStore } from '../util/localStorage'
+import { getOrgnizationListByRegion } from '../util/orgnization'
 const props = defineProps({
   modalVisible: {
     default: false,
@@ -244,7 +246,7 @@ const props = defineProps({
     type: Object
   }
 })
-
+const region = ref(getLocalStore('userInfo'))
 const emit = defineEmits(['handleCancel', 'handleCommit'])
 
 const rules = computed(() => {
@@ -293,7 +295,7 @@ const inputProps = ref({
   autocomplete: false
 })
 const taskStatus = ref(taskStatusList)
-const orgnizationList = ref(orgnizationTree)
+const orgnizationList = ref(getOrgnizationListByRegion(region.value))
 
 watch(
   () => props.formData,

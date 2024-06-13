@@ -1,4 +1,6 @@
 <template>
+  <QueryUser @handleQuery="handleQuery" />
+  <WhiteSpace />
   <Table
     :tableData="state.userList"
     :tableColumns="userColumns"
@@ -18,7 +20,11 @@
         <el-input v-model="state.selectRow.username"></el-input>
       </el-form-item>
       <el-form-item label="密码">
-        <el-input v-model="state.selectRow.password"></el-input>
+        <el-input
+          v-model="state.selectRow.password"
+          type="password"
+          :show-password="true"
+        ></el-input>
       </el-form-item>
       <el-form-item label="角色">
         <SelectCommon
@@ -46,10 +52,15 @@
 import { ref, reactive } from 'vue'
 import Table from '../components/Table.vue'
 import SelectCommon from '../components/SelectCommon.vue'
+import QueryUser from '../components/QueryUser.vue'
+import WhiteSpace from '../components/WhiteSpace.vue'
 import { toast } from '../util/toast'
 import { roleList } from '../constant/index'
 import { getUsersReq, deleteUserReq, updateUserReq } from '../api/login'
 import { ElMessageBoxFn } from '../util/toast'
+import { getLocalStore } from '../util/localStorage'
+
+const region = ref(getLocalStore('userInfo').region)
 const state = reactive({
   userList: [],
   showdialog: false,
@@ -62,7 +73,7 @@ const userColumns = ref([
   },
   {
     label: '密码',
-    prop: 'password'
+    prop: 'passwordSensitive'
   },
   {
     label: '角色',
@@ -101,8 +112,16 @@ const tableOperations = ref([
   }
 ])
 const getUsers = async () => {
-  const result = await getUsersReq()
-  state.userList = result.data.list
+  const params = {
+    region: region.value
+  }
+  const result = await getUsersReq(params)
+  state.userList = result.data.list.map((i) => {
+    return {
+      ...i,
+      passwordSensitive: '********'
+    }
+  })
 }
 
 const updateUser = async () => {
@@ -112,6 +131,17 @@ const updateUser = async () => {
   state.showdialog = false
   toast('修改成功！')
   getUsers()
+}
+
+const handleQuery = async (query) => {
+  state.userList = []
+  const result = await getUsersReq({ ...query })
+  state.userList = result.data.list.map((i) => {
+    return {
+      ...i,
+      passwordSensitive: '********'
+    }
+  })
 }
 getUsers()
 </script>

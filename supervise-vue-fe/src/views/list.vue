@@ -92,6 +92,7 @@ import emitter from '../util/eventbus'
 const userInfo = ref(getLocalStore('userInfo'))
 const role = ref(getLocalStore('userInfo').role)
 const username = ref(getLocalStore('userInfo').username)
+const region = ref(getLocalStore('userInfo').region)
 const state = reactive({
   chooseTab: 'mine',
   modalType: '',
@@ -220,14 +221,13 @@ emitter.on('refreshList', (e) => {
   getListByChooseTab(state.chooseTab)
 })
 
-console.log(dayjs('2023-12-31T00:00:00.000Z').format())
-
 const getSuperviseList = async () => {
   state.tableData = []
   const params = {
     ...state.page,
     ...state.querys,
-    role: role.value
+    role: role.value,
+    taskRegion: region.value
   }
   const result = await getTaskListReq(params)
   state.tableData = insertIdIntoArr(result.data.list)

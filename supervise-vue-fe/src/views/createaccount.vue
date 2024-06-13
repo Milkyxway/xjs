@@ -44,6 +44,8 @@
 import { reactive, ref } from 'vue'
 import { createAccountReq } from '../api/login'
 import { toast } from '../util/toast'
+import { getLocalStore } from '../util/localStorage'
+const region = ref(getLocalStore('userInfo').region)
 const state = reactive({
   formData: {
     username: '',
@@ -80,7 +82,8 @@ const handleSubmit = () => {
   formRef.value.validate(async (res) => {
     await createAccountReq({
       ...state.formData,
-      role: roleList.filter((i) => i.label === state.formData.role)[0].value
+      role: roleList.filter((i) => i.label === state.formData.role)[0].value,
+      region: region.value
     })
     toast()
   })

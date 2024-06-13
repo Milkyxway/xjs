@@ -313,6 +313,36 @@ const orgnizationTree = [
   //   label: '北塘广电网络管理站'
   // }
 ]
+const orgnizationTree_jy = [
+  {
+    value: 13,
+    label: '党群工作部'
+  },
+  {
+    value: 14,
+    label: '综合管理部'
+  },
+  {
+    value: 15,
+    label: '财务资产部'
+  },
+  {
+    value: 16,
+    label: '公众客户部'
+  },
+  {
+    value: 17,
+    label: '政企客户部'
+  },
+  {
+    value: 18,
+    label: '技术工程部'
+  },
+  {
+    value: 19,
+    label: '安播中心'
+  }
+]
 
 const appealCategory = [
   {
@@ -420,6 +450,7 @@ export {
   taskCategory,
   taskCategoryMap,
   orgnizationTree,
+  orgnizationTree_jy,
   appealCategory,
   taskOrigin,
   taskSourceMap,

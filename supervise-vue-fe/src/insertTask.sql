@@ -404,6 +404,4 @@ SET
 update
   `task_base`.`task_list`
 set
-  taskGoal = '按要求补充上传《江阴分公司政企项目审批流程》及《2022年政企类项目实施方案》'
-where
-  taskId = 238;
+  taskRegion = 'wx';

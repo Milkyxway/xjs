@@ -36,6 +36,24 @@
           >
         </el-radio-group>
       </el-form-item>
+      <el-form-item
+        label="部门"
+        prop="orgnization"
+        :label-width="formLabelWidth"
+        v-if="state.formData.role === '部门'"
+      >
+        <SelectCommon
+          v-model:select="state.formData.orgnizationId"
+          :selections="orgnizationList"
+          @updateSelect="
+            (val) => {
+              if (val !== '') {
+                state.formData.orgnizationId = val
+              }
+            }
+          "
+        ></SelectCommon>
+      </el-form-item>
     </el-form>
     <el-button type="primary" @click="handleSubmit">提交</el-button>
   </el-card>
@@ -45,13 +63,17 @@ import { reactive, ref } from 'vue'
 import { createAccountReq } from '../api/login'
 import { toast } from '../util/toast'
 import { getLocalStore } from '../util/localStorage'
+import SelectCommon from '../components/SelectCommon.vue'
+import { getOrgnizationListByRegion } from '../util/orgnization'
 const region = ref(getLocalStore('userInfo').region)
+const orgnizationList = ref(getOrgnizationListByRegion(region.value))
 const state = reactive({
   formData: {
     username: '',
     password: '',
     role: '部门',
-    usernameCn: ''
+    usernameCn: '',
+    orgnizationId: ''
   }
 })
 const formRef = ref()
@@ -83,7 +105,8 @@ const handleSubmit = () => {
     await createAccountReq({
       ...state.formData,
       role: roleList.filter((i) => i.label === state.formData.role)[0].value,
-      region: region.value
+      region: region.value,
+      orgnizationId: state.formData.role === '部门' ? state.formData.orgnizationId : null
     })
     toast()
   })

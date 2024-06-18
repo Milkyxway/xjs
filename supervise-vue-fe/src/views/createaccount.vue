@@ -43,12 +43,12 @@
         v-if="state.formData.role === '部门'"
       >
         <SelectCommon
-          v-model:select="state.formData.orgnizationId"
+          v-model:select="state.formData.orgnization"
           :selections="orgnizationList"
           @updateSelect="
             (val) => {
               if (val !== '') {
-                state.formData.orgnizationId = val
+                state.formData.orgnization = val
               }
             }
           "
@@ -73,7 +73,7 @@ const state = reactive({
     password: '',
     role: '部门',
     usernameCn: '',
-    orgnizationId: ''
+    orgnization: ''
   }
 })
 const formRef = ref()
@@ -106,7 +106,7 @@ const handleSubmit = () => {
       ...state.formData,
       role: roleList.filter((i) => i.label === state.formData.role)[0].value,
       region: region.value,
-      orgnizationId: state.formData.role === '部门' ? state.formData.orgnizationId : null
+      orgnization: state.formData.role === '部门' ? state.formData.orgnization : null
     })
     toast()
   })

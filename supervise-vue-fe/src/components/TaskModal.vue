@@ -295,7 +295,7 @@ const inputProps = ref({
   autocomplete: false
 })
 const taskStatus = ref(taskStatusList)
-const orgnizationList = ref(getOrgnizationListByRegion(region.value))
+const orgnizationList = ref(getOrgnizationListByRegion())
 
 watch(
   () => props.formData,

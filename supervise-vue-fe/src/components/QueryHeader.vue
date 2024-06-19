@@ -140,7 +140,7 @@ let queryForm = reactive({
 })
 const statusList = ref(taskStatusList)
 const taskCategoryList = ref(taskCategory)
-const orgnizationList = ref(getOrgnizationListByRegion(region))
+const orgnizationList = ref(getOrgnizationListByRegion())
 const taskOriginRef = ref(taskOrigin)
 
 const styleByRole = computed(() => {

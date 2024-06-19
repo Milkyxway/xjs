@@ -66,7 +66,7 @@ import { getLocalStore } from '../util/localStorage'
 import SelectCommon from '../components/SelectCommon.vue'
 import { getOrgnizationListByRegion } from '../util/orgnization'
 const region = ref(getLocalStore('userInfo').region)
-const orgnizationList = ref(getOrgnizationListByRegion(region.value))
+const orgnizationList = ref(getOrgnizationListByRegion())
 const state = reactive({
   formData: {
     username: '',

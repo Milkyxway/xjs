@@ -1,13 +1,15 @@
 import { orgnizationTree, taskCategory, taskOrigin, orgnizationTree_jy } from '../constant/index'
+import { getLocalStore } from './localStorage'
+const region = getLocalStore('userInfo').region
 export const orgnizationToName = (id) => {
   if (!id) return ''
   const orgId = Number(id)
-  return orgnizationTree.filter((i) => i.value === orgId)[0].label
+  return getOrgnizationListByRegion(region).filter((i) => i.value === orgId)[0].label
 }
 
 export const orgnizationNameToId = (name) => {
   if (!name) return ''
-  return orgnizationTree.filter((i) => i.label === name)[0].value
+  return getOrgnizationListByRegion(region).filter((i) => i.label === name)[0].value
 }
 
 /**
@@ -22,7 +24,7 @@ export const orgnizationListIdToName = (str) => {
   const listOrg = str.split(',')
   return listOrg
     .map((i) => {
-      return orgnizationTree.filter((treeItem) => treeItem.value == i)[0].label
+      return getOrgnizationListByRegion(region).filter((treeItem) => treeItem.value == i)[0].label
     })
     .join('、')
 }

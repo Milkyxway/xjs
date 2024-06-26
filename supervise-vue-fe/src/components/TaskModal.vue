@@ -227,11 +227,10 @@ import {
   taskStatusList,
   taskCategory,
   orgnizationTree,
-  appealCategory,
+  orgnizationTree_jy,
   taskOrigin
 } from '../constant/index'
 import { getLocalStore } from '../util/localStorage'
-import { getOrgnizationListByRegion } from '../util/orgnization'
 const props = defineProps({
   modalVisible: {
     default: false,
@@ -295,7 +294,7 @@ const inputProps = ref({
   autocomplete: false
 })
 const taskStatus = ref(taskStatusList)
-const orgnizationList = ref(getOrgnizationListByRegion())
+const orgnizationList = region.value === 'wx' ? orgnizationTree : orgnizationTree_jy
 
 watch(
   () => props.formData,

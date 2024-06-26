@@ -125,8 +125,9 @@ const getUsers = async () => {
 }
 
 const updateUser = async () => {
+  const { passwordSensitive, ...rest } = state.selectRow
   await updateUserReq({
-    ...state.selectRow
+    ...rest
   })
   state.showdialog = false
   toast('修改成功！')

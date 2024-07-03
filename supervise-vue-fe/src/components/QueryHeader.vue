@@ -129,7 +129,6 @@ import { toast } from '../util/toast'
 const emit = defineEmits(['handleQuery', 'createTask', 'exportAsExcel'])
 const role = getLocalStore('userInfo').role
 const region = getLocalStore('userInfo').region
-console.log(region)
 let queryForm = reactive({
   category: null,
   status: null,
@@ -176,7 +175,8 @@ const handleChange = async (data) => {
       leadOrg: orgnizationNameToId(i['牵头部门']),
       category: taskCategoryNameToId(i['任务类别']),
       taskSource: taskSourceNameToId(i['任务来源']) || null,
-      ariseOrg: orgnizationNameToId(i['提出部门']) || null
+      ariseOrg: orgnizationNameToId(i['提出部门']) || null,
+      taskRegion: region
     }
   })
   try {

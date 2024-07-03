@@ -9,6 +9,7 @@ export const orgnizationToName = (id) => {
 }
 
 export const orgnizationNameToId = (name) => {
+  console.log(name)
   if (!name) return ''
   const region = getLocalStore('userInfo').region
   return getOrgnizationListByRegion(region).filter((i) => i.label === name)[0].value

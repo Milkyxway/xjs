@@ -215,6 +215,7 @@ const taskId = route.params.taskId * 1
 const userInfo = getLocalStore('userInfo')
 const role = userInfo.role
 const orgnization = userInfo.orgnization
+const region = userInfo.region
 
 let state = reactive({
   modalVisible: false,
@@ -377,6 +378,10 @@ const getTitleByStatus = computed(() => {
 
 const getTaskDetail = async () => {
   const result = await taskDetailReq({ taskId })
+  console.log(result.data.taskRegion, region)
+  if (result.data.taskRegion !== region) {
+    router.back()
+  }
   const {
     data: { category, leadOrg, assistOrg, finishTime, taskGoal }
   } = result

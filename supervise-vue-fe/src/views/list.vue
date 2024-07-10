@@ -117,6 +117,10 @@ const state = reactive({
   },
   tableColumns: [
     {
+      columnName: 'id',
+      prop: 'taskId'
+    },
+    {
       columnName: '关注',
       prop: 'focus'
     },

@@ -5,6 +5,8 @@
       row-key="id"
       :default-expand-all="false"
       :row-class-name="(row) => getRowClassName(row)"
+      @header-dragend="onHeaderDragend"
+      :border="true"
     >
       <el-table-column
         v-for="item in props.tableColumns"
@@ -222,7 +224,7 @@ const getColumnWidth = computed(() => {
         item.prop
       )
         ? 180
-        : 100
+        : 'auto'
     }
   }
 })
@@ -291,6 +293,10 @@ const getTime = computed(() => {
     return dayjs(row[prop]).format('YYYY-MM-DD ')
   }
 })
+
+const onHeaderDragend = (e) => {
+  console.log(e)
+}
 
 const updateTask = (row) => {
   emits('updateTask', row)

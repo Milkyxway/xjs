@@ -6,7 +6,7 @@
       :default-expand-all="false"
       :row-class-name="(row) => getRowClassName(row)"
       @header-dragend="onHeaderDragend"
-      :border="true"
+      :border="region === 'jy'"
     >
       <el-table-column
         v-for="item in props.tableColumns"
@@ -169,6 +169,7 @@ const role = getLocalStore('userInfo').role
 const username = getLocalStore('userInfo').username
 const usernameCn = getLocalStore('userInfo').usernameCn
 const userOrg = getLocalStore('userInfo').orgnization
+const region = getLocalStore('userInfo').region
 const state = reactive({
   page: {
     pageNum: 1,

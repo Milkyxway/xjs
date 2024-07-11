@@ -117,7 +117,7 @@ const state = reactive({
   },
   tableColumns: [
     {
-      columnName: 'id',
+      columnName: '序号',
       prop: 'taskId'
     },
     {

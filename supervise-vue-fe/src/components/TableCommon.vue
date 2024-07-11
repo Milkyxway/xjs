@@ -13,7 +13,7 @@
         :label="item.columnName"
         :prop="item.prop"
         :key="item.key"
-        :width="getColumnWidth(item)"
+        :width="200"
       >
         <template #default="{ row }">
           <el-icon v-if="item.prop === 'focus' && row.children"

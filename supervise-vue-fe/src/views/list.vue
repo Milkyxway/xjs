@@ -83,10 +83,11 @@ import {
   deleteSubTaskReq,
   updateSubtaskReq
 } from '../api/list'
+import { orgnizationListIdToName, orgnizationToName } from '../util/orgnization'
 import { toast } from '../util/toast'
 import { getLocalStore } from '../util/localStorage'
 import { dayjs } from 'element-plus'
-import { statusWeight } from '../constant/index'
+import { statusWeight, taskStatusMap, appealCategoryMap } from '../constant/index'
 import emitter from '../util/eventbus'
 
 const userInfo = ref(getLocalStore('userInfo'))
@@ -238,13 +239,51 @@ const getSuperviseList = async () => {
   state.total = result.data.total
 }
 
+const getChildTaskContent = (list) => {
+  let str = ''
+  list.length
+    ? list.map((m, index) => {
+        str += `${index + 1}、任务目标:${m.taskGoal};计划完成时间:${dayjs(m.finishTime).format(
+          'YYYY-MM-DD'
+        )};实际完成时间:${
+          m.actualFinish ? dayjs(m.actualFinish).format('YYYY-MM-DD') : '-'
+        };任务状态${taskStatusMap[m.status]}\n`
+      })
+    : ''
+  return str
+}
+
 const exportAsExcel = async (query) => {
   await formatQuery(query)
   const result = await exportDataAsExcelReq({
-    ...state.querys
+    ...state.querys,
+    taskRegion: region.value
   })
   const wb = xlsx.utils.book_new()
-  const sheet = xlsx.utils.json_to_sheet(result.data.list)
+  const sheet = xlsx.utils.json_to_sheet(
+    result.data.list.map((i) => {
+      return {
+        任务id: i.taskId,
+        任务来源: i.taskSource,
+        来源描述: i.sourceDesc,
+        任务内容: i.taskContent,
+        提出部门: i.ariseOrg,
+        牵头部门: orgnizationToName(i.leadOrg),
+        协办部门: orgnizationListIdToName(i.assistOrg),
+        任务目标: i.taskGoal,
+        计划完成时间: dayjs(i.finishTime).format('YYYY-MM-DD'),
+        实际完成时间: i.actualFinish ? dayjs(i.actualFinish).format('YYYY-MM-DD') : '',
+        实际完成情况: i.completeDesc,
+        任务状态: taskStatusMap[i.status],
+        领导批注: i.leadComment,
+        反馈类型: appealCategoryMap[i.resolveType],
+        延期说明: i.delayReason,
+        创建时间: dayjs(i.createTime).format('YYYY-MM-DD'),
+        更新时间: dayjs(i.updateTime).format('YYYY-MM-DD'),
+        子任务情况: getChildTaskContent(i.children)
+      }
+    })
+  )
   xlsx.utils.book_append_sheet(wb, sheet)
   xlsx.writeFile(wb, '导出结果.xlsx')
 }

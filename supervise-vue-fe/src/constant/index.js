@@ -362,6 +362,11 @@ const appealCategory = [
     value: 4
   }
 ]
+const appealCategoryMap = {
+  1: '任务表述调整',
+  2: '非问题仅需解释',
+  3: '暂时无法解决，需持续跟进'
+}
 
 const taskOrigin = [
   {
@@ -457,5 +462,6 @@ export {
   statusWeight,
   periodTypeMap,
   periodType,
-  roleList
+  roleList,
+  appealCategoryMap
 }

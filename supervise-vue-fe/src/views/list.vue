@@ -267,7 +267,7 @@ const exportAsExcel = async (query) => {
         任务来源: i.taskSource,
         来源描述: i.sourceDesc,
         任务内容: i.taskContent,
-        提出部门: i.ariseOrg,
+        提出部门: orgnizationToName(i.ariseOrg),
         牵头部门: orgnizationToName(i.leadOrg),
         协办部门: orgnizationListIdToName(i.assistOrg),
         任务目标: i.taskGoal,

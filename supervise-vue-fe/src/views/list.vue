@@ -87,7 +87,7 @@ import { orgnizationListIdToName, orgnizationToName } from '../util/orgnization'
 import { toast } from '../util/toast'
 import { getLocalStore } from '../util/localStorage'
 import { dayjs } from 'element-plus'
-import { statusWeight, taskStatusMap, appealCategoryMap } from '../constant/index'
+import { statusWeight, taskStatusMap, appealCategoryMap, taskSourceMap } from '../constant/index'
 import emitter from '../util/eventbus'
 
 const userInfo = ref(getLocalStore('userInfo'))
@@ -264,7 +264,7 @@ const exportAsExcel = async (query) => {
     result.data.list.map((i) => {
       return {
         任务id: i.taskId,
-        任务来源: orgnizationToName(i.taskSource),
+        任务来源: taskSourceMap[i.taskSource],
         来源描述: i.sourceDesc,
         任务内容: i.taskContent,
         提出部门: orgnizationToName(i.ariseOrg),

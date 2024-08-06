@@ -264,7 +264,7 @@ const exportAsExcel = async (query) => {
     result.data.list.map((i) => {
       return {
         任务id: i.taskId,
-        任务来源: i.taskSource,
+        任务来源: orgnizationToName(i.taskSource),
         来源描述: i.sourceDesc,
         任务内容: i.taskContent,
         提出部门: orgnizationToName(i.ariseOrg),

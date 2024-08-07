@@ -556,20 +556,14 @@ const updateTask = (row) => {
 const subleaderManageParts = () => {
   let manageParts = ''
   switch (username.value) {
-    case 'yanghongyu':
-      manageParts = '9,11'
+    case 'huanghaitao':
+      manageParts = '1,3,7'
       break
-    case 'zhaoyuhui':
-      manageParts = ''
+    case 'qianzhenkai':
+      manageParts = '2,9,10'
       break
-    case 'wangwei':
-      manageParts = '1,2'
-      break
-    case 'zhaoxiaoguang':
-      manageParts = '7,6,8,12'
-      break
-    case 'zhufeng':
-      manageParts = '5,10,4,3'
+    case 'zhangli':
+      manageParts = '4,5,11,12,6,8'
       break
     default:
       break

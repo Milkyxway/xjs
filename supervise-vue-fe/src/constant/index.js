@@ -110,6 +110,18 @@ const taskCategory = [
   {
     label: '财务资产',
     value: 11
+  },
+  {
+    label: '三重一大',
+    value: 12
+  },
+  {
+    label: '文件流转',
+    value: 13
+  },
+  {
+    label: '内容建设',
+    value: 14
   }
 ]
 
@@ -124,17 +136,20 @@ const taskCategoryMap = {
   8: '技术支撑',
   9: '组织人事',
   10: '制度管理',
-  11: '财务资产'
+  11: '财务资产',
+  12: '三重一大',
+  13: '文件流转',
+  14: '内容建设'
 }
 
 const orgnizationTree = [
   {
     value: 1,
-    label: '综合管理部'
+    label: '党群工作部'
   },
   {
     value: 2,
-    label: '党群工作部'
+    label: '综合管理部'
   },
   {
     value: 3,
@@ -146,36 +161,53 @@ const orgnizationTree = [
   },
   {
     value: 5,
-    label: '企业发展部'
-  },
-  {
-    value: 6,
-    label: '新媒体运营部'
-  },
-  {
-    value: 7,
-    label: '政企客户部'
-  },
-  {
-    value: 8,
     label: '大众事业部'
   },
   {
+    value: 6,
+    label: '政企客户部'
+  },
+  {
+    value: 7,
+    label: '新媒体运营部'
+  },
+  {
+    value: 8,
+    label: '客户服务部'
+  },
+  {
     value: 9,
-    label: '技术支撑部'
+    label: '技术中心'
   },
   {
     value: 10,
-    label: '工程建设部'
-  },
-  {
-    value: 11,
     label: '安播中心'
   },
   {
+    value: 11,
+    label: '高新中心'
+  },
+  {
     value: 12,
-    label: '客户服务部'
+    label: '海陵中心'
+  },
+  {
+    value: 13,
+    label: '姜堰分公司'
+  },
+  {
+    value: 14,
+    label: '兴化分公司'
+  },
+  {
+    value: 15,
+    label: '泰兴分公司'
+  },
+  {
+    value: 16,
+    label: '靖江分公司'
   }
+
   // {
   //   value: 12,
   //   label: '锡山广电中心'

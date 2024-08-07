@@ -1,4 +1,4 @@
-import { orgnizationTree, taskCategory, taskOrigin, orgnizationTree_jy } from '../constant/index'
+import { orgnizationTree, taskCategory, taskOrigin } from '../constant/index'
 import { getLocalStore } from './localStorage'
 
 export const orgnizationToName = (id) => {
@@ -43,5 +43,4 @@ export const taskSourceNameToId = (name) => {
   return taskOrigin.filter((i) => i.label === name)[0].value
 }
 
-export const getOrgnizationListByRegion = (region) =>
-  region === 'wx' ? orgnizationTree : orgnizationTree_jy
+export const getOrgnizationListByRegion = (region) => orgnizationTree

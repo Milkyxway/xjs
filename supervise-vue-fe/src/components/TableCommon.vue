@@ -6,7 +6,6 @@
       :default-expand-all="false"
       :row-class-name="(row) => getRowClassName(row)"
       @header-dragend="onHeaderDragend"
-      :border="region === 'jy'"
     >
       <el-table-column
         v-for="item in props.tableColumns"

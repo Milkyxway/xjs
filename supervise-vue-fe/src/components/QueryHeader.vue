@@ -114,13 +114,7 @@
 <script setup>
 import { ref, reactive, computed } from 'vue'
 
-import {
-  taskStatusList,
-  taskCategory,
-  taskOrigin,
-  orgnizationTree,
-  orgnizationTree_jy
-} from '../constant'
+import { taskStatusList, taskCategory, taskOrigin, orgnizationTree } from '../constant'
 import { getLocalStore } from '../util/localStorage'
 import { orgnizationNameToId, taskSourceNameToId, taskCategoryNameToId } from '../util/orgnization'
 import Upload from './Upload.vue'
@@ -141,7 +135,7 @@ let queryForm = reactive({
 })
 const statusList = ref(taskStatusList)
 const taskCategoryList = ref(taskCategory)
-const orgnizationList = region === 'wx' ? orgnizationTree : orgnizationTree_jy
+const orgnizationList = orgnizationTree
 const taskOriginRef = ref(taskOrigin)
 
 const styleByRole = computed(() => {

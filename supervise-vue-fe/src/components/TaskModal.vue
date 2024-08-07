@@ -223,13 +223,7 @@
 
 <script setup>
 import { reactive, ref, watch, computed } from 'vue'
-import {
-  taskStatusList,
-  taskCategory,
-  orgnizationTree,
-  orgnizationTree_jy,
-  taskOrigin
-} from '../constant/index'
+import { taskStatusList, taskCategory, orgnizationTree, taskOrigin } from '../constant/index'
 import { getLocalStore } from '../util/localStorage'
 const props = defineProps({
   modalVisible: {
@@ -294,7 +288,7 @@ const inputProps = ref({
   autocomplete: false
 })
 const taskStatus = ref(taskStatusList)
-const orgnizationList = region.value === 'wx' ? orgnizationTree : orgnizationTree_jy
+const orgnizationList = orgnizationTree
 
 watch(
   () => props.formData,

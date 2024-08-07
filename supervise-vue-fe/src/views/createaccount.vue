@@ -64,9 +64,9 @@ import { createAccountReq } from '../api/login'
 import { toast } from '../util/toast'
 import { getLocalStore } from '../util/localStorage'
 import SelectCommon from '../components/SelectCommon.vue'
-import { orgnizationTree, orgnizationTree_jy } from '../constant'
+import { orgnizationTree } from '../constant'
 const region = ref(getLocalStore('userInfo').region)
-const orgnizationList = region.value === 'wx' ? orgnizationTree : orgnizationTree_jy
+const orgnizationList = orgnizationTree
 const state = reactive({
   formData: {
     username: '',

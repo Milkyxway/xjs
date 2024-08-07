@@ -276,7 +276,7 @@ const exportAsExcel = async (query) => {
         实际完成情况: i.completeDesc,
         任务状态: taskStatusMap[i.status],
         领导批注: i.leadComment,
-        反馈类型: appealCategoryMap[i.resolveType],
+        反馈类型: i.resolveType,
         延期说明: i.delayReason,
         创建时间: dayjs(i.createTime).format('YYYY-MM-DD'),
         更新时间: dayjs(i.updateTime).format('YYYY-MM-DD'),

@@ -86,7 +86,7 @@
           clearable
           :disabled="disableCondition"
           ><el-option
-            v-for="item in orgnizationList"
+            v-for="item in props.orgList"
             :label="item.label"
             :value="item.value"
             v-bind:key="item.key"
@@ -107,7 +107,7 @@
           clearable
           :disabled="disableCondition"
           ><el-option
-            v-for="item in orgnizationList"
+            v-for="item in props.orgList"
             :label="item.label"
             :value="item.value"
             v-bind:key="item.key"
@@ -128,7 +128,7 @@
           multiple
           :disabled="disableCondition"
           ><el-option
-            v-for="item in orgnizationList"
+            v-for="item in props.orgList"
             :label="item.label"
             :value="item.value"
             v-bind:key="item.key"
@@ -223,13 +223,7 @@
 
 <script setup>
 import { reactive, ref, watch, computed } from 'vue'
-import {
-  taskStatusList,
-  taskCategory,
-  orgnizationTree,
-  orgnizationTree_jy,
-  taskOrigin
-} from '../constant/index'
+import { taskStatusList, taskCategory, taskOrigin } from '../constant/index'
 import { getLocalStore } from '../util/localStorage'
 const props = defineProps({
   modalVisible: {
@@ -243,9 +237,12 @@ const props = defineProps({
   formData: {
     default: {},
     type: Object
+  },
+  orgList: {
+    default: [],
+    type: Array
   }
 })
-const region = ref(getLocalStore('userInfo').region)
 const emit = defineEmits(['handleCancel', 'handleCommit'])
 
 const rules = computed(() => {
@@ -294,7 +291,6 @@ const inputProps = ref({
   autocomplete: false
 })
 const taskStatus = ref(taskStatusList)
-const orgnizationList = region.value === 'wx' ? orgnizationTree : orgnizationTree_jy
 
 watch(
   () => props.formData,
@@ -303,6 +299,7 @@ watch(
     immediate: true
   }
 )
+
 state.taskCategory = state.taskCategory.filter((i) => i.value !== 0)
 
 const getModalTitle = computed(() => {

@@ -188,6 +188,7 @@
 </template>
 <script setup>
 import { reactive, computed, watch, ref } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useRoute, useRouter } from 'vue-router'
 import { dayjs } from 'element-plus'
 import mitt from 'mitt'
@@ -206,6 +207,7 @@ import { taskCategoryMap, taskStatusMap, statusWeight } from '../constant/index'
 import { getLocalStore } from '../util/localStorage'
 import { toast } from '../util/toast'
 import emitter from '../util/eventbus'
+import { sectionStore } from '../stores/orgList'
 
 const inputForm = ref()
 const route = useRoute()
@@ -216,6 +218,9 @@ const userInfo = getLocalStore('userInfo')
 const role = userInfo.role
 const orgnization = userInfo.orgnization
 const region = userInfo.region
+
+const setionStore = sectionStore()
+const { sectionList } = storeToRefs(setionStore)
 
 let state = reactive({
   modalVisible: false,
@@ -377,8 +382,8 @@ const getTitleByStatus = computed(() => {
 })
 
 const getTaskDetail = async () => {
+  await setionStore.getOrgList()
   const result = await taskDetailReq({ taskId })
-  console.log(result.data.taskRegion, region)
   if (result.data.taskRegion !== region) {
     router.back()
   }
@@ -389,8 +394,8 @@ const getTaskDetail = async () => {
     ...result.data,
     assistOrg: !assistOrg ? [] : assistOrg.split(',').map((i) => Number(i)),
     categoryName: taskCategoryMap[category],
-    leadOrgName: orgnizationToName(leadOrg),
-    assistOrgName: orgnizationListIdToName(result.data.assistOrg)
+    leadOrgName: orgnizationToName(leadOrg, sectionList.value),
+    assistOrgName: orgnizationListIdToName(result.data.assistOrg, sectionList.value)
   }
   if ([3, 5, 7].includes(result.data.status)) {
     orgnization === result.data.leadOrg && confirmTask() // 只有责任部门能修改任务计划

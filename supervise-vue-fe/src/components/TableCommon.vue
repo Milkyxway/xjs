@@ -162,6 +162,10 @@ const props = defineProps({
   total: {
     default: 0,
     type: Number
+  },
+  orgList: {
+    default: [],
+    type: Array
   }
 })
 const emits = defineEmits(['updateTask', 'refreshList', 'changePage', 'updateFocus'])
@@ -282,9 +286,9 @@ const getClassName = computed(() => {
 const getOrgName = computed(() => {
   return function (row, propName) {
     if (propName === 'assistOrg') {
-      return orgnizationListIdToName(row[propName])
+      return orgnizationListIdToName(row[propName], props.orgList)
     }
-    return orgnizationToName(row[propName])
+    return orgnizationToName(row[propName], props.orgList)
   }
 })
 

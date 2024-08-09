@@ -1,6 +1,7 @@
 <template>
   <QueryHeader
     type="add"
+    :orgList="sectionList"
     @handleQuery="handleQuery"
     @createTask="createTask"
     @exportAsExcel="exportAsExcel"
@@ -16,6 +17,7 @@
           :total="state.myTableTotal"
           @changePage="changePage"
           @updateFocus="updateFocus"
+          :orgList="sectionList"
         />
       </el-tab-pane>
       <el-tab-pane label="已关注" name="focus" v-if="['leader', 'sub-leader'].includes(role)">
@@ -27,6 +29,7 @@
           :total="state.totalFocus"
           @changePage="changePage"
           @updateFocus="updateFocus"
+          :orgList="sectionList"
         />
       </el-tab-pane>
       <el-tab-pane label="所有" name="all">
@@ -38,6 +41,7 @@
           :total="state.total"
           @changePage="changePage"
           @updateFocus="updateFocus"
+          :orgList="sectionList"
         />
       </el-tab-pane>
       <el-tab-pane
@@ -54,6 +58,7 @@
           @refreshList="refreshList"
           :total="state.total"
           @changePage="changePage"
+          :orgList="sectionList"
       /></el-tab-pane>
     </el-tabs>
 
@@ -63,6 +68,7 @@
       @handleCancel="state.modalVisible = false"
       @handle-commit="handleCommit"
       :formData="state.formData"
+      :orgList="sectionList"
     />
   </div>
 </template>
@@ -80,15 +86,16 @@ import {
   myTaskReq,
   getFocusListReq,
   exportDataAsExcelReq,
-  deleteSubTaskReq,
   updateSubtaskReq
 } from '../api/list'
 import { orgnizationListIdToName, orgnizationToName } from '../util/orgnization'
 import { toast } from '../util/toast'
 import { getLocalStore } from '../util/localStorage'
 import { dayjs } from 'element-plus'
-import { statusWeight, taskStatusMap, appealCategoryMap, taskSourceMap } from '../constant/index'
+import { statusWeight, taskStatusMap, taskSourceMap } from '../constant/index'
 import emitter from '../util/eventbus'
+import { storeToRefs } from 'pinia'
+import { sectionStore } from '../stores/orgList'
 
 const userInfo = ref(getLocalStore('userInfo'))
 const role = ref(getLocalStore('userInfo').role)
@@ -222,6 +229,8 @@ const state = reactive({
     }
   ]
 })
+const setionStore = sectionStore()
+const { sectionList } = storeToRefs(setionStore)
 emitter.on('refreshList', (e) => {
   getListByChooseTab(state.chooseTab)
 })
@@ -267,9 +276,9 @@ const exportAsExcel = async (query) => {
         任务来源: taskSourceMap[i.taskSource],
         来源描述: i.sourceDesc,
         任务内容: i.taskContent,
-        提出部门: orgnizationToName(i.ariseOrg),
-        牵头部门: orgnizationToName(i.leadOrg),
-        协办部门: orgnizationListIdToName(i.assistOrg),
+        提出部门: orgnizationToName(i.ariseOrg, state.orgList),
+        牵头部门: orgnizationToName(i.leadOrg, state.orgList),
+        协办部门: orgnizationListIdToName(i.assistOrg, state.orgList),
         任务目标: i.taskGoal,
         计划完成时间: dayjs(i.finishTime).format('YYYY-MM-DD'),
         实际完成时间: i.actualFinish ? dayjs(i.actualFinish).format('YYYY-MM-DD') : '',
@@ -361,7 +370,8 @@ const insertIdIntoArr = (data) => {
   return result
 }
 
-const init = () => {
+const init = async () => {
+  await setionStore.getOrgList()
   // getSuperviseList()
   switch (role.value) {
     case 'section': // 部门

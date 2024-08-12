@@ -114,7 +114,7 @@ export const routeList = [
             cnName: '配置来源及类别',
             isSider: true,
             auth: ['admin'],
-            component: () => import('../views/createaccount.vue')
+            component: () => import('../views/configcategory.vue')
           }
         ]
       }

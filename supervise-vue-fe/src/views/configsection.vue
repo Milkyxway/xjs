@@ -1,6 +1,18 @@
 <template>
   <el-card>
-    <el-button @click="clickAdd">添加部门</el-button>
+    <!-- <form :v-model="state.search">
+      <div class="row-item">
+        <div class="query-select">
+          <span class="query-title">部门名称</span>
+          <el-input
+            v-model="state.search.searchName"
+            placeholder="请输入部门名称"
+            clearable
+          ></el-input>
+        </div>
+      </div>
+    </form> -->
+    <el-button @click="clickAdd" type="primary">创建部门</el-button>
   </el-card>
   <WhiteSpace />
   <el-table :data="state.tableData">
@@ -56,12 +68,16 @@ const state = reactive({
   tableData: [],
   modalVisible: false,
   selectSection: '',
-  modalTitle: ''
+  modalTitle: '',
+  search: {
+    searchName: ''
+  }
 })
 const formRef = ref()
 const form = reactive({
   sectionName: ''
 })
+
 const tableColumns = [
   {
     columnName: '部门编号',
@@ -117,13 +133,17 @@ const clickAdd = () => {
 }
 
 const addSection = async () => {
-  await addSectionReq({
-    sectionName: form.sectionName,
-    region
+  formRef.value.validate(async (res) => {
+    if (res) {
+      await addSectionReq({
+        sectionName: form.sectionName,
+        region
+      })
+      state.modalVisible = false
+      toast('创建成功！')
+      getOrgList()
+    }
   })
-  state.modalVisible = false
-  toast('创建成功！')
-  getOrgList()
 }
 getOrgList()
 </script>

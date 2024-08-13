@@ -264,6 +264,7 @@ const getChildTaskContent = (list) => {
 
 const exportAsExcel = async (query) => {
   await formatQuery(query)
+  await setionStore.getOrgList()
   const result = await exportDataAsExcelReq({
     ...state.querys,
     taskRegion: region.value
@@ -276,9 +277,9 @@ const exportAsExcel = async (query) => {
         任务来源: taskSourceMap[i.taskSource],
         来源描述: i.sourceDesc,
         任务内容: i.taskContent,
-        提出部门: orgnizationToName(i.ariseOrg, state.orgList),
-        牵头部门: orgnizationToName(i.leadOrg, state.orgList),
-        协办部门: orgnizationListIdToName(i.assistOrg, state.orgList),
+        提出部门: orgnizationToName(i.ariseOrg, sectionList.value),
+        牵头部门: orgnizationToName(i.leadOrg, sectionList.value),
+        协办部门: orgnizationListIdToName(i.assistOrg, sectionList.value),
         任务目标: i.taskGoal,
         计划完成时间: dayjs(i.finishTime).format('YYYY-MM-DD'),
         实际完成时间: i.actualFinish ? dayjs(i.actualFinish).format('YYYY-MM-DD') : '',

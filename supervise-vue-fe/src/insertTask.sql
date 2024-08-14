@@ -380,10 +380,9 @@ where
 UPDATE
   `task_base`.`task_list`
 SET
-  status = 3,
-  statusWeight = 3
+  statusWeight = -1
 where
-  taskId = 133;
+  status = 1;
 
 UPDATE
   `task_base`.`subtask_list`

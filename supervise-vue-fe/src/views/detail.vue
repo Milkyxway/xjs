@@ -282,6 +282,7 @@ watch(
       state.showForm = false
       state.showInput = true
     }
+    state.taskType = val
   }
 )
 state.taskType = '该问题待解决'

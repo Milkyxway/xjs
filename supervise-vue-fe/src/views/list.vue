@@ -256,7 +256,7 @@ const getChildTaskContent = (list) => {
           'YYYY-MM-DD'
         )};实际完成时间:${
           m.actualFinish ? dayjs(m.actualFinish).format('YYYY-MM-DD') : '-'
-        };任务状态${taskStatusMap[m.status]}\n`
+        };实际完成情况:${m.completeDesc};任务状态${taskStatusMap[m.status]}\n`
       })
     : ''
   return str

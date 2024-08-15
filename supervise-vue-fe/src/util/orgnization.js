@@ -1,18 +1,14 @@
-import { orgnizationTree, taskCategory, taskOrigin } from '../constant/index'
-import { getLocalStore } from './localStorage'
+import { taskCategory, taskOrigin } from '../constant/index'
 
-export const orgnizationToName = (id) => {
+export const orgnizationToName = (id, sectionList) => {
   if (!id) return ''
   const orgId = Number(id)
-  const region = getLocalStore('userInfo').region
-  return getOrgnizationListByRegion(region).filter((i) => i.value === orgId)[0].label
+  return sectionList.filter((i) => i.value === orgId)[0].label
 }
 
-export const orgnizationNameToId = (name) => {
-  console.log(name)
+export const orgnizationNameToId = (name, sectionList) => {
   if (!name) return ''
-  const region = getLocalStore('userInfo').region
-  return getOrgnizationListByRegion(region).filter((i) => i.label === name)[0].value
+  return sectionList.filter((i) => i.label === name)[0].value
 }
 
 /**
@@ -20,15 +16,14 @@ export const orgnizationNameToId = (name) => {
  * @param {*} str
  * @returns
  */
-export const orgnizationListIdToName = (str) => {
+export const orgnizationListIdToName = (str, sectionList) => {
   if (str == '' || !str) {
     return ''
   }
   const listOrg = str.split(',')
-  const region = getLocalStore('userInfo').region
   return listOrg
     .map((i) => {
-      return getOrgnizationListByRegion(region).filter((treeItem) => treeItem.value == i)[0].label
+      return sectionList.filter((treeItem) => treeItem.value == i)[0].label
     })
     .join('、')
 }
@@ -42,5 +37,3 @@ export const taskSourceNameToId = (name) => {
   if (!name) return ''
   return taskOrigin.filter((i) => i.label === name)[0].value
 }
-
-export const getOrgnizationListByRegion = (region) => orgnizationTree

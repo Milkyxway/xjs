@@ -66,3 +66,10 @@ CREATE TABLE `user` (
     `region` varchar(45) DEFAULT NULL,
     PRIMARY KEY (`userId`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 51 DEFAULT CHARSET = utf8;
+
+CREATE TABLE `org_list` (
+    `sectionId` int(11) DEFAULT NULL AUTO_INCREMENT,
+    `sectionName` varchar(32) NOT NULL,
+    `region` varchar(45) DEFAULT NULL,
+    PRIMARY KEY (`sectionId`)
+) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8;

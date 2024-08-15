@@ -44,7 +44,7 @@
       >
         <SelectCommon
           v-model:select="state.formData.orgnization"
-          :selections="orgnizationList"
+          :selections="sectionList"
           @updateSelect="
             (val) => {
               if (val !== '') {
@@ -60,13 +60,13 @@
 </template>
 <script setup>
 import { reactive, ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import { sectionStore } from '../stores/orgList'
 import { createAccountReq } from '../api/login'
 import { toast } from '../util/toast'
 import { getLocalStore } from '../util/localStorage'
 import SelectCommon from '../components/SelectCommon.vue'
-import { orgnizationTree } from '../constant'
 const region = ref(getLocalStore('userInfo').region)
-const orgnizationList = orgnizationTree
 const state = reactive({
   formData: {
     username: '',
@@ -77,6 +77,8 @@ const state = reactive({
   }
 })
 const formRef = ref()
+const setionStore = sectionStore()
+const { sectionList } = storeToRefs(setionStore)
 const formLabelWidth = '140px'
 const roleList = [
   {
@@ -111,4 +113,8 @@ const handleSubmit = () => {
     toast()
   })
 }
+const init = async () => {
+  await setionStore.getOrgList()
+}
+init()
 </script>

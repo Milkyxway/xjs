@@ -95,6 +95,28 @@ export const routeList = [
             component: () => import('../views/manageuser.vue')
           }
         ]
+      },
+      {
+        name: '配置模块',
+        path: '/config',
+        component: () => import('../views/PersonalHome.vue'),
+        children: [
+          {
+            path: '/config/section',
+            name: 'configSection',
+            cnName: '配置部门',
+            isSider: true,
+            component: () => import('../views/configsection.vue')
+          },
+          {
+            path: '/config/category',
+            name: 'configCategory',
+            cnName: '配置来源及类别',
+            isSider: true,
+            auth: ['admin'],
+            component: () => import('../views/configcategory.vue')
+          }
+        ]
       }
     ]
   }

@@ -35,7 +35,7 @@
           <span class="query-title">牵头部门</span>
           <el-select placeholder="请选择牵头部门" v-model="queryForm.leadOrg" clearable>
             <el-option
-              v-for="org in orgnizationList"
+              v-for="org in props.orgList"
               v-bind:key="org.key"
               :label="org.label"
               :value="org.value"
@@ -47,7 +47,7 @@
           <span class="query-title">协办部门</span>
           <el-select placeholder="请选择协办部门" v-model="queryForm.assistOrg" clearable>
             <el-option
-              v-for="org in orgnizationList"
+              v-for="org in props.orgList"
               v-bind:key="org.key"
               :label="org.label"
               :value="org.value"
@@ -59,7 +59,7 @@
           <span class="query-title">提出部门</span>
           <el-select v-model="queryForm.ariseOrg" placeholder="请选择提出部门" clearable>
             <el-option
-              v-for="item in orgnizationList"
+              v-for="item in props.orgList"
               v-bind:key="item.key"
               :value="item.value"
               :label="item.label"
@@ -114,13 +114,19 @@
 <script setup>
 import { ref, reactive, computed } from 'vue'
 
-import { taskStatusList, taskCategory, taskOrigin, orgnizationTree } from '../constant'
+import { taskStatusList, taskCategory, taskOrigin } from '../constant'
 import { getLocalStore } from '../util/localStorage'
 import { orgnizationNameToId, taskSourceNameToId, taskCategoryNameToId } from '../util/orgnization'
 import Upload from './Upload.vue'
 import { batchAddTasksReq } from '../api/list'
 import { toast } from '../util/toast'
 const emit = defineEmits(['handleQuery', 'createTask', 'exportAsExcel'])
+const props = defineProps({
+  orgList: {
+    default: [],
+    type: Array
+  }
+})
 const role = getLocalStore('userInfo').role
 const region = getLocalStore('userInfo').region
 let queryForm = reactive({
@@ -135,20 +141,8 @@ let queryForm = reactive({
 })
 const statusList = ref(taskStatusList)
 const taskCategoryList = ref(taskCategory)
-const orgnizationList = orgnizationTree
 const taskOriginRef = ref(taskOrigin)
 
-const styleByRole = computed(() => {
-  return ['admin', 'leader'].includes(role)
-    ? {
-        spanSpace: 2,
-        elSpace: 4
-      }
-    : {
-        spanSpace: 2,
-        elSpace: 6
-      }
-})
 const handleQuery = () => {
   emit('handleQuery', queryForm)
 }

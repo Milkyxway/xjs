@@ -212,3 +212,36 @@ export const exportDataAsExcelReq = (data) => {
     data
   })
 }
+
+/**
+ *获取部门列表
+ */
+export const getOrgListReq = (data) => {
+  return createRequest()({
+    url: '/api/task/getOrgList',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ *修改部门名称
+ */
+export const updateSectionNameReq = (data) => {
+  return createRequest()({
+    url: '/api/task/updateSection',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ *增加部门
+ */
+export const addSectionReq = (data) => {
+  return createRequest()({
+    url: '/api/task/addSection',
+    method: 'post',
+    data
+  })
+}

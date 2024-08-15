@@ -25,6 +25,8 @@
 </template>
 <script setup>
 import { reactive, ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import { sectionStore } from '../stores/orgList'
 import PieCharts from '../components/PieCharts.vue'
 import BarCharts from '../components/BarCharts.vue'
 import GaugeChart from '../components/GaugeChart.vue'
@@ -49,6 +51,8 @@ const state = reactive({
   finishProcess: 0,
   init: false
 })
+const setionStore = sectionStore()
+const { sectionList } = storeToRefs(setionStore)
 
 const formatData = (data, map) => {
   return data.map((i) => {
@@ -57,6 +61,7 @@ const formatData = (data, map) => {
 }
 
 const getPieChart = async () => {
+  await setionStore.getOrgList()
   const categoryPieData = await getPieChartReq({ type: 'category', region: region.value })
   const statusPieData = await getPieChartReq({ type: 'status', region: region.value })
   const sectionTask = await getSectionTaskSortReq({ region: region.value })
@@ -64,7 +69,9 @@ const getPieChart = async () => {
   state.categoryPieData = formatData(categoryPieData.data, taskCategoryMap)
   state.statusPieData = formatData(statusPieData.data, taskStatusMap)
   state.sectionTask = sectionTask.data.map((i) => i.value)
-  state.sectionTaskLegend = sectionTask.data.map((i) => orgnizationToName(i.name))
+  state.sectionTaskLegend = sectionTask.data.map((i) =>
+    orgnizationToName(i.name, sectionList.value)
+  )
   state.finishProcess = ((finishProcess.data.statusTotal / finishProcess.data.total) * 100).toFixed(
     0
   )

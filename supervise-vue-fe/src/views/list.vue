@@ -629,7 +629,9 @@ const changePage = (val) => {
 const refreshList = () => {
   toast()
   getSuperviseList()
-  role.value !== 'admin' && getRelatedMeTask()
+  if (['section', 'sub-leader'].includes(role.value)) {
+    getRelatedMeTask()
+  }
 }
 
 const updateFocus = (params) => {

@@ -54,6 +54,7 @@
         <TableCommon
           :table-data="state.tableData"
           :table-columns="state.tableColumns"
+          @updateFocus="updateFocus"
           @updateTask="updateTask"
           @refreshList="refreshList"
           :total="state.total"
@@ -387,7 +388,7 @@ const init = async () => {
       // todo
       break
     case 'sub-leader': // 分管领导
-      leaderViewTableColumn()
+      subLeaderViewTableColumn()
       getRelatedMeTask()
       break
     case 'employee': // 员工
@@ -448,6 +449,21 @@ const leaderViewTableColumn = () => {
     (i) =>
       ![
         'assistOrg',
+        'createTime',
+        'updateTime',
+        'sourceDesc',
+        'ariseOrg',
+        'actualFinish',
+        'delayReason',
+        'resolveType'
+      ].includes(i.prop)
+  )
+}
+
+const subLeaderViewTableColumn = () => {
+  state.tableColumns = state.tableColumns.filter(
+    (i) =>
+      ![
         'createTime',
         'updateTime',
         'sourceDesc',
@@ -576,6 +592,9 @@ const subleaderManageParts = () => {
     case 'zhangli':
       manageParts = '4,5,11,12,6,8'
       break
+    case 'yanghongyu':
+      manageParts = '4,5,11,12,6,8'
+      break
     default:
       break
   }
@@ -654,6 +673,8 @@ const updateFocus = (params) => {
       return i
     })
   }
+
+  //refreshList()
 }
 
 init()

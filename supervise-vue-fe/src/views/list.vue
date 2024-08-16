@@ -387,7 +387,7 @@ const init = async () => {
       // todo
       break
     case 'sub-leader': // 分管领导
-      leaderViewTableColumn()
+      subLeaderViewTableColumn()
       getRelatedMeTask()
       break
     case 'employee': // 员工
@@ -448,6 +448,20 @@ const leaderViewTableColumn = () => {
     (i) =>
       ![
         'assistOrg',
+        'createTime',
+        'updateTime',
+        'sourceDesc',
+        'ariseOrg',
+        'actualFinish',
+        'delayReason',
+        'resolveType'
+      ].includes(i.prop)
+  )
+}
+const subLeaderViewTableColumn = () => {
+  state.tableColumns = state.tableColumns.filter(
+    (i) =>
+      ![
         'createTime',
         'updateTime',
         'sourceDesc',

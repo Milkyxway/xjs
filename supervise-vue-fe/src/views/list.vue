@@ -592,9 +592,6 @@ const subleaderManageParts = () => {
     case 'zhangli':
       manageParts = '4,5,11,12,6,8'
       break
-    case 'yanghongyu':
-      manageParts = '4,5,11,12,6,8'
-      break
     default:
       break
   }

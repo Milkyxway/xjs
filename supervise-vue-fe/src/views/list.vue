@@ -226,6 +226,10 @@ const state = reactive({
     {
       label: '党委巡察整改',
       name: 5
+    },
+    {
+      label: '市级以上重点任务',
+      name: 6
     }
   ]
 })

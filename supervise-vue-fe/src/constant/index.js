@@ -392,6 +392,10 @@ const taskOrigin = [
   {
     label: '党委巡察整改',
     value: 5
+  },
+  {
+    label: '市级以上重点任务',
+    value: 6
   }
 ]
 const taskSourceMap = {
@@ -399,7 +403,8 @@ const taskSourceMap = {
   2: '公司重点工作',
   3: '安全检查整改',
   4: '审计整改',
-  5: '党委巡察整改'
+  5: '党委巡察整改',
+  6: '市级以上重点任务'
 }
 
 const periodType = [

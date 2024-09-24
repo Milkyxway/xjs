@@ -7,6 +7,14 @@ export const routeList = [
     alias: '/',
     component: () => import('../views/login.vue')
   },
+  {
+    path: '/supervise/newcharts',
+    name: 'newcharts',
+    cnName: '任务报表',
+    isSider: true,
+    auth: ['admin', 'section', 'leader', 'sub-leader'],
+    component: () => import('../views/newcharts.vue')
+  },
   // {
   //   path: '/loginwifi',
   //   name: 'loginwifi',
@@ -44,6 +52,7 @@ export const routeList = [
             auth: ['admin', 'section', 'leader', 'sub-leader'],
             component: () => import('../views/charts.vue')
           },
+
           {
             path: '/supervise/detail/:taskId',
             name: 'detail',

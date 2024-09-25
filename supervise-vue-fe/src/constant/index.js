@@ -51,8 +51,8 @@ const taskStatusList = [
 
 // 状态权重
 const statusWeight = {
-  1: 5, // 待确认权重5
-  2: 4, // 待调整
+  1: -1, // 待确认权重5
+  2: 0, // 待调整
   3: 3, // 进行中
   4: 7, // 已完成
   5: 1, // 已延期
@@ -424,6 +424,10 @@ const taskOrigin = [
   {
     label: '党委巡察整改',
     value: 5
+  },
+  {
+    label: '市级以上重点任务',
+    value: 6
   }
 ]
 const taskSourceMap = {
@@ -431,7 +435,8 @@ const taskSourceMap = {
   2: '公司重点工作',
   3: '安全检查整改',
   4: '审计整改',
-  5: '党委巡察整改'
+  5: '党委巡察整改',
+  6: '市级以上重点任务'
 }
 
 const periodType = [

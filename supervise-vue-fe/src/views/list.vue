@@ -227,6 +227,10 @@ const state = reactive({
     {
       label: '党委巡察整改',
       name: 5
+    },
+    {
+      label: '市级以上重点任务',
+      name: 6
     }
   ]
 })
@@ -449,6 +453,20 @@ const leaderViewTableColumn = () => {
     (i) =>
       ![
         'assistOrg',
+        'createTime',
+        'updateTime',
+        'sourceDesc',
+        'ariseOrg',
+        'actualFinish',
+        'delayReason',
+        'resolveType'
+      ].includes(i.prop)
+  )
+}
+const subLeaderViewTableColumn = () => {
+  state.tableColumns = state.tableColumns.filter(
+    (i) =>
+      ![
         'createTime',
         'updateTime',
         'sourceDesc',

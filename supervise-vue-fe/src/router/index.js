@@ -99,12 +99,14 @@ export const routeList = [
       {
         name: '配置模块',
         path: '/config',
+        auth: ['admin'],
         component: () => import('../views/PersonalHome.vue'),
         children: [
           {
             path: '/config/section',
             name: 'configSection',
             cnName: '配置部门',
+            auth: ['admin'],
             isSider: true,
             component: () => import('../views/configsection.vue')
           },

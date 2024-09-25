@@ -478,21 +478,6 @@ const subLeaderViewTableColumn = () => {
   )
 }
 
-const subLeaderViewTableColumn = () => {
-  state.tableColumns = state.tableColumns.filter(
-    (i) =>
-      ![
-        'createTime',
-        'updateTime',
-        'sourceDesc',
-        'ariseOrg',
-        'actualFinish',
-        'delayReason',
-        'resolveType'
-      ].includes(i.prop)
-  )
-}
-
 const employeeViewTableColumn = () => {
   state.tableColumns = state.tableColumns.filter(
     (i) =>

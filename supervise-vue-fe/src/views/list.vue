@@ -32,7 +32,7 @@
           :orgList="sectionList"
         />
       </el-tab-pane>
-      <el-tab-pane label="所有" name="all">
+      <el-tab-pane label="所有" name="all" v-if="['leader', 'admin'].includes(role)">
         <TableCommon
           :table-data="state.tableData"
           :table-columns="state.tableColumns"
@@ -46,7 +46,7 @@
       </el-tab-pane>
       <el-tab-pane
         v-for="(item, index) in state.leaderTabs"
-        v-if="['leader', 'sub-leader'].includes(role)"
+        v-if="['leader'].includes(role)"
         :label="item.label"
         :name="item.name"
         v-bind:key="index"

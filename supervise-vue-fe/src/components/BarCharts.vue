@@ -17,7 +17,7 @@ import { ref, provide, reactive, watch } from 'vue'
 
 use([CanvasRenderer, TitleComponent, TooltipComponent, LegendComponent, GridComponent, BarChart])
 
-provide(THEME_KEY, 'dark')
+// provide(THEME_KEY, 'dark')
 const props = defineProps({
   data: {
     type: Array
@@ -83,6 +83,6 @@ option.value = commonChart()
 <style scoped>
 .chart {
   /* height: 100vh; */
-  height: 300px;
+  height: 500px;
 }
 </style>

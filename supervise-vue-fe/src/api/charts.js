@@ -23,3 +23,29 @@ export const getFinishProcessReq = (data) => {
     data
   })
 }
+
+/**
+ * 按条件查找任务总数
+ * @param {*} data
+ * @returns
+ */
+export const getTotalTaskReq = (data) => {
+  return createRequest()({
+    url: '/api/chart/totaltasks',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 任务完成比例按部门排序
+ * @param {*} data
+ * @returns
+ */
+export const getFinishRateReq = (data) => {
+  return createRequest()({
+    url: '/api/chart/finishrate',
+    method: 'post',
+    data
+  })
+}

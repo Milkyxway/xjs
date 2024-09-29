@@ -17,7 +17,7 @@ import { ref, provide, reactive, watch } from 'vue'
 
 use([CanvasRenderer, TitleComponent, TooltipComponent, LegendComponent, GridComponent, BarChart])
 
-provide(THEME_KEY, 'dark')
+// provide(THEME_KEY, 'dark')
 const props = defineProps({
   data: {
     type: Array
@@ -34,7 +34,7 @@ watch()
 const commonChart = () => {
   const { data, legend, name } = props
   console.log(data, legend)
-  return (option = {
+  return (option.value = {
     title: {
       text: name
     },
@@ -53,21 +53,19 @@ const commonChart = () => {
     },
     xAxis: {
       type: 'value',
-      boundaryGap: [0, 0.01]
+      boundaryGap: [0, 0.01],
+      splitLine: { show: false }
     },
     yAxis: {
       type: 'category',
-      data: legend
+      data: legend,
+      splitLine: { show: false }
     },
     series: [
       {
-        name: '完成数量',
+        name: '完成比例',
         type: 'bar',
         data
-      },
-      {
-        name: '完成比例',
-        type: 'bar'
       }
       // {
       //   name: '2012',
@@ -83,6 +81,6 @@ option.value = commonChart()
 <style scoped>
 .chart {
   /* height: 100vh; */
-  height: 300px;
+  height: 500px;
 }
 </style>

@@ -8,7 +8,7 @@ export const orgnizationToName = (id, sectionList) => {
 
 export const orgnizationNameToId = (name, sectionList) => {
   if (!name) return ''
-  return sectionList.filter((i) => i.label || i.sectionName === name)[0].value
+  return sectionList.filter((i) => i.label === name)[0].value
 }
 
 /**

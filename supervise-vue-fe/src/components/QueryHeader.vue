@@ -160,10 +160,10 @@ const handleChange = async (data) => {
     return {
       taskContent: i['任务内容'],
       sourceDesc: i['来源描述'],
-      leadOrg: orgnizationNameToId(i['牵头部门']),
+      leadOrg: orgnizationNameToId(i['牵头部门'], props.orgList),
       category: taskCategoryNameToId(i['任务类别']),
       taskSource: taskSourceNameToId(i['任务来源']) || null,
-      ariseOrg: orgnizationNameToId(i['提出部门']) || null,
+      ariseOrg: orgnizationNameToId(i['提出部门'], props.orgList) || null,
       taskRegion: region
     }
   })

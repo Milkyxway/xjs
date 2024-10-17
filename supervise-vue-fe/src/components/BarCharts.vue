@@ -34,7 +34,7 @@ watch()
 const commonChart = () => {
   const { data, legend, name } = props
   console.log(data, legend)
-  return (option = {
+  return (option.value = {
     title: {
       text: name
     },
@@ -53,21 +53,19 @@ const commonChart = () => {
     },
     xAxis: {
       type: 'value',
-      boundaryGap: [0, 0.01]
+      boundaryGap: [0, 0.01],
+      splitLine: { show: false }
     },
     yAxis: {
       type: 'category',
-      data: legend
+      data: legend,
+      splitLine: { show: false }
     },
     series: [
       {
-        name: '完成数量',
+        name: '完成比例',
         type: 'bar',
         data
-      },
-      {
-        name: '完成比例',
-        type: 'bar'
       }
       // {
       //   name: '2012',

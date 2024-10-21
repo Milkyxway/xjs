@@ -237,15 +237,12 @@ getData()
 }
 .light-purple {
   background-image: linear-gradient(90deg, #e23af5, transparent);
-  width: 159px;
 }
 .dark-purple {
   background-image: linear-gradient(90deg, #8550f4, transparent);
-  width: 159px;
 }
 .dark-ble {
   background-image: linear-gradient(90deg, #1d3fd6, transparent);
-  width: 159px;
 }
 .double-line {
   background-color: #11204a;

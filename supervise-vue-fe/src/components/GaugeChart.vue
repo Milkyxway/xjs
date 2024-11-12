@@ -34,7 +34,7 @@ watch()
 const commonChart = () => {
   const { data } = props
   console.log(data)
-  return (option = {
+  return (option.value = {
     tooltip: {
       formatter: '{a} <br/>{b} : {c}%'
     },

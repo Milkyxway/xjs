@@ -4,7 +4,9 @@
       <div class="common-container left-top">
         <div class="common-title">任务完成情况</div>
         <div class="grid">
-          <div>{{ state.totalTask || 123 }}</div>
+          <processchart :totalTask="state.totalTask" />
+          <processchart :totalTask="state.totalTask" />
+          <processchart :totalTask="state.totalTask" />
         </div>
       </div>
       <WhiteSpace></WhiteSpace>
@@ -60,6 +62,7 @@ import { getSectionTaskSortReq, getFinishRateReq } from '../api/charts'
 import BarCharts from '../components/BarCharts.vue'
 import { getLocalStore } from '../util/localStorage'
 import { orgnizationToName } from '../util/orgnization'
+import processchart from '../components/processchart.vue'
 const state = reactive({
   init: false,
   totalTask: 0,
@@ -215,13 +218,12 @@ getData()
 }
 .rank {
   width: 100%;
-  padding: 0 10px;
+  padding: 5px 10px;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
   flex: 1;
-  height: 34px;
 }
 .rank-grid {
   display: inline-block;

@@ -22,18 +22,14 @@ const props = defineProps({
   data: {
     type: Array
   },
-  legend: {
-    type: Array
-  },
-  name: {
+  type: {
     type: String
   }
 })
 let option = ref()
 watch()
 const commonChart = () => {
-  const { data } = props
-  console.log(data)
+  const { data, type } = props
   return (option.value = {
     tooltip: {
       formatter: '{a} <br/>{b} : {c}%'
@@ -42,7 +38,7 @@ const commonChart = () => {
       {
         type: 'gauge',
         center: ['50%', '70%'], //调整位置
-        radius: 70, //外圆半径55
+        radius: 65, //外圆半径55
         startAngle: 180,
         endAngle: 0, // 结束位置
         pointer: {
@@ -71,8 +67,8 @@ const commonChart = () => {
               y: 1,
               r: 1, // 渐变半径，值为0到1之间
               colorStops: [
-                { offset: 0, color: 'rgba(1, 66, 178, 0.2)' }, // 渐变颜色1
-                { offset: 1, color: 'rgba(0, 255, 229, 1)' } // 渐变颜色2
+                { offset: 0, color: '#94ffff' }, // 渐变颜色1
+                { offset: 1, color: '#4397ff' } // 渐变颜色2
               ]
             },
             //饼状图阴影，值越大阴影亮度越高
@@ -97,19 +93,19 @@ const commonChart = () => {
         },
         data: [
           {
-            value: 50, // 可写变量  此value 对应 formatter: '{value}%' 中的Value
+            value: props.data, // 可写变量  此value 对应 formatter: '{value}%' 中的Value
             detail: {
               // 仪表盘边框数据详情，用于显示数据。
               valueAnimation: true, // 是否开启标签的数字动画。
-              offsetCenter: ['0%', '-10%'], // 相对于仪表盘中心的偏移位置，数组第一项是水平方向的偏移，第二项是垂直方向的偏移。可以是绝对的数值，也可以是相对于仪表盘半径的百分比。
-              fontSize: 11 // 文字的字体大小。
+              offsetCenter: ['0%', '-15%'], // 相对于仪表盘中心的偏移位置，数组第一项是水平方向的偏移，第二项是垂直方向的偏移。可以是绝对的数值，也可以是相对于仪表盘半径的百分比。
+              fontSize: 16 // 文字的字体大小。
             }
           }
         ],
         detail: {
           //仪表盘详情，用于显示数据 仪表盘中间数字数据。
-          color: 'rgba(57, 193, 91, 1)', // 文本颜色，默认取数值所在的区间的颜色
-          formatter: '{value}%▴' // 格式化函数或者字符串
+          color: `#fff`, // 文本颜色，默认取数值所在的区间的颜色
+          formatter: `{value}%` // 格式化函数或者字符串
         }
       }
     ]

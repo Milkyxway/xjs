@@ -49,3 +49,29 @@ export const getFinishRateReq = (data) => {
     data
   })
 }
+
+/**
+ * 获取各个任务状态占比
+ * @param {*} data
+ * @returns
+ */
+export const getStatusProportionReq = (data) => {
+  return createRequest()({
+    url: '/api/chart/statusProportion',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 获取本月新增任务
+ * @param {*} data
+ * @returns
+ */
+export const getNewTaskInMonthReq = (data) => {
+  return createRequest()({
+    url: '/api/chart/newTaskinMonth',
+    method: 'post',
+    data
+  })
+}

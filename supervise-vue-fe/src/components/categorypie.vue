@@ -76,6 +76,6 @@ option.value = commonChart()
 <style scoped>
 .chart {
   /* height: 100vh; */
-  height: 200px;
+  height: 240px;
 }
 </style>

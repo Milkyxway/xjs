@@ -38,6 +38,7 @@
       <white-space></white-space>
       <div class="common-container">
         <div class="common-title">月度新增任务</div>
+        <latesttask :data="state.newInMonth" />
       </div>
     </div>
     <div class="right-content">
@@ -73,6 +74,8 @@ import statuspie from '../components/statuspie.vue'
 import sectionrank from '../components/sectionrank.vue'
 import delayrank from '../components/delayrank.vue'
 import categorypie from '../components/categorypie.vue'
+import latesttask from '../components/latesttask.vue'
+import dayjs from 'dayjs'
 const state = reactive({
   init: false,
   totalTask: 0,
@@ -90,7 +93,8 @@ const state = reactive({
   statusLegend: taskStatusList.map((i) => i.label),
   categoryPieData: [],
   delayTasks: [],
-  delaySection: []
+  delaySection: [],
+  newInMonth: []
 })
 const region = ref(getLocalStore('userInfo').region)
 const setionStore = sectionStore()
@@ -123,6 +127,7 @@ const getData = async () => {
   state.sectionTaskLegend = sectionFinishRate.data.map((i) =>
     orgnizationToName(i.leadOrg, sectionList.value)
   )
+  state.newInMonth = formatTaskDetailData(newInMonth.data)
   state.statusPieData = formatData(statusPieData.data, taskStatusMap)
 
   state.categoryPieData = formatData(
@@ -157,6 +162,32 @@ const formDelayTasks = (delayTasks, sectionFinishRate) => {
 const formatData = (data, map) => {
   return data.map((i) => {
     return { name: map[i.name], value: i.value }
+  })
+}
+
+const formatTaskDetailData = (data) => {
+  return data.map((i) => {
+    let loc
+    const commaLoc = i.taskContent.indexOf('，')
+    const fullstopLoc = i.taskContent.indexOf('。')
+    if (commaLoc > -1 && fullstopLoc > -1) {
+      loc = commaLoc > fullstopLoc ? fullstopLoc : commaLoc
+    }
+    if (commaLoc < 0 && fullstopLoc < 0) {
+      loc = 20
+    }
+    if (commaLoc > -1 && fullstopLoc < 0) {
+      loc = commaLoc
+    }
+    if (fullstopLoc > -1 && commaLoc < 0) {
+      loc = fullstopLoc
+    }
+    return {
+      ...i,
+      taskContent: i.taskContent.substr(0, loc),
+      leadOrg: orgnizationToName(i.leadOrg, sectionList.value),
+      createTime: dayjs(i.createTime).format('YYYY-MM-DD')
+    }
   })
 }
 

@@ -12,8 +12,14 @@
             <div>任务完成率</div>
             <processchart :data="state.statusRate.finishRate" type="已完成" />
           </div>
-          <!-- <processchart :data="state.statusRate.processRate" type="进行中" /> -->
-          <!-- <processchart :data="state.statusRate.delayRate" type="已延期" /> -->
+          <!-- <div class="grid-item">
+            <div>任务进行</div>
+            <processchart :data="state.statusRate.processRate" type="进行中" />
+          </div> -->
+          <!-- <div class="grid-item">
+            <div>任务延期</div>
+            <processchart :data="state.statusRate.delayRate" type="已延期" />
+          </div> -->
         </div>
       </div>
       <WhiteSpace></WhiteSpace>
@@ -37,11 +43,12 @@
     <div class="right-content">
       <div class="common-container left-top">
         <div class="common-title">任务类别占比</div>
-        <categorypie :data="state.categoryPieData" name="专项任务类别占比" />
+        <categorypie :data="state.categoryPieData" />
       </div>
       <white-space></white-space>
       <div class="common-container left-top">
         <div class="common-title">任务延期情况</div>
+        <delayrank :data="state.delayTasks" :legend="state.delaySection" />
       </div>
     </div>
   </div>
@@ -55,14 +62,16 @@ import {
   getFinishRateReq,
   getStatusProportionReq,
   getNewTaskInMonthReq,
-  getPieChartReq
+  getPieChartReq,
+  getDelayTasksReq
 } from '../api/charts'
-import { taskStatusList, taskStatusMap } from '../constant/index'
+import { taskStatusList, taskStatusMap, taskCategoryMap } from '../constant/index'
 import { getLocalStore } from '../util/localStorage'
 import { orgnizationToName } from '../util/orgnization'
 import processchart from '../components/processchart.vue'
 import statuspie from '../components/statuspie.vue'
 import sectionrank from '../components/sectionrank.vue'
+import delayrank from '../components/delayrank.vue'
 import categorypie from '../components/categorypie.vue'
 const state = reactive({
   init: false,
@@ -79,7 +88,9 @@ const state = reactive({
   sectionTask: [],
   sectionTaskLegend: [],
   statusLegend: taskStatusList.map((i) => i.label),
-  categoryPieData: []
+  categoryPieData: [],
+  delayTasks: [],
+  delaySection: []
 })
 const region = ref(getLocalStore('userInfo').region)
 const setionStore = sectionStore()
@@ -106,13 +117,41 @@ const getData = async () => {
   const newInMonth = await getNewTaskInMonthReq({ region: region.value })
   const statusPieData = await getPieChartReq({ type: 'status', region: region.value })
   const categoryPieData = await getPieChartReq({ type: 'category', region: region.value })
+  const delayTasks = await getDelayTasksReq({ region: region.value })
   formatProportionData(statusProportionRes)
   state.sectionTask = sectionFinishRate.data
   state.sectionTaskLegend = sectionFinishRate.data.map((i) =>
     orgnizationToName(i.leadOrg, sectionList.value)
   )
   state.statusPieData = formatData(statusPieData.data, taskStatusMap)
+
+  state.categoryPieData = formatData(
+    categoryPieData.data.filter((i) => i.name > 0),
+    taskCategoryMap
+  )
+  state.categoryPieData.sort((a, b) => b.value - a.value)
+  formDelayTasks(delayTasks.data, sectionFinishRate.data)
   state.init = true
+}
+
+const formDelayTasks = (delayTasks, sectionFinishRate) => {
+  let data = []
+  delayTasks.map((i) => {
+    return sectionFinishRate.map((j) => {
+      if (i.leadOrg === j.leadOrg) {
+        data.push({
+          ...i,
+          total: j.total,
+          rate: (i.count / j.total).toFixed(2)
+        })
+      }
+    })
+  })
+  data.sort((a, b) => b.rate - a.rate)
+  // state.delayTasks = data.slice(0, 5)
+  state.delayTasks = data
+  // state.delaySection = data.slice(0, 5).map((i) => orgnizationToName(i.leadOrg, sectionList.value))
+  state.delaySection = data.map((i) => orgnizationToName(i.leadOrg, sectionList.value))
 }
 
 const formatData = (data, map) => {

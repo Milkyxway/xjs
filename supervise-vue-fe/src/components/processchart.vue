@@ -71,9 +71,10 @@ const commonChart = () => {
                 { offset: 1, color: '#4397ff' } // 渐变颜色2
               ]
             },
+            borderRadius: 5,
             //饼状图阴影，值越大阴影亮度越高
-            shadowBlur: 24, // 模糊
-            shadowColor: 'rgba(0, 255, 229, 0.5)' // 圆环阴影色
+            shadowBlur: 24 // 模糊
+            // shadowColor: 'rgba(0, 255, 229, 0.5)' ,// 圆环阴影色
           }
         },
         splitLine: {

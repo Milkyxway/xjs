@@ -27,31 +27,43 @@ let option = ref()
 const commonChart = () => {
   const { data, legend, name } = props
   return {
-    title: {
-      text: name,
-      left: 'center'
-    },
     tooltip: {
       trigger: 'item',
       formatter: '{a} <br/>{b} : {c} ({d}%)'
     },
     // legend: {
-    //   orient: 'vertical',
-    //   left: 'left',
-    //   data: legend
+    //   left: 'center',
+    //   top: 'bottom',
+    //   data: data.map((i) => i.name)
     // },
+    toolbox: {
+      show: true,
+      feature: {
+        mark: { show: true },
+        dataView: { show: true, readOnly: false },
+        restore: { show: true },
+        saveAsImage: { show: true }
+      }
+    },
+    color: ['#E23AF5', '#7D4BFF', '#4164F3', '#94FFFF', '#4397FF', '#8BB6FF'],
     series: [
       {
-        name,
+        name: '专项任务类别占比',
         type: 'pie',
-        radius: '55%',
-        center: ['50%', '60%'],
+        radius: [30, 100],
+        center: ['50%', '50%'],
+        roseType: 'area',
+        itemStyle: {
+          borderRadius: 20
+        },
         data,
-        emphasis: {
-          itemStyle: {
-            shadowBlur: 10,
-            shadowOffsetX: 0,
-            shadowColor: 'rgba(0, 0, 0, 0.5)'
+        itemStyle: {
+          normal: {
+            //具体颜色显示
+            borderRadius: 5,
+            //饼状图阴影，值越大阴影亮度越高
+            shadowBlur: 70 // 模糊
+            // shadowColor: 'rgba(0, 255, 229, 0.5)' // 圆环阴影色
           }
         }
       }
@@ -64,6 +76,6 @@ option.value = commonChart()
 <style scoped>
 .chart {
   /* height: 100vh; */
-  height: 300px;
+  height: 200px;
 }
 </style>

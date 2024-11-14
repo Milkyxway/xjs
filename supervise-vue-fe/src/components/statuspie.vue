@@ -26,6 +26,8 @@ const props = defineProps({
 let option = ref()
 const commonChart = () => {
   const { data, legend, name } = props
+
+  const dataCopy = data.sort((a, b) => b.value - a.value)
   return {
     title: {
       text: name,
@@ -40,13 +42,14 @@ const commonChart = () => {
     //   left: 'left',
     //   data: legend
     // },
+    color: ['#E23AF5', '#7D4BFF', '#4164F3', '#94FFFF', '#4397FF', '#8BB6FF'],
     series: [
       {
-        name,
+        name: '专项任务状态占比',
         type: 'pie',
-        radius: '55%',
-        center: ['50%', '60%'],
-        data,
+        radius: '98%',
+        center: ['50%', '50%'],
+        data: dataCopy,
         emphasis: {
           itemStyle: {
             shadowBlur: 10,
@@ -64,6 +67,6 @@ option.value = commonChart()
 <style scoped>
 .chart {
   /* height: 100vh; */
-  height: 300px;
+  height: 250px;
 }
 </style>

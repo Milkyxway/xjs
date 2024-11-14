@@ -75,3 +75,16 @@ export const getNewTaskInMonthReq = (data) => {
     data
   })
 }
+
+/**
+ * 获取延期的任务分部门
+ * @param {*} data
+ * @returns
+ */
+export const getDelayTasksReq = (data) => {
+  return createRequest()({
+    url: '/api/chart/delaytasks',
+    method: 'post',
+    data
+  })
+}

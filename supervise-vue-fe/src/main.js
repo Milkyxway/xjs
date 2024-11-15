@@ -3,6 +3,9 @@ import 'element-plus/dist/index.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import Highcharts from 'highcharts'
+import HighchartsVue from 'highcharts-vue'
+import highcharts3d from 'highcharts/highcharts-3d'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 // import './util/rem'
 import App from './App.vue'
@@ -17,7 +20,9 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 
 app.use(createPinia())
 app.use(router)
-
+app.use(Highcharts)
+app.use(HighchartsVue)
+highcharts3d(Highcharts)
 app.mount('#app')
 app.directive('showByAuth', (el, binding) => {
   // 这会在 `mounted` 和 `updated` 时都调用

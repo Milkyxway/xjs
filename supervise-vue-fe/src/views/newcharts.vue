@@ -33,7 +33,8 @@
       <white-space></white-space>
       <div class="center-top">
         <div class="common-title">任务状态占比</div>
-        <statuspie :data="state.statusPieData" :legend="state.statusLegend" />
+        <pie3d :data="state.statusPie3dData" :total="state.statusRate.total" />
+        <!-- <statuspie :data="state.statusPieData" :legend="state.statusLegend" /> -->
       </div>
       <white-space></white-space>
       <div class="common-container">
@@ -49,7 +50,8 @@
       <white-space></white-space>
       <div class="common-container left-top">
         <div class="common-title">任务延期情况</div>
-        <delayrank :data="state.delayTasks" :legend="state.delaySection" />
+        <!-- <delayrank :data="state.delayTasks" :legend="state.delaySection" /> -->
+        <bar3d :data="state.delayData3d" />
       </div>
     </div>
   </div>
@@ -75,6 +77,8 @@ import sectionrank from '../components/sectionrank.vue'
 import delayrank from '../components/delayrank.vue'
 import categorypie from '../components/categorypie.vue'
 import latesttask from '../components/latesttask.vue'
+import pie3d from '../components/pie3d.vue'
+import bar3d from '../components/bar3d.vue'
 import dayjs from 'dayjs'
 const state = reactive({
   init: false,
@@ -87,6 +91,7 @@ const state = reactive({
     total: 0
   },
   statusPieData: [],
+  statusPie3dData: [],
   statusLegend: [],
   sectionTask: [],
   sectionTaskLegend: [],
@@ -94,7 +99,8 @@ const state = reactive({
   categoryPieData: [],
   delayTasks: [],
   delaySection: [],
-  newInMonth: []
+  newInMonth: [],
+  delayData3d: []
 })
 const region = ref(getLocalStore('userInfo').region)
 const setionStore = sectionStore()
@@ -129,13 +135,14 @@ const getData = async () => {
   )
   state.newInMonth = formatTaskDetailData(newInMonth.data)
   state.statusPieData = formatData(statusPieData.data, taskStatusMap)
-
+  state.statusPie3dData = format3dData(statusPieData.data, taskStatusMap) // 3d饼图数据
   state.categoryPieData = formatData(
     categoryPieData.data.filter((i) => i.name > 0),
     taskCategoryMap
   )
   state.categoryPieData.sort((a, b) => b.value - a.value)
   formDelayTasks(delayTasks.data, sectionFinishRate.data)
+  state.delayData3d = format3dBar(delayTasks.data, sectionFinishRate.data)
   state.init = true
 }
 
@@ -189,6 +196,31 @@ const formatTaskDetailData = (data) => {
       createTime: dayjs(i.createTime).format('YYYY-MM-DD')
     }
   })
+}
+
+const format3dData = (data, map) => {
+  const arr = []
+  data.map((i) => {
+    arr.push([map[i.name], i.value])
+  })
+  arr.sort((a, b) => b[1] - a[1])
+  return arr
+}
+
+const format3dBar = (delayTasks, sectionFinishRate) => {
+  let data = []
+  delayTasks.map((i) => {
+    return sectionFinishRate.map((j) => {
+      if (i.leadOrg === j.leadOrg) {
+        data.push([
+          orgnizationToName(i.leadOrg, sectionList.value),
+          Number((i.count / j.total).toFixed(2))
+        ])
+      }
+    })
+  })
+  data.sort((a, b) => b[1] - a[1])
+  return data
 }
 
 getData()

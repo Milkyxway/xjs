@@ -1,7 +1,6 @@
-<template>
-  <highcharts :options="chartOptions" />
-</template>
+<template>  <highcharts :options="chartOptions" /></template>
 <script setup>
+import { onMounted, onBeforeUnmount, ref } from 'vue'
 const props = defineProps({
   data: {
     type: Array
@@ -10,41 +9,50 @@ const props = defineProps({
     type: Number
   }
 })
-const chartOptions = {
+const getScale = () => {
+  const viewWidth =
+    window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
+
+  if (viewWidth <= 1500) {
+    return {
+      width: 300,
+      height: 280
+    }
+  }
+  return {
+    width: 500,
+    height: 480
+  }
+}
+const chartOptions = ref({
   chart: {
     renderTo: 'container',
     type: 'column',
     options3d: {
       enabled: true,
-      alpha: 10,
-      beta: 10,
-      depth: 50,
-      viewDistance: 20
+      alpha: 0,
+      beta: 15,
+      depth: 50
+      // viewDistance: 15
     },
-    backgroundColor: 'transparent',
-    width: 400,
-    height: 400,
-    color: '#fff'
+    width: getScale().width,
+    height: getScale().height,
+    backgroundColor: 'transparent'
   },
-  colorAxis: {
-    gridLineColor: 'transparent'
-  },
-  labels: {
-    style: {
-      color: '#fff'
-    }
-  },
+  colorAxis: {},
   xAxis: {
-    type: '部门'
+    type: 'category',
+    className: 'x-axis'
   },
   yAxis: {
     title: {
       enabled: false
-    }
+    },
+    className: 'x-axis'
   },
   tooltip: {
     headerFormat: '<b>{point.key}</b><br>',
-    pointFormat: '延期任务比例: {point.y}'
+    pointFormat: '延期任务占比: {point.y}'
   },
   title: {
     text: '',
@@ -69,5 +77,38 @@ const chartOptions = {
       colorByPoint: true
     }
   ]
-}
+})
+onMounted(() => {
+  window.addEventListener('resize', (e) => {
+    var width =
+      window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
+    const scale = width / 2560
+    chartOptions.value = {
+      ...chartOptions.value,
+      chart: {
+        renderTo: 'container',
+        type: 'column',
+        options3d: {
+          enabled: true,
+          alpha: 0,
+          beta: 15,
+          depth: 50
+          // viewDistance: 15
+        },
+        width: 500 * scale,
+        height: 480 * scale,
+        backgroundColor: 'transparent'
+      }
+    }
+  })
+})
+onBeforeUnmount(() => window.removeEventListener('resize'))
 </script>
+<style>
+.x-axis {
+  text {
+    color: #fff !important;
+    fill: #fff !important;
+  }
+}
+</style>

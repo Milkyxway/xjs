@@ -2,6 +2,7 @@
   <highcharts :options="chartOptions" />
 </template>
 <script setup>
+import { onMounted, onBeforeUnmount, ref } from 'vue'
 const props = defineProps({
   data: {
     type: Array
@@ -10,7 +11,23 @@ const props = defineProps({
     type: Number
   }
 })
-const chartOptions = {
+
+const getScale = () => {
+  const viewWidth =
+    window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
+
+  if (viewWidth <= 1500) {
+    return {
+      width: 600,
+      height: 300
+    }
+  }
+  return {
+    width: 1100,
+    height: 500
+  }
+}
+const chartOptions = ref({
   chart: {
     type: 'pie',
     options3d: {
@@ -18,8 +35,8 @@ const chartOptions = {
       alpha: 45
     },
     backgroundColor: 'transparent',
-    width: 900,
-    height: 400
+    width: getScale().width,
+    height: getScale().height
   },
   title: {
     text: '',
@@ -32,7 +49,7 @@ const chartOptions = {
   plotOptions: {
     pie: {
       innerSize: 100,
-      depth: 60,
+      depth: 100,
       dataLabels: {
         enabled: true, //是否显示饼图的线形tip
         distance: 10, //设置引导线的长度 饼图的大小
@@ -57,5 +74,26 @@ const chartOptions = {
     }
   ],
   colors: ['#E23AF5', '#7D4BFF', '#4164F3', '#94FFFF', '#4397FF', '#8BB6FF']
-}
+})
+onMounted(() => {
+  window.addEventListener('resize', (e) => {
+    var width =
+      window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
+    const scale = width / 2560
+    chartOptions.value = {
+      ...chartOptions.value,
+      chart: {
+        type: 'pie',
+        options3d: {
+          enabled: true,
+          alpha: 45
+        },
+        backgroundColor: 'transparent',
+        width: 1100 * scale,
+        height: 500 * scale
+      }
+    }
+  })
+})
+onBeforeUnmount(() => window.removeEventListener('resize'))
 </script>

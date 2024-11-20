@@ -57,7 +57,7 @@
   </div>
 </template>
 <script setup>
-import { reactive, ref, computed } from 'vue'
+import { reactive, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { sectionStore } from '../stores/orgList'
 import WhiteSpace from '../components/WhiteSpace.vue'
@@ -79,6 +79,7 @@ import categorypie from '../components/categorypie.vue'
 import latesttask from '../components/latesttask.vue'
 import pie3d from '../components/pie3d.vue'
 import bar3d from '../components/bar3d.vue'
+
 import dayjs from 'dayjs'
 const state = reactive({
   init: false,
@@ -105,6 +106,7 @@ const state = reactive({
 const region = ref(getLocalStore('userInfo').region)
 const setionStore = sectionStore()
 const { sectionList } = storeToRefs(setionStore)
+const chartRef = ref(null)
 
 const formatProportionData = (data) => {
   const {

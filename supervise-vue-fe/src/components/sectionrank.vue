@@ -53,7 +53,8 @@ const formatRate = computed(() => {
 <style scoped>
 .rank {
   width: 100%;
-  padding: 5px 10px;
+  padding: 4px 10px;
+  /* line-height: 2.1; */
   display: flex;
   flex-direction: row;
   justify-content: flex-start;

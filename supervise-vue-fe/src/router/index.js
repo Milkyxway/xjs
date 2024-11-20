@@ -45,12 +45,12 @@ export const routeList = [
             }
           },
           {
-            path: '/supervise/charts',
+            path: '/supervise/newcharts',
             name: 'charts',
             cnName: '任务报表',
             isSider: true,
             auth: ['admin', 'section', 'leader', 'sub-leader'],
-            component: () => import('../views/charts.vue')
+            component: () => import('../views/newcharts.vue')
           },
 
           {

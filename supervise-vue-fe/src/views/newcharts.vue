@@ -12,10 +12,10 @@
             <div>任务完成率</div>
             <processchart :data="state.statusRate.finishRate" type="已完成" />
           </div>
-          <!-- <div class="grid-item">
-            <div>任务进行</div>
+          <div class="grid-item">
+            <div>任务进行中</div>
             <processchart :data="state.statusRate.processRate" type="进行中" />
-          </div> -->
+          </div>
           <!-- <div class="grid-item">
             <div>任务延期</div>
             <processchart :data="state.statusRate.delayRate" type="已延期" />

@@ -126,6 +126,14 @@ export const routeList = [
             isSider: true,
             auth: ['admin'],
             component: () => import('../views/configcategory.vue')
+          },
+          {
+            path: '/config/manageParts',
+            name: 'configManageParts',
+            cnName: '配置管辖部门',
+            isSider: true,
+            auth: ['admin'],
+            component: () => import('../views/configManageParts.vue')
           }
         ]
       }

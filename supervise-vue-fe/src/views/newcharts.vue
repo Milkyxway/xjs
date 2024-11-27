@@ -29,7 +29,7 @@
       </div>
     </div>
     <div class="center-content">
-      <div class="title">无锡专项任务督办平台驾驶舱</div>
+      <div class="title">泰州专项任务督办平台驾驶舱</div>
       <white-space></white-space>
       <div class="center-top">
         <div class="common-title">任务状态占比</div>

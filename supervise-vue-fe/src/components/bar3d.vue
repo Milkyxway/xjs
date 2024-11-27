@@ -14,16 +14,22 @@ const getScale = () => {
     window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
   const viewHeight =
     window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
-  if (viewWidth <= 1550) {
+
+  if (viewWidth / viewHeight >= 1.97) {
+    return {
+      width: 300,
+      height: 240
+    }
+  } else if (viewWidth <= 1500) {
     return {
       width: 300,
       height: 280
     }
-  }
-  return {
-    width: 500,
-    height: 480
-  }
+  } else
+    return {
+      width: 500,
+      height: 480
+    }
 }
 const chartOptions = ref({
   chart: {

@@ -36,10 +36,11 @@ const getRadius = () => {
     window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
   const viewHeight =
     window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
-  if (viewWidth <= 1550) {
+  if (viewWidth / viewHeight >= 1.97) {
+    return 45
+  } else if (viewWidth <= 1500) {
     return 50
-  }
-  return 75
+  } else return 75
 }
 
 const commonChart = () => {

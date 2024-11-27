@@ -36,7 +36,7 @@ const getRadius = () => {
     window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
   const viewHeight =
     window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
-  if (viewWidth <= 1500 || viewWidth / viewHeight <= 1.8) {
+  if (viewWidth <= 1550) {
     return 50
   }
   return 75

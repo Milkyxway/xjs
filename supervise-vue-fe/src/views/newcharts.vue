@@ -230,6 +230,7 @@ getData()
 <style scoped>
 .chart-page {
   width: 100%;
+  min-height: 100vh;
   background: #0a1635;
   padding: 22px;
   display: flex;

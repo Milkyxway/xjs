@@ -28,7 +28,7 @@ const getScale = () => {
   } else
     return {
       width: 500,
-      height: 480
+      height: 450
     }
 }
 const chartOptions = ref({

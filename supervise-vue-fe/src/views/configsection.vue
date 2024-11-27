@@ -46,7 +46,15 @@
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="state.modalVisible = false">取消</el-button>
+        <el-button
+          @click="
+            () => {
+              form.sectionName = ''
+              state.modalVisible = false
+            }
+          "
+          >取消</el-button
+        >
         <el-button
           type="primary"
           @click="state.modalTitle === '修改部门' ? updateSectionName() : addSection()"
@@ -134,16 +142,15 @@ const clickAdd = () => {
 
 const addSection = async () => {
   formRef.value.validate(async (res) => {
-    if (res) {
-      await addSectionReq({
-        sectionName: form.sectionName,
-        region
-      })
-      state.modalVisible = false
-      toast('创建成功！')
-      getOrgList()
-    }
+    await addSectionReq({
+      sectionName: form.sectionName,
+      region
+    })
+    state.modalVisible = false
+    toast('创建成功！')
+    getOrgList()
   })
 }
+
 getOrgList()
 </script>

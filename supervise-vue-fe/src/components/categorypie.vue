@@ -30,10 +30,12 @@ const getRadius = () => {
     window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
   const viewHeight =
     window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
-  if (viewWidth <= 1550) {
+
+  if (viewWidth / viewHeight >= 1.97) {
+    return [15, 75]
+  } else if (viewWidth <= 1500) {
     return [18, 90]
-  }
-  return [30, 150]
+  } else return [30, 150]
 }
 const commonChart = () => {
   const { data, legend, name } = props

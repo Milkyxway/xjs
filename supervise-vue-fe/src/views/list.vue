@@ -101,6 +101,7 @@ import { sectionStore } from '../stores/orgList'
 const userInfo = ref(getLocalStore('userInfo'))
 const role = ref(getLocalStore('userInfo').role)
 const username = ref(getLocalStore('userInfo').username)
+const manageParts = ref(getLocalStore('userInfo').manageParts)
 const region = ref(getLocalStore('userInfo').region)
 const state = reactive({
   chooseTab: 'mine',
@@ -615,7 +616,7 @@ const getRelatedMeTask = async () => {
     params = {
       ...params,
       role: role.value,
-      manageParts: subleaderManageParts()
+      manageParts: manageParts.value
     }
   }
   const result = await myTaskReq(params)

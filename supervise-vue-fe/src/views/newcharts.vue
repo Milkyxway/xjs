@@ -4,29 +4,28 @@
       <div class="common-container left-top">
         <div class="common-title">任务完成情况</div>
         <div class="grid">
-          <div>{{ state.totalTask || 123 }}</div>
+          <div class="grid-item">
+            <div>任务总数</div>
+            <div class="total-amount">{{ state.statusRate.total }}</div>
+          </div>
+          <div class="grid-item">
+            <div>任务完成率</div>
+            <processchart :data="state.statusRate.finishRate" type="已完成" />
+          </div>
+          <div class="grid-item">
+            <div>任务进行中</div>
+            <processchart :data="state.statusRate.processRate" type="进行中" />
+          </div>
+          <!-- <div class="grid-item">
+            <div>任务延期</div>
+            <processchart :data="state.statusRate.delayRate" type="已延期" />
+          </div> -->
         </div>
       </div>
       <WhiteSpace></WhiteSpace>
       <div class="common-container">
         <div class="common-title">部门完成情况排序</div>
-        <div class="rank rank-title">
-          <span class="rank-index">排名</span>
-          <span class="rank-grid">部门名称</span>
-          <span class="rank-index">任务总数</span>
-          <span class="rank-index">完成比例</span>
-        </div>
-        <div
-          v-for="(item, index) in state.sectionTask"
-          v-bind:key="index"
-          :class="getStyleByIndex(index)"
-        >
-          <span class="rank-index">{{ index + 1 }}</span>
-          <span class="rank-grid">{{ orgnizationToName(item.leadOrg, sectionList) }}</span>
-          <span class="rank-index">{{ item.total }}</span>
-          <span class="rank-index">{{ item.rate }}</span>
-        </div>
-        <!-- <BarCharts :data="state.sectionTask" :legend="state.sectionTaskLegend" /> -->
+        <sectionrank :sectionTask="state.sectionTask" :sectionList="sectionList"></sectionrank>
       </div>
     </div>
     <div class="center-content">
@@ -34,70 +33,198 @@
       <white-space></white-space>
       <div class="center-top">
         <div class="common-title">任务状态占比</div>
+        <pie3d :data="state.statusPie3dData" :total="state.statusRate.total" />
+        <!-- <statuspie :data="state.statusPieData" :legend="state.statusLegend" /> -->
       </div>
       <white-space></white-space>
       <div class="common-container">
         <div class="common-title">月度新增任务</div>
+        <latesttask :data="state.newInMonth" />
       </div>
     </div>
     <div class="right-content">
       <div class="common-container left-top">
         <div class="common-title">任务类别占比</div>
+        <categorypie :data="state.categoryPieData" />
       </div>
       <white-space></white-space>
       <div class="common-container left-top">
         <div class="common-title">任务延期情况</div>
+        <!-- <delayrank :data="state.delayTasks" :legend="state.delaySection" /> -->
+        <bar3d :data="state.delayData3d" />
       </div>
     </div>
   </div>
 </template>
 <script setup>
-import { reactive, ref, computed } from 'vue'
+import { reactive, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { sectionStore } from '../stores/orgList'
 import WhiteSpace from '../components/WhiteSpace.vue'
-import { getSectionTaskSortReq, getFinishRateReq } from '../api/charts'
-import BarCharts from '../components/BarCharts.vue'
+import {
+  getFinishRateReq,
+  getStatusProportionReq,
+  getNewTaskInMonthReq,
+  getPieChartReq,
+  getDelayTasksReq
+} from '../api/charts'
+import { taskStatusList, taskStatusMap, taskCategoryMap } from '../constant/index'
 import { getLocalStore } from '../util/localStorage'
 import { orgnizationToName } from '../util/orgnization'
+import processchart from '../components/processchart.vue'
+import statuspie from '../components/statuspie.vue'
+import sectionrank from '../components/sectionrank.vue'
+import delayrank from '../components/delayrank.vue'
+import categorypie from '../components/categorypie.vue'
+import latesttask from '../components/latesttask.vue'
+import pie3d from '../components/pie3d.vue'
+import bar3d from '../components/bar3d.vue'
+
+import dayjs from 'dayjs'
 const state = reactive({
   init: false,
   totalTask: 0,
   finishProcess: 0,
+  statusRate: {
+    finishRate: 0,
+    processRate: 0,
+    delayRate: 0,
+    total: 0
+  },
+  statusPieData: [],
+  statusPie3dData: [],
+  statusLegend: [],
   sectionTask: [],
-  sectionTaskLegend: []
+  sectionTaskLegend: [],
+  statusLegend: taskStatusList.map((i) => i.label),
+  categoryPieData: [],
+  delayTasks: [],
+  delaySection: [],
+  newInMonth: [],
+  delayData3d: []
 })
 const region = ref(getLocalStore('userInfo').region)
 const setionStore = sectionStore()
 const { sectionList } = storeToRefs(setionStore)
+const chartRef = ref(null)
 
-const getStyleByIndex = computed(() => {
-  return function (index) {
-    let className = 'rank'
-    if (index === 0) {
-      className += ` light-purple`
-    } else if (index == 1) {
-      className += ` dark-purple`
-    } else if (index == 2) {
-      className += ` dark-ble`
-    }
-    if (index % 2 === 0) {
-      className += ` double-line`
-    }
-    return className
-  }
-})
+const formatProportionData = (data) => {
+  const {
+    data: { finishCount, delayCount, processCount, totalCount }
+  } = data
+  const finish = finishCount[0].value
+  const total = totalCount[0].value
+  const delay = delayCount[0].value
+  const process = processCount[0].value
+  state.statusRate.finishRate = ((finish / total).toFixed(2) * 100).toFixed(0)
+  state.statusRate.processRate = ((process / total).toFixed(2) * 100).toFixed(0)
+  state.statusRate.delayRate = ((delay / total).toFixed(2) * 100).toFixed(0)
+  state.statusRate.total = total
+}
 
 const getData = async () => {
   await setionStore.getOrgList()
+  const statusProportionRes = await getStatusProportionReq({ region: region.value })
   const sectionFinishRate = await getFinishRateReq({ region: region.value })
+  const newInMonth = await getNewTaskInMonthReq({ region: region.value })
+  const statusPieData = await getPieChartReq({ type: 'status', region: region.value })
+  const categoryPieData = await getPieChartReq({ type: 'category', region: region.value })
+  const delayTasks = await getDelayTasksReq({ region: region.value })
+  formatProportionData(statusProportionRes)
   state.sectionTask = sectionFinishRate.data
   state.sectionTaskLegend = sectionFinishRate.data.map((i) =>
     orgnizationToName(i.leadOrg, sectionList.value)
   )
-  console.log(state.sectionTaskLegend)
+  state.newInMonth = formatTaskDetailData(newInMonth.data)
+  state.statusPieData = formatData(statusPieData.data, taskStatusMap)
+  state.statusPie3dData = format3dData(statusPieData.data, taskStatusMap) // 3d饼图数据
+  state.categoryPieData = formatData(
+    categoryPieData.data.filter((i) => i.name > 0),
+    taskCategoryMap
+  )
+  state.categoryPieData.sort((a, b) => b.value - a.value)
+  formDelayTasks(delayTasks.data, sectionFinishRate.data)
+  state.delayData3d = format3dBar(delayTasks.data, sectionFinishRate.data)
   state.init = true
 }
+
+const formDelayTasks = (delayTasks, sectionFinishRate) => {
+  let data = []
+  delayTasks.map((i) => {
+    return sectionFinishRate.map((j) => {
+      if (i.leadOrg === j.leadOrg) {
+        data.push({
+          ...i,
+          total: j.total,
+          rate: (i.count / j.total).toFixed(2)
+        })
+      }
+    })
+  })
+  data.sort((a, b) => b.rate - a.rate)
+  // state.delayTasks = data.slice(0, 5)
+  state.delayTasks = data
+  // state.delaySection = data.slice(0, 5).map((i) => orgnizationToName(i.leadOrg, sectionList.value))
+  state.delaySection = data.map((i) => orgnizationToName(i.leadOrg, sectionList.value))
+}
+
+const formatData = (data, map) => {
+  return data.map((i) => {
+    return { name: map[i.name], value: i.value }
+  })
+}
+
+const formatTaskDetailData = (data) => {
+  return data.map((i) => {
+    let loc
+    const commaLoc = i.taskContent.indexOf('，')
+    const fullstopLoc = i.taskContent.indexOf('。')
+    if (commaLoc > -1 && fullstopLoc > -1) {
+      loc = commaLoc > fullstopLoc ? fullstopLoc : commaLoc
+    }
+    if (commaLoc < 0 && fullstopLoc < 0) {
+      loc = 20
+    }
+    if (commaLoc > -1 && fullstopLoc < 0) {
+      loc = commaLoc
+    }
+    if (fullstopLoc > -1 && commaLoc < 0) {
+      loc = fullstopLoc
+    }
+    return {
+      ...i,
+      taskContent: i.taskContent.substr(0, loc),
+      leadOrg: orgnizationToName(i.leadOrg, sectionList.value),
+      createTime: dayjs(i.createTime).format('YYYY-MM-DD')
+    }
+  })
+}
+
+const format3dData = (data, map) => {
+  const arr = []
+  data.map((i) => {
+    arr.push([map[i.name], i.value])
+  })
+  arr.sort((a, b) => b[1] - a[1])
+  return arr
+}
+
+const format3dBar = (delayTasks, sectionFinishRate) => {
+  let data = []
+  delayTasks.map((i) => {
+    return sectionFinishRate.map((j) => {
+      if (i.leadOrg === j.leadOrg) {
+        data.push([
+          orgnizationToName(i.leadOrg, sectionList.value),
+          Number((i.count / j.total).toFixed(2))
+        ])
+      }
+    })
+  })
+  data.sort((a, b) => b[1] - a[1])
+  return data
+}
+
 getData()
 </script>
 <style scoped>
@@ -187,7 +314,22 @@ getData()
   height: 100%;
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.grid-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 50%;
+  height: 100px;
+  font-size: 16px;
+  color: #fff;
+}
+.total-amount {
+  font-size: 32px;
 }
 
 .right-content {
@@ -212,39 +354,5 @@ getData()
   align-items: flex-start;
   width: 100%;
   margin-left: 65px;
-}
-.rank {
-  width: 100%;
-  padding: 0 10px;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: flex-start;
-  flex: 1;
-  height: 34px;
-}
-.rank-grid {
-  display: inline-block;
-  width: 34%;
-}
-.rank-index {
-  display: inline-block;
-  width: 22%;
-}
-.rank-title {
-  color: #6ccee6;
-  margin-bottom: 5px;
-}
-.light-purple {
-  background-image: linear-gradient(90deg, #e23af5, transparent);
-}
-.dark-purple {
-  background-image: linear-gradient(90deg, #8550f4, transparent);
-}
-.dark-ble {
-  background-image: linear-gradient(90deg, #1d3fd6, transparent);
-}
-.double-line {
-  background-color: #11204a;
 }
 </style>

@@ -45,12 +45,12 @@ export const routeList = [
             }
           },
           {
-            path: '/supervise/charts',
+            path: '/supervise/newcharts',
             name: 'charts',
             cnName: '任务报表',
             isSider: true,
             auth: ['admin', 'section', 'leader', 'sub-leader'],
-            component: () => import('../views/charts.vue')
+            component: () => import('../views/newcharts.vue')
           },
 
           {
@@ -126,6 +126,14 @@ export const routeList = [
             isSider: true,
             auth: ['admin'],
             component: () => import('../views/configcategory.vue')
+          },
+          {
+            path: '/config/manageParts',
+            name: 'configManageParts',
+            cnName: '配置管辖部门',
+            isSider: true,
+            auth: ['admin'],
+            component: () => import('../views/configManageParts.vue')
           }
         ]
       }

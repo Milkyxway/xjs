@@ -34,7 +34,9 @@ watch()
 const getRadius = () => {
   const viewWidth =
     window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
-  if (viewWidth <= 1500) {
+  const viewHeight =
+    window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+  if (viewWidth <= 1550) {
     return 50
   }
   return 75

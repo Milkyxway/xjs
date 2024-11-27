@@ -12,8 +12,9 @@ const props = defineProps({
 const getScale = () => {
   const viewWidth =
     window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
-
-  if (viewWidth <= 1500) {
+  const viewHeight =
+    window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+  if (viewWidth <= 1550) {
     return {
       width: 300,
       height: 280

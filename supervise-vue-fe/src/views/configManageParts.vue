@@ -75,7 +75,6 @@ let form = reactive({
   manageParts: ''
 })
 const userColumns = ref([
- 
   {
     label: '用户名',
     prop: 'usernameCn'
@@ -113,8 +112,11 @@ const getUsers = async () => {
 }
 
 const updateUser = async () => {
+  const {
+    selectRow: { managePartsCp, ...rest }
+  } = state
   await updateUserReq({
-    ...state.selectRow,
+    ...rest,
     manageParts: form.manageParts.join(',')
   })
   state.showdialog = false

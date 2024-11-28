@@ -99,7 +99,7 @@
             >{{ item.label }}</el-radio
           >
         </el-radio-group>
-        <el-form v-if="state.showForm">
+        <el-form v-if="state.showForm" :label-position="'left'">
           <el-form-item label="是否拆分成阶段任务" v-if="state.taskDetail.status === 1"
             ><el-switch v-model="state.hasChildTasks"></el-switch
           ></el-form-item>
@@ -117,6 +117,7 @@
             v-for="(item, index) in state.childTasks"
             :label="`阶段任务${index + 2}`"
             v-bind:key="index"
+            v-if="state.hasChildTasks"
           >
             <ChildTask
               :data="item"
@@ -127,38 +128,44 @@
               :fatherStatus="state.taskDetail.status"
             />
           </el-form-item>
-          <el-form-item v-if="!state.hasChildTasks">
-            <!-- <ChildTask :data="state.formSingle" /> -->
-            <el-form-item label="完成目标"
+          <div v-if="!state.hasChildTasks">
+            <el-form-item label="完成目标" :label-width="formLabelWidth"
               ><el-input
                 v-model="state.formSingle.taskGoal"
                 placeholder="请填写完成目标"
                 :disabled="state.taskDetail.status !== 1"
+                type="textarea"
+                rows="3"
               ></el-input
             ></el-form-item>
-            <el-form-item label="计划完成时间"
+            <el-form-item label="计划完成时间" :label-width="formLabelWidth"
               ><el-date-picker
                 v-model="state.formSingle.finishTime"
                 placeholder="请选择计划完成时间"
                 :disabled="modifyDisable"
               ></el-date-picker
             ></el-form-item>
-            <el-form-item label="实际完成时间" v-if="modifyDisable"
+            <el-form-item label="实际完成时间" v-if="modifyDisable" :label-width="formLabelWidth"
               ><el-date-picker
                 v-model="state.formSingle.actualFinish"
                 placeholder="请选择实际完成时间"
               ></el-date-picker
             ></el-form-item>
-            <el-form-item label="实际完成情况" v-if="modifyDisable"
+            <el-form-item label="实际完成情况" v-if="modifyDisable" :label-width="formLabelWidth"
               ><el-input
                 placeholder="请输入实际完成情况"
                 v-model="state.formSingle.completeDesc"
+                type="textarea"
+                rows="3"
               ></el-input
             ></el-form-item>
-            <el-form-item label="延期说明" v-if="state.taskDetail.status === 5"
-              ><el-input v-model="state.formSingle.delayReason"></el-input
+            <el-form-item
+              label="延期说明"
+              v-if="state.taskDetail.status === 5"
+              :label-width="formLabelWidth"
+              ><el-input v-model="state.formSingle.delayReason" type="textarea" rows="3"></el-input
             ></el-form-item>
-          </el-form-item>
+          </div>
         </el-form>
         <el-form v-if="state.showInput" ref="inputForm" :model="state.formInput">
           <el-form-item
@@ -209,6 +216,7 @@ import { toast } from '../util/toast'
 import emitter from '../util/eventbus'
 import { sectionStore } from '../stores/orgList'
 
+const formLabelWidth = '140px'
 const inputForm = ref()
 const route = useRoute()
 const router = useRouter()
@@ -697,5 +705,11 @@ getTaskDetail()
 }
 .task-goal {
   width: 200px;
+}
+:deep(.el-date-editor) {
+  width: 800px !important;
+}
+:deep(.el-textarea) {
+  width: 800px !important;
 }
 </style>

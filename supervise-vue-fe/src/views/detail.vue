@@ -216,7 +216,7 @@ import { toast } from '../util/toast'
 import emitter from '../util/eventbus'
 import { sectionStore } from '../stores/orgList'
 
-const formLabelWidth = '140px'
+const formLabelWidth = '180px'
 const inputForm = ref()
 const route = useRoute()
 const router = useRouter()

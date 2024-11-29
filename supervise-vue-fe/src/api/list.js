@@ -245,3 +245,16 @@ export const addSectionReq = (data) => {
     data
   })
 }
+
+/**
+ * 上传附件
+ * @param {*} data
+ * @returns
+ */
+export const uploadReq = (data) => {
+  return createRequest()({
+    url: '/api/report/upload',
+    method: 'post',
+    data
+  })
+}

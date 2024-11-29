@@ -11,6 +11,10 @@ const props = defineProps({
   btnTxt: {
     type: String,
     default: '选择文件'
+  },
+  needAnalysis: {
+    type: Boolean,
+    default: false
   }
 })
 const uploadRef = ref()
@@ -20,7 +24,11 @@ const onUpload = () => {
   uploadRef.value.click()
 }
 const beforeUpload = async (e) => {
-  analysisExcel(e.target.files[0])
+  if (props.needAnalysis) {
+    analysisExcel(e.target.files[0])
+  } else {
+    emits('handleChange', e.target.files[0])
+  }
 }
 const analysisExcel = (file) => {
   const reader = new FileReader()

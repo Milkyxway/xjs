@@ -103,7 +103,7 @@
         >新建任务</el-button
       >
       <div class="upload-wrap" v-showByAuth="{ role, showCondition: ['admin'] }">
-        <Upload :btn-txt="'批量上传'" @handleChange="handleChange" />
+        <Upload :btn-txt="'批量上传'" @handleChange="handleChange" :needAnalysis="true" />
       </div>
       <div class="upload-wrap" v-showByAuth="{ role, showCondition: ['admin'] }">
         <el-button plain @click="exportAsExcel">导出</el-button>

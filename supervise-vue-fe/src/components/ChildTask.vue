@@ -44,6 +44,10 @@
           rows="3"
         ></el-input>
       </div>
+      <div v-if="props.data.fileLink" class="child-task-row">
+        <span class="paddingLR10">附件：</span>
+        <span class="submit-btn">{{ props.data.fileLink }}</span>
+      </div>
     </div>
     <div class="op-box">
       <el-icon color="#0076fe" @click="addChild" v-if="props.isFirst">
@@ -52,6 +56,11 @@
       <el-icon @click="deleteChild(index)" v-if="!props.isFirst"
         ><Delete v-if="props.fatherStatus == 1"
       /></el-icon>
+      <Upload
+        v-if="[3, 7].includes(props.taskStatus)"
+        btnTxt="添加附件"
+        @handleChange="handleFileChange"
+      />
       <div v-if="[3, 5, 7].includes(props.taskStatus)" @click="handleItemSubmit" class="submit-btn">
         提交
       </div>
@@ -59,7 +68,11 @@
   </div>
 </template>
 <script setup>
-import WhiteSpace from './WhiteSpace.vue'
+import dayjs from 'dayjs'
+import Upload from './Upload.vue'
+import { updateSubtaskReq, updateTaskReq, uploadReq } from '../api/list'
+import { toast } from '../util/toast'
+import { reactive } from 'vue'
 const props = defineProps({
   data: {
     type: Object,
@@ -78,6 +91,7 @@ const props = defineProps({
     default: 0
   }
 })
+
 const emits = defineEmits(['addChild', 'deleteChild', 'handleItemSubmit'])
 
 const addChild = () => {
@@ -90,6 +104,23 @@ const deleteChild = () => {
 
 const handleItemSubmit = () => {
   emits('handleItemSubmit', props.data)
+}
+
+const handleFileChange = async (file) => {
+  const now = dayjs().format('YYYYMMDDHHmmss')
+  const fileSplitLength = file.name.split('.').length
+  const fileSuffix = file.name.split('.')[fileSplitLength - 1]
+  const fileOriginName = file.name.split('.')[0]
+  const newFile = `${fileOriginName}${now}.${fileSuffix}`
+  const copyFile = new File([file], `${newFile}`)
+  const formData = new FormData()
+  formData.append('file', copyFile)
+  await uploadReq(formData)
+  toast('上传附件成功！')
+  await updateSubtaskReq({
+    subtaskId: props.data.subtaskId,
+    fileLink: `http://172.16.179.5:7001/public/upload/${fileOriginName}${now}.${fileSuffix}`
+  })
 }
 </script>
 <style scoped>
@@ -107,6 +138,7 @@ const handleItemSubmit = () => {
 }
 .submit-btn {
   color: #0076fe;
+  cursor: pointer;
 }
 :deep(.el-date-editor) {
   width: 800px !important;

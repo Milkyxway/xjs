@@ -12,39 +12,39 @@
         </div>
       </template>
       <div class="card-content">
-        <div class="row-item" v-if="state.taskDetail?.categoryName">
+        <div class="row-item" v-if="state.taskDetailCp?.categoryName">
           <div class="bold space">任务类别:</div>
-          <div>{{ state.taskDetail?.categoryName }}</div>
+          <div>{{ state.taskDetailCp?.categoryName }}</div>
         </div>
         <div class="row-item">
           <div class="bold space">任务内容:</div>
-          <div class="content">{{ state.taskDetail.taskContent }}</div>
+          <div class="content">{{ state.taskDetailCp.taskContent }}</div>
         </div>
         <div class="row-item">
           <div class="bold space">责任部门:</div>
-          <div>{{ state.taskDetail.leadOrgName }}</div>
+          <div>{{ state.taskDetailCp.leadOrgName }}</div>
         </div>
         <div v-if="showAssitOrg" class="row-item">
           <div class="bold space">协办部门:</div>
-          <div>{{ state.taskDetail.assistOrgName }}</div>
+          <div>{{ state.taskDetailCp.assistOrgName }}</div>
         </div>
-        <div class="row-item" v-if="state.taskDetail.taskGoal">
+        <div class="row-item" v-if="state.taskDetailCp.taskGoal">
           <div class="bold space">任务目标:</div>
-          <div class="content">{{ state.taskDetail.taskGoal }}</div>
+          <div class="content">{{ state.taskDetailCp.taskGoal }}</div>
         </div>
-        <div class="row-item" v-if="state.taskDetail.finishTime">
+        <div class="row-item" v-if="state.taskDetailCp.finishTime">
           <div class="bold space">计划完成时间:</div>
-          <div>{{ getTime(state.taskDetail.finishTime) }}</div>
+          <div>{{ getTime(state.taskDetailCp.finishTime) }}</div>
         </div>
-        <div class="row-item" v-if="state.taskDetail.actualFinish">
+        <div class="row-item" v-if="state.taskDetailCp.actualFinish">
           <div class="bold space">实际完成时间:</div>
-          <div>{{ getTime(state.taskDetail.actualFinish) }}</div>
+          <div>{{ getTime(state.taskDetailCp.actualFinish) }}</div>
         </div>
-        <div class="row-item" v-if="state.taskDetail.completeDesc">
+        <div class="row-item" v-if="state.taskDetailCp.completeDesc">
           <div class="bold space">实际完成情况:</div>
-          <div class="content">{{ state.taskDetail.completeDesc }}</div>
+          <div class="content">{{ state.taskDetailCp.completeDesc }}</div>
         </div>
-        <div v-if="state.taskDetail?.children?.length">
+        <div v-if="state.taskDetailCp?.children?.length">
           <div class="row-item">
             <span class="bold space"></span>
             <span class="space task-goal">任务目标</span>
@@ -54,7 +54,7 @@
             <span class="space task-goal">任务状态</span>
           </div>
           <div
-            v-for="(item, index) in state.taskDetail.children"
+            v-for="(item, index) in state.taskDetailCp.children"
             v-bind:key="index"
             class="row-item"
           >
@@ -72,9 +72,9 @@
           <div class="bold space">任务状态:</div>
           <div :class="getClassName()">{{ getTaskStatus }}</div>
         </div>
-        <div class="row-item" v-if="state.taskDetail.comment">
+        <div class="row-item" v-if="state.taskDetailCp.comment">
           <div class="bold space">备注及回复:</div>
-          <div class="content">{{ state.taskDetail.comment }}</div>
+          <div class="content">{{ state.taskDetailCp.comment }}</div>
         </div>
       </div>
     </el-card>
@@ -233,6 +233,7 @@ const { sectionList } = storeToRefs(setionStore)
 let state = reactive({
   modalVisible: false,
   taskDetail: {},
+  taskDetailCp: {},
   showTaskGoal: false,
   hasChildTasks: false,
   childTasksFirst: [
@@ -324,7 +325,7 @@ const getTime = computed(() => {
 
 const getTaskStatus = computed(() => {
   const {
-    taskDetail: { status, finishTime }
+    taskDetailCp: { status, finishTime }
   } = state
   // if (status == 5) {
   //   let text = taskStatusMap[status]
@@ -336,8 +337,8 @@ const getTaskStatus = computed(() => {
 
 const showAdjustBtns = computed(() => {
   const { orgnization } = userInfo
-  const { taskDetail } = state
-  if (taskDetail.status === 1 && orgnization === taskDetail.leadOrg) {
+  const { taskDetailCp } = state
+  if (taskDetailCp.status === 1 && orgnization === taskDetailCp.leadOrg) {
     return true
   }
   return false
@@ -346,7 +347,7 @@ const showAdjustBtns = computed(() => {
 const getClassName = computed(() => {
   return function (row) {
     let className = ''
-    const status = row ? row.status : state.taskDetail.status
+    const status = row ? row.status : state.taskDetailCp.status
     switch (status) {
       case 1: //
         className = 'status-confirm'
@@ -387,7 +388,7 @@ const getTitleByStatus = computed(() => {
     5: '延期修改',
     7: '填写完成情况'
   }
-  return statusTitleMap[state.taskDetail.status]
+  return statusTitleMap[state.taskDetailCp.status]
 })
 
 const getTaskDetail = async () => {
@@ -406,6 +407,7 @@ const getTaskDetail = async () => {
     leadOrgName: orgnizationToName(leadOrg, sectionList.value),
     assistOrgName: orgnizationListIdToName(result.data.assistOrg, sectionList.value)
   }
+  state.taskDetailCp = state.taskDetail
   if ([3, 5, 7].includes(result.data.status)) {
     orgnization === result.data.leadOrg && confirmTask() // 只有责任部门能修改任务计划
     if (result.data.children.length) {

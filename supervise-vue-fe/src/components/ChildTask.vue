@@ -44,9 +44,10 @@
           rows="3"
         ></el-input>
       </div>
-      <div v-if="props.data.fileLink" class="child-task-row">
-        <span class="paddingLR10">附件：</span>
-        <span class="submit-btn">{{ props.data.fileLink }}</span>
+      <div v-if="state.fileLink" class="child-task-row">
+        <span>附件：</span>
+        <span class="submit-btn mr10" @click="downloadFile">{{ state.fileLink }}</span>
+        <el-icon @click="deleteFile(index)"><Delete /></el-icon>
       </div>
     </div>
     <div class="op-box">
@@ -58,7 +59,7 @@
       /></el-icon>
       <Upload
         v-if="[3, 7].includes(props.taskStatus)"
-        btnTxt="添加附件"
+        btnTxt="添加完成结果附件"
         @handleChange="handleFileChange"
       />
       <div v-if="[3, 5, 7].includes(props.taskStatus)" @click="handleItemSubmit" class="submit-btn">
@@ -70,7 +71,7 @@
 <script setup>
 import dayjs from 'dayjs'
 import Upload from './Upload.vue'
-import { updateSubtaskReq, updateTaskReq, uploadReq } from '../api/list'
+import { updateSubtaskReq, uploadReq, deleteFileReq } from '../api/list'
 import { toast } from '../util/toast'
 import { reactive } from 'vue'
 const props = defineProps({
@@ -90,6 +91,10 @@ const props = defineProps({
     type: Number,
     default: 0
   }
+})
+
+const state = reactive({
+  fileLink: props.data.fileLink
 })
 
 const emits = defineEmits(['addChild', 'deleteChild', 'handleItemSubmit'])
@@ -117,10 +122,31 @@ const handleFileChange = async (file) => {
   formData.append('file', copyFile)
   await uploadReq(formData)
   toast('上传附件成功！')
+  const fileLink = `http://172.16.179.5:7001/public/upload/${fileOriginName}${now}.${fileSuffix}`
   await updateSubtaskReq({
     subtaskId: props.data.subtaskId,
-    fileLink: `http://172.16.179.5:7001/public/upload/${fileOriginName}${now}.${fileSuffix}`
+    fileLink
   })
+  state.fileLink = fileLink
+}
+
+const deleteFile = async () => {
+  const { fileLink } = state
+  const fileLinkSplit = fileLink.split('/upload/')
+  await deleteFileReq({
+    fileName: fileLinkSplit[1],
+    path: 'upload'
+  })
+  toast('删除附件成功！')
+  await updateSubtaskReq({
+    subtaskId: props.data.subtaskId,
+    fileLink: ''
+  })
+  state.fileLink = ''
+}
+
+const downloadFile = () => {
+  window.location.href = state.fileLink
 }
 </script>
 <style scoped>
@@ -128,7 +154,7 @@ const handleFileChange = async (file) => {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: center;
   white-space: nowrap;
   width: 800px;
   margin-bottom: 6px;
@@ -145,5 +171,8 @@ const handleFileChange = async (file) => {
 }
 .op-box {
   margin-left: 20px;
+}
+.mr10 {
+  margin-right: 30px;
 }
 </style>

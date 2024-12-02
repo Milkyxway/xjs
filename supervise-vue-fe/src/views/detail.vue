@@ -159,6 +159,17 @@
                 rows="3"
               ></el-input
             ></el-form-item>
+            <el-form-item v-if="[3, 7].includes(state.taskDetailCp.status)">
+              <Upload btnTxt="添加完成结果附件" @handleChange="handleFileChange" />
+              <div v-if="state.fileLink || state.taskDetailCp.fileLink" class="child-task-row">
+                <span class="ml10">附件：</span>
+                <span class="submit-btn mr10" @click="downloadFile">{{
+                  state.fileLink || state.taskDetailCp.fileLink
+                }}</span>
+                <el-icon @click="deleteFile(index)"><Delete /></el-icon>
+              </div>
+            </el-form-item>
+
             <el-form-item
               label="延期说明"
               v-if="state.taskDetail.status === 5"
@@ -199,6 +210,7 @@ import { storeToRefs } from 'pinia'
 import { useRoute, useRouter } from 'vue-router'
 import { dayjs } from 'element-plus'
 import mitt from 'mitt'
+import Upload from '../components/Upload.vue'
 import TaskModal from '../components/TaskModal.vue'
 import ChildTask from '../components/ChildTask.vue'
 import NavBack from '../components/NavBack.vue'
@@ -207,7 +219,9 @@ import {
   appealTaskReq,
   addSubTaskReq,
   updateTaskReq,
-  updateSubtaskReq
+  updateSubtaskReq,
+  uploadReq,
+  deleteFileReq
 } from '../api/list'
 import { orgnizationListIdToName, orgnizationToName } from '../util/orgnization'
 import { taskCategoryMap, taskStatusMap, statusWeight } from '../constant/index'
@@ -243,6 +257,7 @@ let state = reactive({
       comment: null
     }
   ],
+  fileLink: '',
   childTasks: [],
   formSingle: {
     taskGoal: '',
@@ -390,6 +405,45 @@ const getTitleByStatus = computed(() => {
   }
   return statusTitleMap[state.taskDetailCp.status]
 })
+
+const handleFileChange = async (file) => {
+  const now = dayjs().format('YYYYMMDDHHmmss')
+  const fileSplitLength = file.name.split('.').length
+  const fileSuffix = file.name.split('.')[fileSplitLength - 1]
+  const fileOriginName = file.name.split('.')[0]
+  const newFile = `${fileOriginName}${now}.${fileSuffix}`
+  const copyFile = new File([file], `${newFile}`)
+  const formData = new FormData()
+  formData.append('file', copyFile)
+  await uploadReq(formData)
+  commonFileFn(
+    '上传附件成功！',
+    `http://172.16.179.5:7001/public/upload/${fileOriginName}${now}.${fileSuffix}`
+  )
+}
+
+const deleteFile = async () => {
+  const { fileLink } = state
+  const fileLinkSplit = fileLink.split('/upload/')
+  await deleteFileReq({
+    fileName: fileLinkSplit[1],
+    path: 'upload'
+  })
+  commonFileFn('删除附件成功！', '')
+}
+
+const commonFileFn = async (toastTxt, fileLink) => {
+  toast(toastTxt)
+  await updateTaskReq({
+    taskId: state.taskDetailCp.taskId,
+    fileLink
+  })
+  state.fileLink = fileLink
+}
+
+const downloadFile = () => {
+  window.location.href = state.fileLink || state.taskDetailCp.fileLink
+}
 
 const getTaskDetail = async () => {
   await setionStore.getOrgList()
@@ -713,5 +767,26 @@ getTaskDetail()
 }
 :deep(.el-textarea) {
   width: 800px !important;
+}
+
+.submit-btn {
+  color: #0076fe;
+  cursor: pointer;
+}
+
+.mr10 {
+  margin-right: 30px;
+}
+.ml10 {
+  margin-left: 30px;
+}
+.child-task-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  white-space: nowrap;
+  width: 800px;
+  margin-bottom: 6px;
 }
 </style>

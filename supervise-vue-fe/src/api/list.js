@@ -258,3 +258,16 @@ export const uploadReq = (data) => {
     data
   })
 }
+
+/**
+ * 删除文件
+ * @param {*} data
+ * @returns
+ */
+export const deleteFileReq = (data) => {
+  return createRequest()({
+    url: '/api/report/deletefile',
+    method: 'post',
+    data
+  })
+}

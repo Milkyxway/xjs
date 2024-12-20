@@ -178,6 +178,10 @@ const state = reactive({
       prop: 'completeDesc'
     },
     {
+      columnName: '完成附件文件',
+      prop: 'fileLink'
+    },
+    {
       columnName: '任务状态',
       prop: 'status'
     },

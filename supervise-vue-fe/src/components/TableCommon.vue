@@ -35,6 +35,12 @@
             v-if="['finishTime', 'createTime', 'updateTime', 'actualFinish'].includes(item.prop)"
             >{{ getTime(row, item.prop) }}</span
           >
+          <span
+            v-if="item.prop === 'fileLink'"
+            class="link-btn"
+            @click="downloadUrl(row.fileLink)"
+            >{{ row.fileLink ? '完成附件' : null }}</span
+          >
           <span v-if="item.prop === 'taskSource'">{{ getTaskSourceName(row) }}</span>
           <span
             v-if="['taskContent', 'completeDesc', 'taskGoal'].includes(item.prop)"
@@ -299,6 +305,10 @@ const getTime = computed(() => {
   }
 })
 
+const downloadUrl = (link) => {
+  window.location.href = link
+}
+
 const onHeaderDragend = (e) => {
   console.log(e)
 }
@@ -464,6 +474,10 @@ const setFocus = async (row) => {
       border-radius: 50%;
     }
   }
+}
+.link-btn {
+  color: #0076fe;
+  cursor: pointer;
 }
 .el-table .subtask-row {
   /* background-color: rgba(103, 194, 58, 0.2) !important; */

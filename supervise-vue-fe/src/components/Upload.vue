@@ -1,7 +1,13 @@
 <template>
   <div class="row-item">
     <el-button @click="onUpload" type="primary" plain>{{ props.btnTxt }}</el-button>
-    <input ref="uploadRef" type="file" @change="beforeUpload" accept=".xlsx, .xls" hidden />
+    <input
+      ref="uploadRef"
+      type="file"
+      @change="beforeUpload"
+      accept=".xlsx, .xls, .doc, .docx"
+      hidden
+    />
   </div>
 </template>
 <script setup>

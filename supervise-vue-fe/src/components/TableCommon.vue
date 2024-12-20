@@ -13,7 +13,7 @@
         :label="item.columnName"
         :prop="item.prop"
         :key="item.key"
-        :width="200"
+        :width="getWidthByField(item.prop)"
       >
         <template #default="{ row }">
           <el-icon v-if="item.prop === 'focus' && row.children"
@@ -197,6 +197,14 @@ watch(
     emits('changePage', { pageNum: val[0], pageSize: val[1] })
   }
 )
+
+const getWidthByField = computed(() => {
+  return function (field) {
+    return ['taskContent', 'taskGoal', 'completeDesc', 'leadComment', 'delayReason'].includes(field)
+      ? 200
+      : 110
+  }
+})
 
 const getDialogTitle = computed(() => {
   return state.selectTask.leadComment.indexOf(usernameCn) > -1 ? '修改批注' : '新增批注'

@@ -150,6 +150,10 @@ const state = reactive({
       prop: 'taskContent'
     },
     {
+      columnName: '任务状态',
+      prop: 'status'
+    },
+    {
       columnName: '提出部门',
       prop: 'ariseOrg'
     },
@@ -180,10 +184,6 @@ const state = reactive({
     {
       columnName: '完成附件文件',
       prop: 'fileLink'
-    },
-    {
-      columnName: '任务状态',
-      prop: 'status'
     },
     {
       columnName: '领导批注',

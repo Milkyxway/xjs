@@ -44,6 +44,12 @@
           <div class="bold space">实际完成情况:</div>
           <div class="content">{{ state.taskDetailCp.completeDesc }}</div>
         </div>
+        <div class="row-item" v-if="state.taskDetailCp.fileLink">
+          <div class="bold space">完成附件文件:</div>
+          <div class="content submit-btn" @click="downloadUrl(state.taskDetailCp.fileLink)">
+            附件下载
+          </div>
+        </div>
         <div v-if="state.taskDetailCp?.children?.length">
           <div class="row-item">
             <span class="bold space"></span>
@@ -405,6 +411,10 @@ const getTitleByStatus = computed(() => {
   }
   return statusTitleMap[state.taskDetailCp.status]
 })
+
+const downloadUrl = (link) => {
+  window.location.href = link
+}
 
 const handleFileChange = async (file) => {
   const now = dayjs().format('YYYYMMDDHHmmss')

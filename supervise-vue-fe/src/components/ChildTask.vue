@@ -96,7 +96,7 @@ const props = defineProps({
 const state = reactive({
   fileLink: props.data.fileLink
 })
-
+console.log(props.data)
 const emits = defineEmits(['addChild', 'deleteChild', 'handleItemSubmit'])
 
 const addChild = () => {
@@ -125,7 +125,9 @@ const handleFileChange = async (file) => {
   const fileLink = `http://172.16.179.5:7001/public/upload/${fileOriginName}${now}.${fileSuffix}`
   await updateSubtaskReq({
     subtaskId: props.data.subtaskId,
-    fileLink
+    fileLink,
+    parentId: props.data.parentId,
+    status: props.data.status
   })
   state.fileLink = fileLink
 }
@@ -140,7 +142,9 @@ const deleteFile = async () => {
   toast('删除附件成功！')
   await updateSubtaskReq({
     subtaskId: props.data.subtaskId,
-    fileLink: ''
+    fileLink: '',
+    parentId: props.data.parentId,
+    status: props.data.status
   })
   state.fileLink = ''
 }

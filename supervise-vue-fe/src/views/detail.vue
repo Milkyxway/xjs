@@ -53,11 +53,12 @@
         <div v-if="state.taskDetailCp?.children?.length">
           <div class="row-item">
             <span class="bold space"></span>
-            <span class="space task-goal">任务目标</span>
-            <span class="space task-goal">完成情况</span>
+            <span class="space grid-wide">任务目标</span>
+            <span class="space grid-wide">完成情况</span>
             <span class="space task-goal">计划完成时间</span>
             <span class="space task-goal">实际完成时间</span>
             <span class="space task-goal">任务状态</span>
+            <span class="space task-goal">完成附件文件</span>
           </div>
           <div
             v-for="(item, index) in state.taskDetailCp.children"
@@ -65,13 +66,16 @@
             class="row-item"
           >
             <span class="bold space">阶段任务{{ index + 1 }}</span>
-            <span class="space task-goal">{{ item.taskGoal }}</span>
-            <span class="space task-goal">{{ item.completeDesc || '-' }}</span>
+            <span class="space grid-wide">{{ item.taskGoal }}</span>
+            <span class="space grid-wide">{{ item.completeDesc || '-' }}</span>
             <span class="space task-goal">{{ getTime(item.finishTime) }}</span>
             <span class="space task-goal">{{ getTime(item.actualFinish) }}</span>
             <span :class="['space', 'task-goal', getClassName(item)]">{{
               taskStatusMap[item.status]
             }}</span>
+            <span class="content submit-btn" @click="item.fileLink && downloadUrl(item.fileLink)">
+              {{ item.fileLink ? '附件下载' : '' }}
+            </span>
           </div>
         </div>
         <div class="row-item">
@@ -770,7 +774,11 @@ getTaskDetail()
   height: 10px;
 }
 .task-goal {
-  width: 200px;
+  width: 100px;
+}
+
+.grid-wide {
+  width: 220px;
 }
 :deep(.el-date-editor) {
   width: 800px !important;

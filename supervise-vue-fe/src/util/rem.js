@@ -10,3 +10,33 @@ const setRootFontSize = () => {
 }
 setRootFontSize()
 window.addEventListener('resize', setRootFontSize)
+
+export const getClassName = (status) => {
+  let className = ''
+  switch (status) {
+    case 1: //
+      className = 'status-confirm'
+      break
+    case 2:
+      className = 'status-adjust'
+      break
+    case 3:
+      className = 'status-processing'
+      break
+    case 4:
+      className = 'status-finish'
+      break
+    case 5:
+      className = 'status-delay'
+      break
+    case 6:
+      className = 'status-submit'
+      break
+    case 7:
+      className = 'status-delay-process'
+      break
+    default:
+      break
+  }
+  return className
+}

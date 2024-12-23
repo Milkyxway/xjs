@@ -70,7 +70,7 @@
             <span class="space grid-wide">{{ item.completeDesc || '-' }}</span>
             <span class="space task-goal">{{ getTime(item.finishTime) }}</span>
             <span class="space task-goal">{{ getTime(item.actualFinish) }}</span>
-            <span :class="['space', 'task-goal', getClassName(item)]">{{
+            <span :class="['space', 'task-goal', getClassName(item.status)]">{{
               taskStatusMap[item.status]
             }}</span>
             <span class="content submit-btn" @click="item.fileLink && downloadUrl(item.fileLink)">
@@ -80,7 +80,7 @@
         </div>
         <div class="row-item">
           <div class="bold space">任务状态:</div>
-          <div :class="getClassName()">{{ getTaskStatus }}</div>
+          <div :class="getClassName(state.taskDetailCp.status)">{{ getTaskStatus }}</div>
         </div>
         <div class="row-item" v-if="state.taskDetailCp.comment">
           <div class="bold space">备注及回复:</div>
@@ -173,9 +173,11 @@
               <Upload btnTxt="添加完成结果附件" @handleChange="handleFileChange" />
               <div v-if="state.fileLink || state.taskDetailCp.fileLink" class="child-task-row">
                 <span class="ml10">附件：</span>
-                <span class="submit-btn mr10" @click="downloadFile">{{
-                  state.fileLink || state.taskDetailCp.fileLink
-                }}</span>
+                <span
+                  class="submit-btn mr10"
+                  @click="downloadUrl(state.fileLink || state.taskDetailCp.fileLink)"
+                  >{{ state.fileLink || state.taskDetailCp.fileLink }}</span
+                >
                 <el-icon @click="deleteFile(index)"><Delete /></el-icon>
               </div>
             </el-form-item>
@@ -230,7 +232,6 @@ import {
   addSubTaskReq,
   updateTaskReq,
   updateSubtaskReq,
-  uploadReq,
   deleteFileReq
 } from '../api/list'
 import { orgnizationListIdToName, orgnizationToName } from '../util/orgnization'
@@ -239,6 +240,8 @@ import { getLocalStore } from '../util/localStorage'
 import { toast } from '../util/toast'
 import emitter from '../util/eventbus'
 import { sectionStore } from '../stores/orgList'
+import { getClassName } from '../util/rem'
+import { downloadUrl, commonFileUpload } from '../util/link'
 
 const formLabelWidth = '180px'
 const inputForm = ref()
@@ -369,39 +372,6 @@ const showAdjustBtns = computed(() => {
   return false
 })
 
-const getClassName = computed(() => {
-  return function (row) {
-    let className = ''
-    const status = row ? row.status : state.taskDetailCp.status
-    switch (status) {
-      case 1: //
-        className = 'status-confirm'
-        break
-      case 2:
-        className = 'status-adjust'
-        break
-      case 3:
-        className = 'status-processing'
-        break
-      case 4:
-        className = 'status-finish'
-        break
-      case 5:
-        className = 'status-delay'
-        break
-      case 6:
-        className = 'status-submit'
-        break
-      case 7:
-        className = 'status-delay-process'
-        break
-      default:
-        break
-    }
-    return className
-  }
-})
-
 const showAssitOrg = computed(() => {
   return state.taskDetail?.assistOrg && state.taskDetail.assistOrg.length
 })
@@ -416,24 +386,9 @@ const getTitleByStatus = computed(() => {
   return statusTitleMap[state.taskDetailCp.status]
 })
 
-const downloadUrl = (link) => {
-  window.location.href = link
-}
-
 const handleFileChange = async (file) => {
-  const now = dayjs().format('YYYYMMDDHHmmss')
-  const fileSplitLength = file.name.split('.').length
-  const fileSuffix = file.name.split('.')[fileSplitLength - 1]
-  const fileOriginName = file.name.split('.')[0]
-  const newFile = `${fileOriginName}${now}.${fileSuffix}`
-  const copyFile = new File([file], `${newFile}`)
-  const formData = new FormData()
-  formData.append('file', copyFile)
-  await uploadReq(formData)
-  commonFileFn(
-    '上传附件成功！',
-    `http://172.16.179.5:7001/public/upload/${fileOriginName}${now}.${fileSuffix}`
-  )
+  const fileLink = await commonFileUpload(file)
+  commonFileFn('上传附件成功！', fileLink)
 }
 
 const deleteFile = async () => {
@@ -455,14 +410,11 @@ const commonFileFn = async (toastTxt, fileLink) => {
   state.fileLink = fileLink
 }
 
-const downloadFile = () => {
-  window.location.href = state.fileLink || state.taskDetailCp.fileLink
-}
-
 const getTaskDetail = async () => {
   await setionStore.getOrgList()
   const result = await taskDetailReq({ taskId })
   if (result.data.taskRegion !== region) {
+    // 校验任务所属地区
     router.back()
   }
   const {

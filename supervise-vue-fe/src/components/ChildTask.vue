@@ -46,7 +46,9 @@
       </div>
       <div v-if="state.fileLink" class="child-task-row">
         <span>附件：</span>
-        <span class="submit-btn mr10" @click="downloadFile">{{ state.fileLink }}</span>
+        <span class="submit-btn mr10" @click="downloadUrl(state.fileLink)">{{
+          state.fileLink
+        }}</span>
         <el-icon @click="deleteFile(index)"><Delete /></el-icon>
       </div>
     </div>
@@ -69,11 +71,11 @@
   </div>
 </template>
 <script setup>
-import dayjs from 'dayjs'
-import Upload from './Upload.vue'
-import { updateSubtaskReq, uploadReq, deleteFileReq } from '../api/list'
-import { toast } from '../util/toast'
 import { reactive } from 'vue'
+import Upload from './Upload.vue'
+import { updateSubtaskReq, deleteFileReq } from '../api/list'
+import { toast } from '../util/toast'
+import { commonFileUpload, downloadUrl } from '../util/link'
 const props = defineProps({
   data: {
     type: Object,
@@ -96,7 +98,6 @@ const props = defineProps({
 const state = reactive({
   fileLink: props.data.fileLink
 })
-console.log(props.data)
 const emits = defineEmits(['addChild', 'deleteChild', 'handleItemSubmit'])
 
 const addChild = () => {
@@ -112,24 +113,9 @@ const handleItemSubmit = () => {
 }
 
 const handleFileChange = async (file) => {
-  const now = dayjs().format('YYYYMMDDHHmmss')
-  const fileSplitLength = file.name.split('.').length
-  const fileSuffix = file.name.split('.')[fileSplitLength - 1]
-  const fileOriginName = file.name.split('.')[0]
-  const newFile = `${fileOriginName}${now}.${fileSuffix}`
-  const copyFile = new File([file], `${newFile}`)
-  const formData = new FormData()
-  formData.append('file', copyFile)
-  await uploadReq(formData)
+  const fileLink = await commonFileUpload(file)
   toast('上传附件成功！')
-  const fileLink = `http://172.16.179.5:7001/public/upload/${fileOriginName}${now}.${fileSuffix}`
-  await updateSubtaskReq({
-    subtaskId: props.data.subtaskId,
-    fileLink,
-    parentId: props.data.parentId,
-    status: props.data.status
-  })
-  state.fileLink = fileLink
+  commonDeal(fileLink)
 }
 
 const deleteFile = async () => {
@@ -140,17 +126,17 @@ const deleteFile = async () => {
     path: 'upload'
   })
   toast('删除附件成功！')
+  commonDeal('')
+}
+
+const commonDeal = async (fileLink) => {
   await updateSubtaskReq({
     subtaskId: props.data.subtaskId,
-    fileLink: '',
+    fileLink,
     parentId: props.data.parentId,
     status: props.data.status
   })
-  state.fileLink = ''
-}
-
-const downloadFile = () => {
-  window.location.href = state.fileLink
+  state.fileLink = fileLink
 }
 </script>
 <style scoped>

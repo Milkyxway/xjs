@@ -1,25 +1,14 @@
 <script setup>
-import { storeToRefs } from 'pinia'
-import { ElMessageBox } from 'element-plus'
 import SideBar from '../components/SideBar.vue'
 import router from '../router'
 import { rmLocalStore, getLocalStore } from '../util/localStorage'
-import { userLoginStore } from '../stores/login'
-const authStore = userLoginStore()
-const { userInfo } = storeToRefs(authStore)
+import { ElMessageBoxFn } from '../util/toast'
 
 const userInfoLocal = getLocalStore('userInfo')
 const logOutFn = () => {
-  ElMessageBox.confirm('确定要登出吗?', '警告', {
-    type: 'warning',
-    confirmButtonText: '确认',
-    cancelButtonText: '取消',
-    callback: async (action) => {
-      if (action === 'confirm') {
-        rmLocalStore('userInfo')
-        router.replace('/login')
-      }
-    }
+  ElMessageBoxFn('确定要登出吗?', () => {
+    rmLocalStore('userInfo')
+    router.replace('/login')
   })
 }
 </script>
@@ -42,7 +31,7 @@ const logOutFn = () => {
         </el-aside>
         <el-container>
           <el-main><RouterView></RouterView></el-main>
-          <!-- <el-footer>江苏有线无锡分公司版权所有Copyright © 2023 </el-footer> -->
+          <!-- <el-footer>江苏有线无锡分公司版权所有Copyright © 2024 </el-footer> -->
         </el-container>
       </el-container>
     </el-container>

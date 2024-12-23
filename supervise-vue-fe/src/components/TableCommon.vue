@@ -23,7 +23,7 @@
               v-if="row.isFocus"
               @click="setFocus(row)"
           /></el-icon>
-          <span v-if="item.prop === 'status'" :class="getClassName(row)">{{
+          <span v-if="item.prop === 'status'" :class="getClassName(row.status)">{{
             getStatusName(row)
           }}</span>
           <span v-if="item.prop === 'leadComment'" class="lead-comment">{{ row.leadComment }}</span>
@@ -47,7 +47,6 @@
             :class="isExpand ? 'task-content-expand' : 'task-content'"
             >{{ row[item.prop] }}</span
           >
-          <!-- <span v-if="item.prop === 'taskContent'" @click="expandAll">展开</span> -->
         </template></el-table-column
       >
 
@@ -136,7 +135,6 @@
   </div>
 </template>
 <script setup>
-import { storeToRefs } from 'pinia'
 import { computed, reactive, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {
@@ -147,14 +145,14 @@ import {
   addLeadCommentReq,
   updateLeadCommentReq
 } from '../api/list'
-import { taskStatusMap, taskCategoryMap, orgnizationTree, taskSourceMap } from '../constant/index'
+import { taskStatusMap, taskCategoryMap, taskSourceMap } from '../constant/index'
 import { getLocalStore } from '../util/localStorage'
-import { userLoginStore } from '../stores/login'
 import { orgnizationListIdToName, orgnizationToName } from '../util/orgnization'
 import { dayjs } from 'element-plus'
-import { toast } from '../util/toast'
-const authStore = userLoginStore()
-const { userInfo } = storeToRefs(authStore)
+import { toast, ElMessageBoxFn } from '../util/toast'
+import { getClassName } from '../util/rem'
+import { downloadUrl } from '../util/link'
+
 const router = useRouter()
 const props = defineProps({
   tableData: {
@@ -178,7 +176,6 @@ const emits = defineEmits(['updateTask', 'refreshList', 'changePage', 'updateFoc
 const role = getLocalStore('userInfo').role
 const username = getLocalStore('userInfo').username
 const usernameCn = getLocalStore('userInfo').usernameCn
-const userOrg = getLocalStore('userInfo').orgnization
 const region = getLocalStore('userInfo').region
 const state = reactive({
   page: {
@@ -236,18 +233,6 @@ const getTaskSourceName = computed(() => {
   }
 })
 
-const getColumnWidth = computed(() => {
-  return function (item) {
-    if (['admin', 'section'].includes(role)) {
-      return ['taskContent', 'taskGoal', 'completeDesc', 'finishTime', 'actualFinish'].includes(
-        item.prop
-      )
-        ? 180
-        : 'auto'
-    }
-  }
-})
-
 // 转换成类别名称
 const getCategoryName = computed(() => {
   return function (row) {
@@ -266,37 +251,6 @@ const showFinishBtn = computed(() => {
   }
 })
 
-const getClassName = computed(() => {
-  return function (row) {
-    let className = ''
-    switch (row.status) {
-      case 1: //
-        className = 'status-confirm'
-        break
-      case 2:
-        className = 'status-adjust'
-        break
-      case 3:
-        className = 'status-processing'
-        break
-      case 4:
-        className = 'status-finish'
-        break
-      case 5:
-        className = 'status-delay'
-        break
-      case 6:
-        className = 'status-submit'
-        break
-      case 7:
-        className = 'status-delay-process'
-        break
-      default:
-        break
-    }
-    return className
-  }
-})
 const getOrgName = computed(() => {
   return function (row, propName) {
     if (propName === 'assistOrg') {
@@ -313,12 +267,8 @@ const getTime = computed(() => {
   }
 })
 
-const downloadUrl = (link) => {
-  window.location.href = link
-}
-
 const onHeaderDragend = (e) => {
-  console.log(e)
+  // console.log(e)
 }
 
 const updateTask = (row) => {
@@ -326,24 +276,14 @@ const updateTask = (row) => {
 }
 const deleteTask = async (row) => {
   const { taskId } = row
-  ElMessageBox.confirm(
-    row.parentId ? '确定要删除这子任务吗?' : '确定要删除这项专项任务吗?',
-    '警告',
-    {
-      type: 'warning',
-      confirmButtonText: '确认',
-      cancelButtonText: '取消',
-      callback: async (action) => {
-        if (action === 'confirm') {
-          row.parentId
-            ? await deleteSubTaskReq({ subtaskId: row.subtaskId })
-            : await deleteTaskReq({ taskId })
-          emits('refreshList')
-        }
-      }
-    }
-  )
+  ElMessageBoxFn(row.parentId ? '确定要删除这子任务吗?' : '确定要删除这项专项任务吗?', async () => {
+    row.parentId
+      ? await deleteSubTaskReq({ subtaskId: row.subtaskId })
+      : await deleteTaskReq({ taskId })
+    emits('refreshList')
+  })
 }
+
 const showLeadCommentModal = (row) => {
   setLeadCommentModal(true)
   state.selectTask = row
@@ -384,24 +324,14 @@ const addLeadComment = async () => {
 }
 // 置为完成
 const setFinish = async (item) => {
-  ElMessageBox.confirm('确定要将这项专项任务置为完成吗?', '警告', {
-    type: 'warning',
-    confirmButtonText: '确认',
-    cancelButtonText: '取消',
-    callback: async (action) => {
-      if (action === 'confirm') {
-        await taskSetFinishReq(item)
-        emits('refreshList')
-      }
-    }
+  ElMessageBoxFn('确定要将这项专项任务置为完成吗?', async () => {
+    await taskSetFinishReq(item)
+    emits('refreshList')
   })
 }
 
 const checkTask = (row) => {
   router.push(`/supervise/detail/${row.taskId || row.parentId}`)
-}
-const expandAll = () => {
-  state.isExpand = true
 }
 
 const setFocus = async (row) => {

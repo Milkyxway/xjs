@@ -587,30 +587,6 @@ const updateTask = (row) => {
   }
 }
 
-const subleaderManageParts = () => {
-  let manageParts = ''
-  switch (username.value) {
-    case 'yanghongyu':
-      manageParts = '9,11'
-      break
-    case 'zhaoyuhui':
-      manageParts = ''
-      break
-    case 'wangwei':
-      manageParts = '1,2'
-      break
-    case 'zhaoxiaoguang':
-      manageParts = '7,6,8,12'
-      break
-    case 'zhufeng':
-      manageParts = '5,10,4,3'
-      break
-    default:
-      break
-  }
-  return manageParts
-}
-
 const getRelatedMeTask = async () => {
   let params = {
     ...state.page,

@@ -201,8 +201,8 @@ watch(
 const getWidthByField = computed(() => {
   return function (field) {
     return ['taskContent', 'taskGoal', 'completeDesc', 'leadComment', 'delayReason'].includes(field)
-      ? 200
-      : 150
+      ? 250
+      : 120
   }
 })
 

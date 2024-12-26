@@ -26,7 +26,7 @@ const logOutFn = () => {
         </div>
       </el-header>
       <el-container>
-        <el-aside width="200px">
+        <el-aside>
           <SideBar></SideBar>
         </el-aside>
         <el-container>
@@ -69,6 +69,7 @@ header {
     /* background-color: var(--el-color-primary-light-8); */
     color: var(--el-text-color-primary);
     text-align: center;
+    width: 15%;
   }
 
   .el-main {

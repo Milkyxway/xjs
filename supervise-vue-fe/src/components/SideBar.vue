@@ -8,7 +8,9 @@
   >
     <el-sub-menu v-for="item in homeMenu" :key="item.path" :index="item.path" class="sub_menu">
       <template #title>
-        <el-icon><location /></el-icon>
+        <el-icon v-if="item.name === '任务督办'"><Files /></el-icon>
+        <el-icon v-if="item.name === '账号模块'"><User /></el-icon>
+        <el-icon v-if="item.name === '配置模块'"><Setting /></el-icon>
         <span>{{ item.name }}</span>
       </template>
       <el-menu-item-group

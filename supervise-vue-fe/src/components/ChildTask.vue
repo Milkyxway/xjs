@@ -109,7 +109,7 @@ const deleteChild = () => {
 }
 
 const handleItemSubmit = () => {
-  emits('handleItemSubmit', props.data)
+  emits('handleItemSubmit', { ...props.data, fileLink: state.fileLink || props.data.fileLink })
 }
 
 const handleFileChange = async (file) => {

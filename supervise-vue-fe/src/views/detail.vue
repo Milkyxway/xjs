@@ -580,7 +580,8 @@ const getParamsByStatus = (taskStatus) => {
     taskGoal,
     finishTime: dayjs(finishTime).format(),
     taskId,
-    statusWeight: statusWeight[taskStatus]
+    statusWeight: statusWeight[taskStatus],
+    fileLink: state.fileLink || state.taskDetailCp.fileLink
   }
 }
 

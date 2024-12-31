@@ -535,6 +535,7 @@ const handleCommit = async (form) => {
       : form.isSubtask
       ? await updateSubtaskReq({
           // 子任务修改
+          parentId: form.parentId,
           status: [1, 2].includes(status) ? 1 : status,
           statusWeight: [1, 2].includes(status) ? statusWeight[1] : statusWeight[status],
           subtaskId: form.subtaskId,

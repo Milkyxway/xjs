@@ -69,7 +69,8 @@ header {
     /* background-color: var(--el-color-primary-light-8); */
     color: var(--el-text-color-primary);
     text-align: center;
-    width: 15%;
+    width: 12%;
+    /* position: fixed; */
   }
 
   .el-main {

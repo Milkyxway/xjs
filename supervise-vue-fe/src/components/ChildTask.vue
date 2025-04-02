@@ -5,7 +5,7 @@
         <span class="paddingLR10">计划完成目标</span>
         <el-input
           v-model="props.data.taskGoal"
-          placeholder="请填写计划完成目标"
+          placeholder="请填写子任务目标"
           :disabled="props.taskStatus > 2"
           type="textarea"
           rows="3"
@@ -15,14 +15,14 @@
         <span class="paddingLR10">计划完成时间</span>
         <el-date-picker
           v-model="props.data.finishTime"
-          placeholder="请选择计划完成时间"
+          placeholder="请选择子任务计划完成时间"
           :disabled="[3, 7, 6].includes(props.taskStatus)"
         ></el-date-picker>
       </div>
       <div class="child-task-row" v-if="props.taskStatus == 5">
         <span class="paddingLR10">延期说明</span>
         <el-input
-          placeholder="请填写延期说明"
+          placeholder="请填写子任务延期说明"
           v-model="props.data.delayReason"
           type="textarea"
           rows="3"
@@ -31,14 +31,14 @@
       <div class="child-task-row" v-if="[3, 7].includes(props.taskStatus)">
         <span class="paddingLR10">实际完成时间</span>
         <el-date-picker
-          placeholder="请选择实际完成时间"
+          placeholder="请选择子任务实际完成时间"
           v-model="props.data.actualFinish"
         ></el-date-picker>
       </div>
       <div class="child-task-row" v-if="[3, 7].includes(props.taskStatus)">
         <span class="paddingLR10">完成情况说明</span>
         <el-input
-          placeholder="请填写完成情况说明"
+          placeholder="请填写子任务完成情况说明"
           v-model="props.data.completeDesc"
           type="textarea"
           rows="3"

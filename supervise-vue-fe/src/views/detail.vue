@@ -113,11 +113,19 @@
           <el-form-item label="是否拆分成阶段任务" v-if="state.taskDetail.status === 1"
             ><el-switch v-model="state.hasChildTasks"></el-switch
           ></el-form-item>
-          <el-form-item v-if="state.hasChildTasks">
+          <el-form-item v-if="state.hasChildTasks && state.taskDetail.taskGoal">
             <div :style="{ color: '#606266', fontWeight: '700', fontSize: '32' }">
               任务总目标： {{ state.taskDetail.taskGoal }}
             </div>
           </el-form-item>
+          <el-form-item v-if="state.hasChildTasks && !state.taskDetail.taskGoal" label="任务总目标"
+            ><el-input
+              v-model="state.formSingle.taskGoal"
+              placeholder="请填写任务总目标"
+              type="textarea"
+              rows="3"
+            ></el-input
+          ></el-form-item>
           <el-form-item v-if="state.hasChildTasks" label="阶段任务1">
             <ChildTask
               :data="state.childTasksFirst[0]"
@@ -597,15 +605,18 @@ const subtaskSubmit = async () => {
   let unfill = ''
   mergeList.map((i) => {
     if (!i.taskGoal) {
-      unfill = '请填写计划完成目标'
+      unfill = '请填写子任务目标'
     }
     if (!i.finishTime) {
-      unfill = '请填写计划完成时间'
+      unfill = '请填写子任务计划完成时间'
     }
     if (dayjs(i.finishTime).format() < dayjs().format()) {
       unfill = '请选择今天及以后的时间'
     }
   })
+  if (!state.formSingle.taskGoal) {
+    unfill = '请填写任务总目标'
+  }
   if (unfill) {
     return toast(unfill, 'error')
   }
@@ -620,7 +631,13 @@ const subtaskSubmit = async () => {
       statusWeight: statusWeight[3]
     }
   })
+  !state.taskDetail.taskGoal && // 管理员没有填写总目标 部门需要自行填写
+    (await updateTaskReq({
+      taskId,
+      taskGoal: state.formSingle.taskGoal
+    }))
   await addSubTaskReq({ list, taskId })
+
   toast('提交成功！')
   launchRefresh()
   router.replace('/supervise/list')

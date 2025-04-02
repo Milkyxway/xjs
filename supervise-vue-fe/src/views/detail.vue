@@ -53,12 +53,12 @@
         <div v-if="state.taskDetailCp?.children?.length">
           <div class="row-item">
             <span class="bold space"></span>
-            <span class="space grid-wide">任务目标</span>
-            <span class="space grid-wide">完成情况</span>
-            <span class="space task-goal">计划完成时间</span>
-            <span class="space task-goal">实际完成时间</span>
-            <span class="space task-goal">任务状态</span>
-            <span class="space task-goal">完成附件文件</span>
+            <span class="space grid-wide">子任务目标</span>
+            <span class="space grid-wide">子任务完成情况</span>
+            <span class="space task-goal">子任务计划完成时间</span>
+            <span class="space task-goal">子任务实际完成时间</span>
+            <span class="space task-goal">子任务状态</span>
+            <span class="space task-goal">子任务完成附件</span>
           </div>
           <div
             v-for="(item, index) in state.taskDetailCp.children"
@@ -113,6 +113,11 @@
           <el-form-item label="是否拆分成阶段任务" v-if="state.taskDetail.status === 1"
             ><el-switch v-model="state.hasChildTasks"></el-switch
           ></el-form-item>
+          <el-form-item v-if="state.hasChildTasks">
+            <div :style="{ color: '#606266', fontWeight: '700', fontSize: '32' }">
+              任务总目标： {{ state.taskDetail.taskGoal }}
+            </div>
+          </el-form-item>
           <el-form-item v-if="state.hasChildTasks" label="阶段任务1">
             <ChildTask
               :data="state.childTasksFirst[0]"
@@ -139,11 +144,11 @@
             />
           </el-form-item>
           <div v-if="!state.hasChildTasks">
-            <el-form-item label="完成目标" :label-width="formLabelWidth"
+            <el-form-item label="任务目标" :label-width="formLabelWidth"
               ><el-input
                 v-model="state.formSingle.taskGoal"
-                placeholder="请填写完成目标"
-                :disabled="state.taskDetail.status !== 1"
+                placeholder="请填写任务目标"
+                :disabled="state.formSingle.taskGoal"
                 type="textarea"
                 rows="3"
               ></el-input
@@ -428,7 +433,8 @@ const getTaskDetail = async () => {
     assistOrgName: orgnizationListIdToName(result.data.assistOrg, sectionList.value)
   }
   state.taskDetailCp = state.taskDetail
-  if ([3, 5, 7].includes(result.data.status)) {
+  if ([3, 5, 7, 1].includes(result.data.status)) {
+    //进行中 延期 延期后进行
     orgnization === result.data.leadOrg && confirmTask() // 只有责任部门能修改任务计划
     if (result.data.children.length) {
       state.hasChildTasks = true

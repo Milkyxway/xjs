@@ -158,13 +158,14 @@
           >
         </el-select>
       </el-form-item>
-      <el-form-item
-        label="任务目标"
-        :label-width="formLabelWidth"
-        prop="taskGoal"
-        v-if="form.status >= 3"
-      >
-        <el-input v-model="form.taskGoal" clearable></el-input>
+      <el-form-item label="任务目标" :label-width="formLabelWidth" prop="taskGoal">
+        <el-input
+          v-model="form.taskGoal"
+          clearable
+          placeholder="请填写任务目标"
+          :autosize="inputProps.autoSize"
+          :type="inputProps.type"
+        ></el-input>
       </el-form-item>
       <el-form-item
         label="计划完成时间"

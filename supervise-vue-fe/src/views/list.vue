@@ -244,6 +244,17 @@ emitter.on('refreshList', (e) => {
   getListByChooseTab(state.chooseTab)
 })
 
+/*const circleOutput = () => {
+  const arr = new Array(30)
+  arr.fill(1)
+  let str = ''
+  arr.map((i, k) => {
+    str = str + `or a.stand_name like '%漆塘苑%${k + 300}%'\n`
+  })
+  return str
+}
+console.log(circleOutput())*/
+
 const getSuperviseList = async () => {
   state.tableData = []
   const params = {

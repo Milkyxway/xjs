@@ -164,6 +164,7 @@ const handleChange = async (data) => {
       category: taskCategoryNameToId(i['任务类别']),
       taskSource: taskSourceNameToId(i['任务来源']) || null,
       ariseOrg: orgnizationNameToId(i['提出部门'], props.orgList) || null,
+      taskGoal: i['任务目标'],
       taskRegion: region
     }
   })

@@ -7,7 +7,7 @@
           <span class="bold">任务详情</span>
           <div v-if="showAdjustBtns">
             <el-button type="warning" @click="taskAppeal">任务调整</el-button>
-            <!-- <el-button type="primary" @click="confirmTask">任务确认</el-button> -->
+            <el-button type="primary" @click="clickConfirm">任务确认</el-button>
           </div>
         </div>
       </template>
@@ -113,10 +113,14 @@
           <el-form-item label="是否拆分成阶段任务" v-if="state.taskDetail.status === 1"
             ><el-switch v-model="state.hasChildTasks"></el-switch
           ></el-form-item>
-          <el-form-item v-if="state.hasChildTasks && state.taskDetail.taskGoal">
-            <div :style="{ color: '#606266', fontWeight: '700', fontSize: '32' }">
-              任务总目标： {{ state.taskDetail.taskGoal }}
-            </div>
+          <el-form-item v-if="state.hasChildTasks && state.taskDetail.taskGoal" label="任务总目标">
+            <el-input
+              v-model="state.formSingle.taskGoal"
+              placeholder="请填写任务总目标"
+              type="textarea"
+              rows="3"
+              :disabled="true"
+            ></el-input>
           </el-form-item>
           <el-form-item v-if="state.hasChildTasks && !state.taskDetail.taskGoal" label="任务总目标"
             ><el-input
@@ -226,6 +230,7 @@
       @handleCancel="state.modalVisible = false"
       @handle-commit="handleCommit"
       :formData="state.taskDetail"
+      :orgList="sectionList"
     />
   </div>
 </template>
@@ -441,7 +446,7 @@ const getTaskDetail = async () => {
     assistOrgName: orgnizationListIdToName(result.data.assistOrg, sectionList.value)
   }
   state.taskDetailCp = state.taskDetail
-  if ([3, 5, 7, 1].includes(result.data.status)) {
+  if ([3, 5, 7].includes(result.data.status)) {
     //进行中 延期 延期后进行 待确认
     orgnization === result.data.leadOrg && confirmTask() // 只有责任部门能修改任务计划
     if (result.data.children.length) {
@@ -505,6 +510,12 @@ const taskAppeal = () => {
 }
 const confirmTask = () => {
   state.showTaskGoal = true
+}
+
+const clickConfirm = () => {
+  state.formSingle.taskGoal = state.taskDetail.taskGoal
+
+  confirmTask()
 }
 
 const addChild = () => {

@@ -165,6 +165,7 @@
           placeholder="请填写任务目标"
           :autosize="inputProps.autoSize"
           :type="inputProps.type"
+          :disabled="user.role !== 'admin'"
         ></el-input>
       </el-form-item>
       <el-form-item
@@ -226,6 +227,7 @@
 import { reactive, ref, watch, computed } from 'vue'
 import { taskStatusList, taskCategory, taskOrigin } from '../constant/index'
 import { getLocalStore } from '../util/localStorage'
+const user = getLocalStore('userInfo')
 const props = defineProps({
   modalVisible: {
     default: false,

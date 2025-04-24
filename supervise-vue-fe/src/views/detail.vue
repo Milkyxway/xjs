@@ -6,8 +6,8 @@
         <div class="card-header">
           <span class="bold">任务详情</span>
           <div v-if="showAdjustBtns">
-            <el-button @click="taskAppeal">任务调整</el-button>
-            <el-button type="primary" @click="confirmTask">任务确认</el-button>
+            <el-button type="warning" @click="taskAppeal">任务调整</el-button>
+            <!-- <el-button type="primary" @click="confirmTask">任务确认</el-button> -->
           </div>
         </div>
       </template>
@@ -442,7 +442,7 @@ const getTaskDetail = async () => {
   }
   state.taskDetailCp = state.taskDetail
   if ([3, 5, 7, 1].includes(result.data.status)) {
-    //进行中 延期 延期后进行
+    //进行中 延期 延期后进行 待确认
     orgnization === result.data.leadOrg && confirmTask() // 只有责任部门能修改任务计划
     if (result.data.children.length) {
       state.hasChildTasks = true

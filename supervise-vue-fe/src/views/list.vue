@@ -42,6 +42,7 @@
           @changePage="changePage"
           @updateFocus="updateFocus"
           :orgList="sectionList"
+          @addChildTask="addChildTask"
         />
       </el-tab-pane>
       <el-tab-pane
@@ -86,7 +87,8 @@ import {
   myTaskReq,
   getFocusListReq,
   exportDataAsExcelReq,
-  updateSubtaskReq
+  updateSubtaskReq,
+  addSubTaskReq
 } from '../api/list'
 import { orgnizationListIdToName, orgnizationToName } from '../util/orgnization'
 import { toast } from '../util/toast'
@@ -540,39 +542,53 @@ const handleCommit = async (form) => {
     const { ariseOrg, ...rest } = form
     params = rest
   }
-  const result =
-    state.modalType === 'add'
-      ? await createTaskReq({ ...params, statusWeight: statusWeight[1], taskRegion: region.value })
-      : form.isSubtask
-      ? await updateSubtaskReq({
-          // 子任务修改
-          parentId: form.parentId,
-          status: [1, 2].includes(status) ? 1 : status,
-          statusWeight: [1, 2].includes(status) ? statusWeight[1] : statusWeight[status],
-          subtaskId: form.subtaskId,
-          taskGoal: status === 1 ? null : taskGoal, // 调整成待确认 用户手动填写的全部清空
-          finishTime: status === 1 ? null : finishTime ? dayjs(finishTime).format() : null,
-          actualFinish: status === 1 ? null : actualFinish ? dayjs(actualFinish).format() : null,
-          completeDesc: status === 1 ? null : completeDesc
-        })
-      : await updateTaskReq({
-          // 父级任务修改
-          assistOrg,
-          category,
-          taskContent,
-          leadOrg,
-          comment,
-          status: [1, 2].includes(status) ? 1 : status,
-          statusWeight: [1, 2].includes(status) ? statusWeight[1] : statusWeight[status],
-          taskId,
-          taskGoal: status === 1 ? null : taskGoal, // 调整成待确认 用户手动填写的全部清空
-          finishTime: status === 1 ? null : finishTime ? dayjs(finishTime).format() : null,
-          actualFinish: status === 1 ? null : actualFinish ? dayjs(actualFinish).format() : null,
-          completeDesc: status === 1 ? null : completeDesc,
-          taskSource,
-          sourceDesc,
-          ariseOrg: form.ariseOrg
-        })
+  let result
+
+  if (state.modalType === 'add' && form.isSubtask) {
+    // 增加子任务
+    result = await addSubTaskReq({ ...form })
+  }
+  if (state.modalType === 'add' && !form.isSubtask) {
+    // 创建主任务
+    result = await createTaskReq({
+      ...params,
+      statusWeight: statusWeight[1],
+      taskRegion: region.value
+    })
+  }
+  if (state.modalType === 'update' && form.isSubtask) {
+    result = await updateSubtaskReq({
+      // 子任务修改
+      parentId: form.parentId,
+      status: [1, 2].includes(status) ? 1 : status,
+      statusWeight: [1, 2].includes(status) ? statusWeight[1] : statusWeight[status],
+      subtaskId: form.subtaskId,
+      taskGoal: status === 1 ? null : taskGoal, // 调整成待确认 用户手动填写的全部清空
+      finishTime: status === 1 ? null : finishTime ? dayjs(finishTime).format() : null,
+      actualFinish: status === 1 ? null : actualFinish ? dayjs(actualFinish).format() : null,
+      completeDesc: status === 1 ? null : completeDesc
+    })
+  }
+  if (state.modalType === 'update' && !form.isSubtask) {
+    result = await updateTaskReq({
+      // 父级任务修改
+      assistOrg,
+      category,
+      taskContent,
+      leadOrg,
+      comment,
+      status: [1, 2].includes(status) ? 1 : status,
+      statusWeight: [1, 2].includes(status) ? statusWeight[1] : statusWeight[status],
+      taskId,
+      taskGoal: status === 1 ? null : taskGoal, // 调整成待确认 用户手动填写的全部清空
+      finishTime: status === 1 ? null : finishTime ? dayjs(finishTime).format() : null,
+      actualFinish: status === 1 ? null : actualFinish ? dayjs(actualFinish).format() : null,
+      completeDesc: status === 1 ? null : completeDesc,
+      taskSource,
+      sourceDesc,
+      ariseOrg: form.ariseOrg
+    })
+  }
 
   // state.modalType === 'update' &&
   //   !form.isSubtask &&
@@ -596,6 +612,19 @@ const updateTask = (row) => {
   state.formData = {
     ...row,
     assistOrg: !row.assistOrg ? [] : row.assistOrg.split(',').map((i) => Number(i))
+  }
+}
+
+const addChildTask = (row) => {
+  state.modalType = 'add'
+  state.modalVisible = true
+  state.formData = {
+    ...row.children[0],
+    taskGoal: '',
+    finishTime: '',
+    actualFinish: '',
+    completeDesc: '',
+    parentId: row.taskId
   }
 }
 

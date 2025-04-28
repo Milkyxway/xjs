@@ -54,7 +54,7 @@
         <template #default="{ row }">
           <el-button
             link
-            type="info"
+            type="primary"
             size="small"
             @click="checkTask(row)"
             v-showByAuth="{
@@ -81,6 +81,18 @@
             @click="deleteTask(row)"
             v-showByAuth="{ role, showCondition: ['admin'] }"
             >删除</el-button
+          >
+          <el-button
+            link
+            type="info"
+            size="small"
+            @click="addChildTask(row)"
+            v-showByAuth="{
+              role,
+              showCondition: ['admin'],
+              otherCondition: row.status === 3
+            }"
+            >增加子任务</el-button
           >
           <el-button
             link
@@ -172,7 +184,13 @@ const props = defineProps({
     type: Array
   }
 })
-const emits = defineEmits(['updateTask', 'refreshList', 'changePage', 'updateFocus'])
+const emits = defineEmits([
+  'updateTask',
+  'refreshList',
+  'changePage',
+  'updateFocus',
+  'addChildTask'
+])
 const role = getLocalStore('userInfo').role
 const username = getLocalStore('userInfo').username
 const usernameCn = getLocalStore('userInfo').usernameCn
@@ -282,6 +300,10 @@ const deleteTask = async (row) => {
       : await deleteTaskReq({ taskId })
     emits('refreshList')
   })
+}
+
+const addChildTask = (row) => {
+  emits('addChildTask', row)
 }
 
 const showLeadCommentModal = (row) => {

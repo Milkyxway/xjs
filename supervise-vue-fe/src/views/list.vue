@@ -624,7 +624,8 @@ const addChildTask = (row) => {
     finishTime: '',
     actualFinish: '',
     completeDesc: '',
-    parentId: row.taskId
+    parentId: row.taskId,
+    subtaskId: ''
   }
 }
 

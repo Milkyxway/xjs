@@ -61,7 +61,7 @@
       /></el-icon>
       <Upload
         v-if="[3, 7].includes(props.taskStatus)"
-        btnTxt="添加完成结果附件"
+        btnTxt="添加阶段结果附件"
         @handleChange="handleFileChange"
       />
       <div v-if="[3, 5, 7].includes(props.taskStatus)" @click="handleItemSubmit" class="submit-btn">
@@ -146,7 +146,7 @@ const commonDeal = async (fileLink) => {
   justify-content: flex-start;
   align-items: center;
   white-space: nowrap;
-  width: 800px;
+  width: 820px;
   margin-bottom: 6px;
 }
 .paddingLR10 {

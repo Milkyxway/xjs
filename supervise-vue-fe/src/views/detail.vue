@@ -155,6 +155,30 @@
               :fatherStatus="state.taskDetail.status"
             />
           </el-form-item>
+          <el-form-item
+            v-if="[3, 7].includes(state.taskDetailCp.status) && state.hasChildTasks"
+            label="总体完成情况"
+          >
+            <el-input
+              placeholder="请输入实际完成情况"
+              type="textarea"
+              rows="3"
+              v-model="state.completeDesc"
+            ></el-input>
+            <div class="ml10">
+              <Upload btnTxt="添加完成结果附件" @handleChange="handleFileChange" />
+              <div @click="commitFn" class="submit-btn">提交</div>
+            </div>
+            <div v-if="state.fileLink || state.taskDetailCp.fileLink" class="child-task-row">
+              <span class="ml10">附件：</span>
+              <span
+                class="submit-btn mr10"
+                @click="downloadUrl(state.fileLink || state.taskDetailCp.fileLink)"
+                >{{ state.fileLink || state.taskDetailCp.fileLink }}</span
+              >
+              <el-icon @click="deleteFile(index)"><Delete /></el-icon>
+            </div>
+          </el-form-item>
           <div v-if="!state.hasChildTasks">
             <el-form-item label="任务目标" :label-width="formLabelWidth"
               ><el-input
@@ -318,7 +342,8 @@ let state = reactive({
   showInput: false,
   formInput: {
     comment: ''
-  }
+  },
+  completeDesc: ''
 })
 
 watch(
@@ -503,7 +528,7 @@ const handleItemSubmit = async (data, status) => {
   })
   toast()
   launchRefresh()
-  router.replace('/supervise/list')
+  // router.replace('/supervise/list')
 }
 const taskAppeal = () => {
   state.modalVisible = true
@@ -651,7 +676,7 @@ const subtaskSubmit = async () => {
 
   toast('提交成功！')
   launchRefresh()
-  router.replace('/supervise/list')
+  // router.replace('/supervise/list')
 }
 
 const submitFn = async () => {
@@ -685,6 +710,17 @@ const submitFn = async () => {
   } else {
     singleTaskSubmit()
   }
+}
+
+const commitFn = async () => {
+  const { taskDetailCp, completeDesc, fileLink } = state
+  await updateTaskReq({
+    completeDesc,
+    taskId: taskDetailCp.taskId,
+    fileLink: fileLink || taskDetailCp.fileLink
+  })
+  toast('提交成功！')
+  launchRefresh()
 }
 
 getTaskDetail()
@@ -783,7 +819,7 @@ getTaskDetail()
   margin-right: 30px;
 }
 .ml10 {
-  margin-left: 30px;
+  margin-left: 20px;
 }
 .child-task-row {
   display: flex;

@@ -5,7 +5,7 @@
       ref="uploadRef"
       type="file"
       @change="beforeUpload"
-      accept=".xlsx, .xls, .doc, .docx"
+      accept=".xlsx, .xls, .doc, .docx, .pdf, .ppt"
       hidden
     />
   </div>

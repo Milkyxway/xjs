@@ -546,7 +546,19 @@ const handleCommit = async (form) => {
 
   if (state.modalType === 'add' && form.isSubtask) {
     // 增加子任务
-    result = await addSubTaskReq({ ...form })
+    result = await addSubTaskReq({
+      taskId: form.parentId,
+      list: [
+        {
+          taskGoal: form.taskGoal,
+          parentId: form.parentId,
+          status: form.status,
+          finishTime: dayjs(form.finishTime).format(),
+          statusWeight: statusWeight[form.status],
+          leadOrg: form.leadOrg
+        }
+      ]
+    })
   }
   if (state.modalType === 'add' && !form.isSubtask) {
     // 创建主任务

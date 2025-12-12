@@ -410,7 +410,7 @@ const handleFileChange = async (file) => {
 }
 
 const deleteFile = async () => {
-  const { fileLink } = state
+  const fileLink = state.fileLink || state.taskDetail.fileLink
   const fileLinkSplit = fileLink.split('/upload/')
   await deleteFileReq({
     fileName: fileLinkSplit[1],

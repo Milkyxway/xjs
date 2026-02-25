@@ -717,10 +717,13 @@ const commitFn = async () => {
   await updateTaskReq({
     completeDesc,
     taskId: taskDetailCp.taskId,
-    fileLink: fileLink || taskDetailCp.fileLink
+    fileLink: fileLink || taskDetailCp.fileLink,
+    status: 6,
+    statusWeight: statusWeight[6]
   })
   toast('提交成功！')
   launchRefresh()
+  router.replace('/supervise/list')
 }
 
 getTaskDetail()

@@ -184,7 +184,7 @@
               ><el-input
                 v-model="state.formSingle.taskGoal"
                 placeholder="请填写任务目标"
-                :disabled="state.formSingle.taskGoal"
+                :disabled="!!state.taskDetail.taskGoal"
                 type="textarea"
                 rows="3"
               ></el-input

@@ -94,13 +94,7 @@
           ></el-select
         >
       </el-form-item>
-      <el-form-item
-        label="责任部门"
-        :label-width="formLabelWidth"
-        prop="leadOrg"
-        :rules="rules('请选择责任部门')"
-        v-if="!isSubtask"
-      >
+      <el-form-item label="责任部门" :label-width="formLabelWidth" prop="leadOrg" v-if="!isSubtask">
         <el-select
           v-model="form.leadOrg"
           placeholder="请选择责任部门"

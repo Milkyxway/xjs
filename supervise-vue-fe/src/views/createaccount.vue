@@ -100,6 +100,10 @@ const roleList = [
   {
     label: '员工',
     value: 'employee'
+  },
+  {
+    label: '浏览',
+    value: 'browser'
   }
 ]
 const handleSubmit = () => {

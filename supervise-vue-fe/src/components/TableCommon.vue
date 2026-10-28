@@ -59,7 +59,7 @@
             @click="checkTask(row)"
             v-showByAuth="{
               role,
-              showCondition: ['admin', 'section', 'leader', 'employee', 'sub-leader']
+              showCondition: ['admin', 'section', 'leader', 'employee', 'sub-leader', 'browser']
             }"
             >查看</el-button
           >

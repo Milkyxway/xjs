@@ -422,6 +422,11 @@ const init = async () => {
       adminViewTableColumn()
       getSuperviseList()
       break
+    case 'browser': // 浏览
+      state.chooseTab = 'all'
+      browserViewTableColumn()
+      getSuperviseList()
+      break
     default:
       break
   }
@@ -517,6 +522,23 @@ const employeeViewTableColumn = () => {
 const sectionViewTableColumn = () => {
   state.tableColumns = state.tableColumns.filter(
     (i) => !['sourceDesc', 'ariseOrg', 'focus'].includes(i.prop)
+  )
+}
+
+const browserViewTableColumn = () => {
+  state.tableColumns = state.tableColumns.filter(
+    (i) =>
+      ![
+        'taskGoal',
+        'finishTime',
+        'actualFinish',
+        'completeDesc',
+        'fileLink',
+        'leadComment',
+        'delayReason',
+        'resolveType',
+        'focus'
+      ].includes(i.prop)
   )
 }
 // 弹窗里确定按钮触发
